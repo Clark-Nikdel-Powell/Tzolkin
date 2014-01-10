@@ -10,7 +10,7 @@
 	Copyright 2012  Chris Roche & Taylor Gorman (email : wordpress@clarknikdelpowell.com)
 
 	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License, version 2, as 
+	it under the terms of the GNU General Public License, version 2, as
 	published by the Free Software Foundation.
 
 	This program is distributed in the hope that it will be useful,
@@ -35,6 +35,7 @@ define('TZ_URL', plugin_dir_url(__FILE__));
 // PLUGIN DEPENDENCIES
 ////////////////////////////////////////////////////////////////////////////////
 
+require_once TZ_PATH.'tz-category.php';
 require_once TZ_PATH.'tz-event.php';
 require_once TZ_PATH.'tz-functions.php';
 require_once TZ_PATH.'tz-admin.php';

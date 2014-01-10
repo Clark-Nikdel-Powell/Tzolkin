@@ -38,7 +38,7 @@ final class TZ_Event {
 	  'capability_type'    => 'post',
 	  'has_archive'        => true,
 	  'hierarchical'       => false,
-	  'menu_position'      => 5,
+	  'menu_position'      => 23,
 	  'rewrite'            => array('with_front' => false),
 
 	  'labels' => array(
@@ -551,6 +551,7 @@ final class TZ_Event {
 		if (!is_archive()) return;
 		if (!is_array($query->query)) return;
 		if (!array_key_exists('post_type', $query->query)) return;
+		if (isset($query->query['meta_query'])) return;
 		if (self::$name !== $query->query['post_type']) return;
 
 		self::filter_admin($query);

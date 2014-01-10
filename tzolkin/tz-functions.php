@@ -72,8 +72,8 @@ if (!function_exists('tz_is_all_day')) {
 }
 
 if (!function_exists('tz_event_is_same_day')) {
-	function tz_event_is_same_day() {
-		return TZ_Event::event_is_same_day();
+	function tz_event_is_same_day($post_id) {
+		return TZ_Event::event_is_same_day($post_id);
 	}
 }
 
