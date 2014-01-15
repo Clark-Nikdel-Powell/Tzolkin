@@ -633,7 +633,7 @@ final class TZ_Event {
 		$now = new DateTime();
 		$meta_query[] = array(
 			'key'     => self::$end_meta,
-			'value'   => $now->format('Y-m-d H:i:s'),
+			'value'   => $now->format('Y-m-d').' 00:00:00', // SM: added null h:m:s to fix missing events
 			'compare' => '>=',
 			'type'    => 'DATETIME'
 		);
