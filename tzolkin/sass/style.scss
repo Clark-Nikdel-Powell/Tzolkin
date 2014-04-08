@@ -1,0 +1,454 @@
+.tzolkin-calendar {
+	.month.current, .format, .month-navigation {width: 98%;}
+	.month.current {
+		font-size: 1.5em;
+		font-weight: bold;
+		text-align: center;
+	}
+	// Category Navigation
+	.container.tz-categories {
+		width: auto;
+		margin: 0;
+		display: inline-block;
+		position: relative;
+
+		&:before {
+			content: "";
+			position: absolute;
+			right: .5em;
+			top: 50%;
+			margin-top: -2px;
+			border-left: 4px solid transparent;
+			border-right: 4px solid transparent;
+			border-top: 5px solid #BBB;
+			pointer-events: none;
+		}
+	}
+	select.tz-categories {
+		height: auto;
+		padding: .25em 1.75em .25em .5em;
+		appearance: none;
+		-webkit-appearance: none;
+		border: 1px solid #DDD;
+		font-size: .75em;
+		color: #555;
+		display: block;
+		float: left;
+		overflow: hidden;
+	}
+
+	// Format Navigation
+	form {padding: 0;}
+	.format {
+		width: 98%;
+		margin-top: -1.2em;
+		text-align: right;
+
+		input[type="radio"] {-webkit-appearance: none;}
+		label {
+			$c_link: #aaa;
+			$c_active: #555;
+			$c_hover: mix($c_link, $c_active, $weight:50%);
+
+			color: $c_link;
+			cursor: pointer;
+			padding-left: 1em;
+			display: inline-block;
+			position: relative;
+
+			input {cursor: pointer;}
+			input:before, input:after {
+				content: "";
+				display: block;
+				position: absolute;
+			}
+			&:first-child {margin-right: .375em;}
+
+			// List Format
+			.list {
+
+				&:before, &:after {
+					width: 14px;
+					border-bottom: solid 3px $c_link;
+					left: 0;
+				}
+				&:before {
+					border-top: solid 3px $c_link;
+					height: 8px;
+					top: 2px;
+				}
+				&:after {
+					top: 12px;
+				}
+			}
+			// Grid Format
+			.grid {
+				&:before, &:after {
+					width: 14px;
+					height: 6px;
+					top: 56%;
+					left: 0;
+					border-left: solid 6px $c_link;
+					border-right: solid 6px $c_link;
+				}
+				&:before {
+					margin-top: -8px;
+				}
+			}
+			// Style for hover
+			&:hover {
+				color: $c_hover;
+
+				input:before, input:after {
+					border-color: $c_hover;
+				}
+			}
+			// Styles for current format
+			&.active {
+				color: $c_active;
+				font-weight: bold;
+
+				input:before, input:after {
+					border-color: $c_active;
+				}
+			}
+		}
+	}
+	// Month Navigation
+	.month-navigation {
+		margin-top: 2em;
+		font-size: .875em;
+
+		button {
+			$blue: #0E325D;
+
+			-webkit-appearance: none;
+			height: auto;
+			background-color: transparent;
+			color: $blue;
+			cursor: pointer;
+		}
+		.next-month {float: right;}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//  GRID STYLES  ///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+.tzolkin-grid {
+	$bwidth: 1px;
+	$bcolor: #DDD;
+	$bgcolor: #f9f9f9;
+
+	width: 100%;
+	margin-top: 1em;
+
+	// Animation Setup
+	.tzolkin-row {transition: height .15s ease-in-out;}
+	.cell,.cell:after {transition: background-color .15s ease-in-out;}
+	.details, .tzolkin-row:after {transition: opacity .15s ease-in-out;}
+
+	// Row setup
+	.tzolkin-row {
+		position: relative;
+		cursor: pointer;
+		overflow: hidden;
+
+		&:last-child .cell {border-bottom: $bwidth solid $bcolor;}
+
+		// Hover Effects
+		&:hover, &.open {
+			&:after {
+				opacity: 1;
+			}
+
+			.cell {
+				background-color: $bgcolor;
+
+				&.past:after {
+					background-color: rgba(255,255,255,0);
+				}
+			}
+		}
+		// Open Row
+		&.open {
+			overflow: inherit;
+
+			.cell:after {display: none;}
+			.details {
+				opacity: 1;
+			}
+		}
+	}
+	// For the Weekday Header
+	.days {
+		height: 2em;
+		font-size: .875em;
+
+		.cell {padding: .5em;}
+		.full-day {display: none;}
+	}
+	// Standard Cell Styles
+	.cell {
+		$width: 14%;
+
+		width: $width;
+		height: 100%;
+		display: inline-block;
+		position: relative;
+		border-top: $bwidth solid $bcolor;
+		border-right: $bwidth solid $bcolor;
+		text-align: center;
+		vertical-align: top;
+
+		&:first-child {border-left: $bwidth solid $bcolor;}
+		&.offset {
+			background-color: $bgcolor;
+
+			&.offset-1 {width: $width;}
+			&.offset-2 {width: $width*2;}
+			&.offset-3 {width: $width*3;}
+			&.offset-4 {width: $width*4;}
+			&.offset-5 {width: $width*5;}
+			&.offset-6 {width: $width*6;}
+		}
+		// Styles for past days/events
+		&.past {
+
+			&:after {
+				width: 101%; // to cover up multi-day :after elements
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				content: " ";
+				display: block;
+				background-color: rgba(#FFF, .4);
+			}
+
+			.number {color: #777;}
+		}
+		&.present {
+
+			.number {font-weight: bold;}
+		}
+	}
+	.date-top {
+		padding: 1em 0;
+	}
+	// Name of the day, display on list.
+	.day {display: none;}
+	// Number of the day
+	.number {
+		display: inline-block;
+		position: relative;
+		font-size: 1.25em;
+	}
+
+	// Shape Variables
+	$height: 20px;
+	$color: #9FC6E7;
+	$blue: #4986E7;
+	$red: #FA573C;
+	$green: #7BD148;
+	$yellow: #FBE983;
+
+	// Hide times on grid.
+	.time {display: none;}
+
+	// Circles on the main calendar
+	.circles {
+		text-align: center;
+		overflow: hidden;
+
+		.circle {
+			width: .5em;
+			height: .5em;
+			margin: .25em .125em 0;
+			display: inline-block;
+			background-color: $color;
+			border-radius: 100%;
+		}
+	}
+
+	// Rectangles in the details view
+	.rectangles {
+		width: 100%;
+		display: inline-block;
+
+		.rectangle {
+			width: 100%;
+			height: $height;
+			display: block;
+			position: relative;
+
+			&:before, &:after {
+				height: $height;
+				background-color: $color;
+				content: " ";
+				display: block;
+				position: absolute;
+				top: 0;
+			}
+			&:after {
+				width: 1px;
+				right: -1px;
+			}
+			@at-root .tzolkin-row .cell {
+				&:last-child, &:first-child {
+					.rectangles .rectangle {
+
+						// Using both before & after because after is already taken. #120
+						&:before, &:after {
+							border-style: solid;
+							border-top: $height/2 solid transparent;
+							border-bottom: $height/2 solid transparent;
+						}
+					}
+				}
+				&:last-child .rectangles .rectangle {
+
+					&:after {
+						background-color: transparent;
+						right: ceil(-$height/3);
+						border-left-width: floor($height/3);
+					}
+					@each $class, $color in (blue: $blue, red: $red, green: $green, yellow: $yellow) {
+						&.#{$class}:after {border-left-color: $color;}
+					}
+				}
+				&:first-child .rectangles .rectangle {
+
+					&:before {
+						background-color: transparent;
+						left: ceil(-$height/3);
+						border-right-width: floor($height/3);
+					}
+					@each $class, $color in (blue: $blue, red: $red, green: $green, yellow: $yellow) {
+						&.#{$class}:before {border-right-color: $color;}
+					}
+				}
+			}
+			// Why not try some løveli colors?
+			@each $class, $color in (blue: $blue, red: $red, green: $green, yellow: $yellow) {
+				&.#{$class} {
+					background-color: $color;
+
+					&:after {
+						background-color: $color;
+					}
+				}
+			}
+
+			.title {
+				padding-top: .375em;
+				position: relative;
+				left: .375em;
+				z-index: 2;
+				white-space: nowrap;
+				color: #1d1d1d;
+			}
+			&.duration-1 {
+				&:before, &:after {display: none;}
+				.title {
+					padding-right: .75em;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+		// Levels
+		.event:first-child .level-1 {margin-top: $height;}
+		.event:first-child .level-2 {margin-top: $height*2;}
+		.event:first-child .level-3 {margin-top: $height*3;}
+		.event:first-child .level-4 {margin-top: $height*4;}
+
+		// Titles
+		.title {display: none;}
+		.event.show-title .title {display: block;}
+	}
+	.details {
+		position: relative;
+		width: 100%;
+		padding: .75em 0 1em;
+		opacity: 0;
+		border-top: 1px dotted $bcolor;
+		font-size: .75em;
+		text-align: left;
+	}
+	.titles {
+		margin: .5em;
+
+		.title {
+			display: block;
+			margin-top: .5em;
+		}
+	}
+	.description {display: none;}
+
+	@media (min-width: 500px) {
+		.days .full-day {display: inline;}
+	}
+
+ }
+
+////////////////////////////////////////////////////////////////////////////////
+//  LIST STYLES  ///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+.tzolkin-list {
+
+	// First, hide the stuff we don't need: the weekday header, offset cells, empty cells.
+	.days, .offset, .no-events {display: none;}
+
+	.cell {
+		margin-top: 1.5em;
+		padding-bottom: 1.5em;
+		overflow: hidden;
+	}
+	.date {
+		width: 2.675em;
+		margin-right: 1em;
+		padding: .5em 0;
+		background-color: #e1e1e1;
+		float: left;
+		font-size: 1.125em;
+		font-weight: bold;
+		text-align: center;
+
+		.day {
+			margin-bottom: .25em;
+			font-size: .675em;
+			text-transform: uppercase;
+		}
+		.number {font-size: 1.125em;}
+	}
+	.details {
+		width: auto;
+		overflow: hidden;
+	}
+	.event {
+		margin-bottom: 1em;
+		padding-bottom: 1em;
+		border-bottom: 1px dotted #CCC;
+	}
+	.text {
+		width: 75%;
+		display: inline-block;
+		vertical-align: top;
+	}
+	.time {
+		width: 20%;
+		display: inline-block;
+		font-size: .875em;
+		vertical-align: baseline;
+	}
+	.title {font-weight: bold;}
+	.description {
+		margin-top: .5em;
+		font-size: .875em;
+		font-style: italic;
+		line-height: 1.4em;
+	}
+}

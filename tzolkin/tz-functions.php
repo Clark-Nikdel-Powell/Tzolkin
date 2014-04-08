@@ -263,7 +263,7 @@ if (!function_exists('tz_the_city')) {
 
 
 ///////////////////////////////////////////////////////////////
-//  CITY FUNCTIONS  ///////////////////////////////////////////
+//  STATE FUNCTIONS  //////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
 
 if (!function_exists('tz_get_event_state')) {
@@ -348,5 +348,24 @@ if (!function_exists('tz_the_zip')) {
 	 */
 	function tz_the_zip() {
 		return TZ_Event::the_zip();
+	}
+}
+
+
+///////////////////////////////////////////////////////////////
+//  CATEGORY FUNCTIONS  ///////////////////////////////////////
+///////////////////////////////////////////////////////////////
+
+if (!function_exists('tz_get_categories')) {
+
+	function tz_get_categories() {
+		return TZ_Event::get_categories();
+	}
+}
+
+if (!function_exists('tz_dropdown_categories')) {
+
+	function tz_dropdown_categories() {
+		return TZ_Event::dropdown_categories();
 	}
 }

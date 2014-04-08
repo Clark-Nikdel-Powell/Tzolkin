@@ -39,6 +39,7 @@ require_once TZ_PATH.'tz-category.php';
 require_once TZ_PATH.'tz-event.php';
 require_once TZ_PATH.'tz-functions.php';
 require_once TZ_PATH.'tz-admin.php';
+require_once TZ_PATH.'tz-shortcode.php';
 
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS

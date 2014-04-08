@@ -66,9 +66,9 @@ final class TZ_Event {
 	  )
 	);
 
-	/////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 	// THEME HELPER METHODS
-	/////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 
 	private static function get_event_date($post_id, $key, $format = '') {
 		$format = trim($format);
@@ -266,6 +266,37 @@ final class TZ_Event {
 		echo get_post_meta($post->ID, self::$zip_meta, true);
 	}
 
+	////////////////////////////////////////////////////////////////
+	//  CATEGORY FUNCTIONS  ////////////////////////////////////////
+	////////////////////////////////////////////////////////////////
+
+	public static function get_categories() {
+		return get_terms('tz_category');
+	}
+
+	public static function dropdown_categories($args=0) {
+
+		$defaults = array(
+			'hide_if_empty'    => true
+		,	'class'            => 'tz-categories'
+		,	'show_option_none' => 'Select a Category'
+		);
+
+		// Parse incoming $args into an array and merge it with $defaults
+		$args = wp_parse_args( $args, $defaults );
+
+		// Keep taxonomy as a constant.
+		$args['taxonomy'] = 'tz_category';
+		$args['echo']     = 0;
+		$args['name']     = 'tz_category';
+
+		// Paragraph added because :before element doesn't work on <select> tags
+		$output = '<p class="container '. $args['class'] .'">' . wp_dropdown_categories($args) . '</p>';
+		$output = preg_replace("#<select([^>]*)>#", "<select$1 onchange='return this.form.submit()'>", $output);
+		return $output;
+	}
+
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// POST META MAGIC!
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -284,21 +315,24 @@ final class TZ_Event {
 
 		wp_enqueue_script(
 			'tz-jquery-ui-datetime',
-			TZ_URL.'resources/jquery-ui-timepicker.js',
+			// GOLIVE: Change URL to use TZ_URL
+			'/wp-content/plugins/tzolkin/resources/jquery-ui-timepicker.js',
 			array('jquery-ui-datepicker', 'jquery-ui-slider')
 		);
 
 		wp_enqueue_script(
 			'tz-event',
-			TZ_URL.'resources/tz-event.js',
+			// GOLIVE: Change URL to use TZ_URL
+			'/wp-content/plugins/tzolkin/resources/tz-event.js',
 			array('tz-jquery-ui-datetime')
 		);
 	}
 
 	public static function enqueue_styles() {
 		if (!self::is_tzolkin()) return;
-		wp_enqueue_style('tz-jquery-ui', TZ_URL.'resources/jquery-ui-smoothness.css');
-		wp_enqueue_style('tz-styles', TZ_URL.'resources/jquery-ui-timepicker.css');
+		// GOLIVE: Change URLs to use TZ_URL
+		wp_enqueue_style('tz-jquery-ui', '/wp-content/plugins/tzolkin/resources/jquery-ui-smoothness.css');
+		wp_enqueue_style('tz-styles', '/wp-content/plugins/tzolkin/resources/jquery-ui-timepicker.css');
 	}
 
 	public static function add_meta_box() {
