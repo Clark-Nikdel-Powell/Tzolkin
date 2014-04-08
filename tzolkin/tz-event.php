@@ -328,24 +328,22 @@ final class TZ_Event {
 
 		wp_enqueue_script(
 			'tz-jquery-ui-datetime',
-			// GOLIVE: Change URL to use TZ_URL
-			'/wp-content/plugins/tzolkin/resources/jquery-ui-timepicker.js',
+			TZ_URL.'resources/jquery-ui-timepicker.js',
 			array('jquery-ui-datepicker', 'jquery-ui-slider')
 		);
 
 		wp_enqueue_script(
 			'tz-event',
-			// GOLIVE: Change URL to use TZ_URL
-			'/wp-content/plugins/tzolkin/resources/tz-event.js',
+			TZ_URL.'/resources/tz-event.js',
 			array('tz-jquery-ui-datetime')
 		);
 	}
 
 	public static function enqueue_styles() {
 		if (!self::is_tzolkin()) return;
-		// GOLIVE: Change URLs to use TZ_URL
-		wp_enqueue_style('tz-jquery-ui', '/wp-content/plugins/tzolkin/resources/jquery-ui-smoothness.css');
-		wp_enqueue_style('tz-styles', '/wp-content/plugins/tzolkin/resources/jquery-ui-timepicker.css');
+		wp_enqueue_style('tz-jquery-ui', TZ_URL.'resources/jquery-ui-smoothness.css');
+		wp_enqueue_style('tz-styles', TZ_URL.'resources/jquery-ui-timepicker.css');
+		echo TZ_URL;
 	}
 
 	public static function add_meta_box() {

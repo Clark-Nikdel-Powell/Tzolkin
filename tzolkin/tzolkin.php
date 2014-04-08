@@ -27,9 +27,16 @@
 // PLUGIN CONSTANT DEFINITIONS
 ////////////////////////////////////////////////////////////////////////////////
 
+
+// DETERMINE LOCAL OR LIVE
+$localhost = true;
+if ($localhost===true) $url = '/wp-content/plugins/tzolkin/';
+else $url = __FILE__;
+
 //FILESYSTEM CONSTANTS
 define('TZ_PATH', plugin_dir_path(__FILE__));
-define('TZ_URL', plugin_dir_url(__FILE__));
+define('TZ_URL', $url);
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // PLUGIN DEPENDENCIES
