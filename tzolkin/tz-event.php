@@ -11,11 +11,24 @@ final class TZ_Event {
 	private static $start_time    = 'tz-start-time';
 	private static $end_date      = 'tz-end-date';
 	private static $end_time      = 'tz-end-time';
+	private static $rec_frequency = 'tz-rec-frequency';
+	private static $rec_end_date  = 'tz-rec-end-date';
 
 	private static $start_meta    = 'tz_start';
 	private static $end_meta      = 'tz_end';
+	private static $rec_end_meta  = 'tz_rec_end';
+	private static $rec_frequency_meta = 'tz_rec_frequency';
 	private static $all_day_meta  = 'tz_all_day';
 	private static $mysql_format  = 'Y-m-d H:i:s';
+
+	private static $rec_frequencies = array(
+		 '' => '(none)'
+		,'d' => 'daily'
+		,'w' => 'weekly'
+		,'m1' => 'monthly (by day)'
+		,'m2' => 'monthly (by date)'
+		,'y' => 'yearly'
+	);
 
 	private static $year_tag      = 'tz_year';
 	private static $month_tag     = 'tz_month';
@@ -352,9 +365,17 @@ final class TZ_Event {
 
 		$start_str = get_post_meta($event->ID, self::$start_meta, true);
 		$end_str = get_post_meta($event->ID, self::$end_meta, true);
+		$rec_end_str = get_post_meta($event->ID, self::$rec_end_meta, true);
+		$rec_frequency_str = get_post_meta($event->ID, self::$rec_frequency_meta, true);
 
 		$start = new DateTime($start_str ? $start_str : current_time('mysql'));
 		$end = new DateTime($end_str ? $end_str : current_time('mysql'));
+
+		$rec_end = '';
+		if ($rec_end_str) {
+			$rec_end = new DateTime($rec_end_str);
+			$rec_end = $rec_end->format('m/d/Y');
+		}
 
 		$location         = get_post_meta($event->ID, self::$location_meta, true);
 		$street_address   = get_post_meta($event->ID, self::$address_meta, true);
@@ -385,6 +406,23 @@ final class TZ_Event {
 					 value="<?php echo self::$all_day; ?>" <?php echo $all_day ? 'checked="checked" ' : ''; ?>/>
 					All Day Event
 				</label>
+			</p>
+			<h4>Recurrence</h4>
+			<p>
+				<label>Frequency</label><br/>
+				<select name="<?php echo self::$rec_frequency; ?>" id="<?php echo self::$rec_frequency; ?>">
+					<?php foreach (self::$rec_frequencies as $val=>$disp) {
+						$sel = '';
+						if ($val==$rec_frequency_str) $sel = ' selected';
+					?>
+					<option value="<?= $val ?>"<?= $sel ?>><?= $disp ?></option><?php
+					}?>
+				</select>
+			</p>
+			<p id="freqp">
+				<label for="<?php echo self::$rec_end_date; ?>">End Date (on or before)</label><br/>
+				<input type="text" name="<?php echo self::$rec_end_date; ?>" id="<?php echo self::$rec_end_date; ?>"
+				 class="tz-input tz-date" value="<?php esc_attr_e($rec_end) ?>" />
 			</p>
 			<h4>Location / Admission</h4>
 			<p>
@@ -421,6 +459,9 @@ final class TZ_Event {
 		$start   = new DateTime(sprintf('%s %s', $_POST[self::$start_date], $_POST[self::$start_time]));
 		$end     = new DateTime(sprintf('%s %s', $_POST[self::$end_date], $_POST[self::$end_time]));
 
+		$rec_frequency  = isset($_POST[self::$rec_frequency]) ? $_POST[self::$rec_frequency] : '';
+		$rec_end = new DateTime(sprintf('%s', $_POST[self::$rec_end_date]));
+
 		$location       = isset($_POST[self::$location_meta]) ? $_POST[self::$location_meta] : '';
 		$street_address = isset($_POST[self::$address_meta]) ? $_POST[self::$address_meta] : '';
 		$city           = isset($_POST[self::$city_meta]) ? $_POST[self::$city_meta] : '';
@@ -438,6 +479,9 @@ final class TZ_Event {
 		update_post_meta($post_id, self::$all_day_meta, $all_day);
 		update_post_meta($post_id, self::$start_meta, $start->format(self::$mysql_format));
 		update_post_meta($post_id, self::$end_meta, $end->format(self::$mysql_format));
+
+		update_post_meta($post_id, self::$rec_frequency_meta, $rec_frequency);
+		update_post_meta($post_id, self::$rec_end_meta, $rec_end->format(self::$mysql_format));
 
 		update_post_meta($post_id, self::$location_meta, $location);
 		update_post_meta($post_id, self::$address_meta, $street_address);
