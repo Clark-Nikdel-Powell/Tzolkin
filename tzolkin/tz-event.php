@@ -49,7 +49,7 @@ final class TZ_Event {
 	  'show_in_menu'       => true,
 	  'query_var'          => true,
 	  'capability_type'    => 'post',
-	  'has_archive'        => true,
+	  'has_archive'        => false,
 	  'hierarchical'       => false,
 	  'menu_position'      => 23,
 	  'rewrite'            => array('with_front' => false),
@@ -343,7 +343,6 @@ final class TZ_Event {
 		if (!self::is_tzolkin()) return;
 		wp_enqueue_style('tz-jquery-ui', TZ_URL.'resources/jquery-ui-smoothness.css');
 		wp_enqueue_style('tz-styles', TZ_URL.'resources/jquery-ui-timepicker.css');
-		echo TZ_URL;
 	}
 
 	public static function add_meta_box() {
@@ -698,13 +697,13 @@ final class TZ_Event {
 			'type'    => 'DATETIME'
 		);
 
+
 		$query->set('meta_query', $meta_query);
 	}
 
 	public static function exclude_old_events(&$query) {
 		$meta_query = $query->meta_query;
 		if (!is_array($meta_query)) $meta_query = array();
-
 
 		$now = new DateTime();
 		$meta_query[] = array(
