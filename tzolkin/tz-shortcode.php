@@ -7,7 +7,6 @@
 function get_current_month_events($user_args) {
 
 	$currentMonth = $user_args['current_month'];
-
 	$currentMonthFormatted = date('Y-m-d H:i:s', strtotime($currentMonth . " this month"));
 	$nextMonth             = date('Y-m-d H:i:s', strtotime($currentMonth . " next month"));
 
@@ -41,8 +40,84 @@ function get_current_month_events($user_args) {
 		,	'terms'    => $user_args['category_id']
 		);
 	}
-
 	$events = get_posts($args);
+	foreach ($events as $id=>$event) {
+		$get = array('tz_start','tz_end','tz_all_day');
+		foreach ($get as $key) {
+			$events[$id]->$key = get_post_meta($event->ID, $key, true);
+		}
+	}
+
+
+	$rArgs = array(
+		'post_type' => 'tz_event'
+		,'suppress_filters' => true
+		,'meta_query'       => array(
+			'relation' => 'AND'
+			,array(
+				'key' => 'tz_rec_frequency'
+				,'value' => ''
+				,'compare' => '!='
+
+			)
+			,array(
+				'key' => 'tz_rec_frequency'
+				,'compare' => 'EXISTS'
+
+			)
+			,array(
+				'key' => 'tz_rec_end'
+				,'value' => $nextMonth
+				,'compare' => '<='
+				,'type'    => 'DATETIME'
+
+			)
+		)
+	);
+	$reocurringEvents = get_posts($rArgs);
+
+	$lastDayOfMonth = date('d',strtotime($nextMonth)-1);
+	$currentYear = date('Y',strtotime($nextMonth)-1);
+	$currentMonth = date('m',strtotime($nextMonth)-1);
+
+	foreach ($reocurringEvents as $recEvent) {
+
+		$recType		= get_post_meta($recEvent->ID, 'tz_rec_frequency', true);
+		$recEnd 		= get_post_meta($recEvent->ID, 'tz_rec_end', true);
+		$eventStart 	= get_post_meta($recEvent->ID, 'tz_start', true);
+		$eventEnd 		= get_post_meta($recEvent->ID, 'tz_end', true);
+		$eventLength 	= floor((strtotime($eventEnd) - strtotime($eventStart))/(60*60*24));
+		$allDay 		= get_post_meta($recEvent->ID, 'tz_all_day', true);
+
+		$startDayName = date('l', strtotime($eventStart));
+
+		if ($recType==='w') {
+
+			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
+
+				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
+				$currentDayName = date('l', $thisTimeStamp);
+		
+
+				if (   $thisTimeStamp > strtotime($eventStart) 
+					&& $thisTimeStamp < strtotime($recEnd) 
+					&& $currentDayName == $startDayName
+					) {
+
+					$newStart 	= date('Y-m-d H:i:s', $thisTimeStamp);
+					$newEnd 	= date('Y-m-d H:i:s', strtotime('+'.$eventLength.' day', $thisTimeStamp));
+
+					$eventCopy 				= clone $recEvent;
+					$eventCopy->tz_start 	= $newStart;
+					$eventCopy->tz_end 		= $newEnd;
+					$eventCopy->tz_all_day 	= $allDay;
+
+					array_push($events, $eventCopy);
+				}
+			}
+		}
+	}
+
 	return $events;
 }
 
@@ -202,9 +277,9 @@ $colors = array('blue', 'red', 'green', 'yellow');
 // Loop through events and add the data to the $date_cells array
 foreach ($events as $event) {
 	$e_id      = $event->ID;
-	$e_start   = get_post_meta( $e_id, 'tz_start', true );
-	$e_end     = get_post_meta( $e_id, 'tz_end', true );
-	$e_allday  = get_post_meta( $e_id, 'tz_all_day', true );
+	$e_start   = $event->tz_start;
+	$e_end     = $event->tz_end;
+	$e_allday  = $event->tz_all_day;
 
 	$start_key = date('j', strtotime($e_start));
 	$end_key   = date('j', strtotime($e_end));
