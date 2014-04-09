@@ -4,12 +4,10 @@
   font-size: 1.5em;
   font-weight: bold;
   text-align: center; }
-.tzolkin-calendar .container.tz-categories {
+.tzolkin-calendar .tzolkin-categories .container {
   width: auto;
-  margin: 0;
-  display: inline-block;
   position: relative; }
-  .tzolkin-calendar .container.tz-categories:before {
+  .tzolkin-calendar .tzolkin-categories .container:before {
     content: "";
     position: absolute;
     right: .5em;
@@ -19,17 +17,35 @@
     border-right: 4px solid transparent;
     border-top: 5px solid #BBB;
     pointer-events: none; }
-.tzolkin-calendar select.tz-categories {
+.tzolkin-calendar .tzolkin-categories .container, .tzolkin-calendar .tzolkin-categories .clear {
+  display: inline-block;
+  vertical-align: middle; }
+.tzolkin-calendar .tzolkin-categories select, .tzolkin-calendar .tzolkin-categories .clear {
+  border: 1px solid #DDD;
+  color: #555;
+  font-size: .75em;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px; }
+.tzolkin-calendar .tzolkin-categories select {
   height: auto;
   padding: .25em 1.75em .25em .5em;
   appearance: none;
   -webkit-appearance: none;
-  border: 1px solid #DDD;
-  font-size: .75em;
-  color: #555;
   display: block;
   float: left;
   overflow: hidden; }
+.tzolkin-calendar .tzolkin-categories .clear {
+  width: auto;
+  height: auto;
+  margin-left: .5em;
+  padding: .25em .5em;
+  background-color: transparent;
+  cursor: pointer; }
+  .tzolkin-calendar .tzolkin-categories .clear:hover {
+    background-color: #fa573c;
+    color: #fff;
+    border-color: #fff; }
 .tzolkin-calendar form {
   padding: 0; }
 .tzolkin-calendar .format {
@@ -87,7 +103,7 @@
     -webkit-appearance: none;
     height: auto;
     background-color: transparent;
-    color: #0e325d;
+    color: #0E325D;
     cursor: pointer; }
   .tzolkin-calendar .month-navigation .next-month {
     float: right; }

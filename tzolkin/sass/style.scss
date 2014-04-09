@@ -1,3 +1,10 @@
+// Colors
+$color: #9FC6E7;
+$blue: #4986E7;
+$red: #FA573C;
+$green: #7BD148;
+$yellow: #FBE983;
+
 .tzolkin-calendar {
 	.month.current, .format, .month-navigation {width: 98%;}
 	.month.current {
@@ -6,35 +13,58 @@
 		text-align: center;
 	}
 	// Category Navigation
-	.container.tz-categories {
-		width: auto;
-		margin: 0;
-		display: inline-block;
-		position: relative;
+	.tzolkin-categories {
+		.container {
+			width: auto;
+			position: relative;
 
-		&:before {
-			content: "";
-			position: absolute;
-			right: .5em;
-			top: 50%;
-			margin-top: -2px;
-			border-left: 4px solid transparent;
-			border-right: 4px solid transparent;
-			border-top: 5px solid #BBB;
-			pointer-events: none;
+			&:before {
+				content: "";
+				position: absolute;
+				right: .5em;
+				top: 50%;
+				margin-top: -2px;
+				border-left: 4px solid transparent;
+				border-right: 4px solid transparent;
+				border-top: 5px solid #BBB;
+				pointer-events: none;
+			}
 		}
-	}
-	select.tz-categories {
-		height: auto;
-		padding: .25em 1.75em .25em .5em;
-		appearance: none;
-		-webkit-appearance: none;
-		border: 1px solid #DDD;
-		font-size: .75em;
-		color: #555;
-		display: block;
-		float: left;
-		overflow: hidden;
+		.container, .clear {
+			display: inline-block;
+			vertical-align: middle;
+		}
+		select, .clear {
+			border: 1px solid #DDD;
+			color: #555;
+			font-size: .75em;
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+			border-radius: 5px;
+		}
+		select {
+			height: auto;
+			padding: .25em 1.75em .25em .5em;
+			appearance: none;
+			-webkit-appearance: none;
+			display: block;
+			float: left;
+			overflow: hidden;
+		}
+		.clear {
+			width: auto;
+			height: auto;
+			margin-left: .5em;
+			padding: .25em .5em;
+			background-color: transparent;
+			cursor: pointer;
+
+			&:hover {
+				background-color: $red;
+				color: #fff;
+				border-color: #fff;
+			}
+		}
 	}
 
 	// Format Navigation
@@ -120,12 +150,10 @@
 		font-size: .875em;
 
 		button {
-			$blue: #0E325D;
-
 			-webkit-appearance: none;
 			height: auto;
 			background-color: transparent;
-			color: $blue;
+			color: #0E325D;
 			cursor: pointer;
 		}
 		.next-month {float: right;}
@@ -248,11 +276,6 @@
 
 	// Shape Variables
 	$height: 20px;
-	$color: #9FC6E7;
-	$blue: #4986E7;
-	$red: #FA573C;
-	$green: #7BD148;
-	$yellow: #FBE983;
 
 	// Hide times on grid.
 	.time {display: none;}

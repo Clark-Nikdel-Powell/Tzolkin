@@ -365,7 +365,7 @@ if (!function_exists('tz_get_categories')) {
 
 if (!function_exists('tz_dropdown_categories')) {
 
-	function tz_dropdown_categories() {
-		return TZ_Event::dropdown_categories();
+	function tz_dropdown_categories($args) {
+		return TZ_Event::dropdown_categories($args);
 	}
 }

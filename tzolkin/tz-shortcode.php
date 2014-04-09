@@ -1,8 +1,8 @@
 <?php
 
 ////////////////////////////////////////////////////////////////////////////////
-//  Shortcode Function  ////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+//  Get Current Month Events  /////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
 function get_current_month_events($user_args) {
 
@@ -70,21 +70,31 @@ if ( isset($_POST['format']) ) {
 	$format = 'grid';
 }
 
+// Use the category input unless the clear button was clicked.
+if ( isset($_POST['tz_category']) && !isset($_POST['clear_category']) ) {
+	$term_id = $_POST['tz_category'];
+}
+
 ///////////////////////////////////////////////////
-// Grid Markup Setup  ////////////////////////////
+//  Markup Setup  ////////////////////////////////
 /////////////////////////////////////////////////
 
 echo '<div class="tzolkin-calendar">';
 
+/////////////////////////////////////////
+//  Header Area  ///////////////////////
+///////////////////////////////////////
+
 // Month Header
-$lastMonth = date('F Y', strtotime($currentMonth . " last month"));
-$nextMonth = date('F Y', strtotime($currentMonth . " next month"));
 echo '<header class="month current">'. $currentMonth .'</header>';
 
 echo '<form method="post" action="">';
 
 // Categories
-echo tz_dropdown_categories();
+$c_args = array(
+	'selected' => isset($term_id) ? $term_id : 0
+);
+echo tz_dropdown_categories($c_args);
 
 // Format
 if ( $format == 'grid' ) {
@@ -102,6 +112,8 @@ if ( $format == 'grid' ) {
 }
 
 // Month Navigation
+$lastMonth = date('F Y', strtotime($currentMonth . " last month"));
+$nextMonth = date('F Y', strtotime($currentMonth . " next month"));
 echo
 	'<div class="month-navigation">
 		<button name="month" value="'. $lastMonth .'" type="submit" class="prev-month">&larr; '. $lastMonth .'</button>
@@ -110,10 +122,14 @@ echo
 
 echo '</form>';
 
+////////////////////////////////////////////////////////////////////////////////
+// 1. Set up Date Grid  ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
 // Start up the grid, or the list.
 echo '<div class="tzolkin-'. $format .'">';
 
-// Date Headers
+// Weekday Headers
 $days = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 echo '<header class="tzolkin-row days">';
 foreach($days as $day) {
@@ -122,8 +138,6 @@ foreach($days as $day) {
 	echo '<header class="cell '. $day .'">'. ucfirst($day_w_span) .'</header>';
 }
 echo '</header>';
-
-// Date Grid
 
 // Get the number of days in this month.
 $dates = date("t", strtotime($currentMonth));
@@ -144,11 +158,8 @@ if ($startkey != 0) {
 	echo '<div class="cell offset offset-'. $startkey .'">&nbsp;</div>';
 }
 
-// Past, Present & Future
+// Set the present as today's date number.
 $present = date('j');
-
-// Figure out how many we've got on the last row, and... add a class for border purposes. Meh.
-// $leftovers = ($dates + $startkey) % 7;
 
 // Create the date cells, store in an array
 $date_cells = array();
@@ -163,16 +174,6 @@ for ($i=1; $i <= $dates; $i++) {
 		elseif ($i > $present) {$p_p_or_f = 'future';}
 	}
 
-	// Add a class to the last 7 cells for border purposes.
-	// $last_7 = '';
-	// if ($dates - $i < 7)
-	// 	$last_7 = 'last-7';
-
-	// Add a class to the last row for border purposes.
-	// $last_row = '';
-	// if ($dates - $i < $leftovers)
-	// 	$last_row = 'last-row';
-
 	// Get weekday based off current month and current $i value
 	$currentDate = $i.' '.$currentMonth;
 	$currentDay  = date('D', strtotime($currentDate) );
@@ -183,18 +184,22 @@ for ($i=1; $i <= $dates; $i++) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Handle Event Data  //////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
+// 2. Add Event Data  /////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 
-// Add data to the date cells by LOOPING THROUGH EVENTS.
+// Set up $args, get the events
 $args = array('current_month' => $currentMonth);
 
-if ( isset($_POST['tz_category']) )
-	$args['category_id'] = $_POST['tz_category'];
+// Get events by category if it's set. (line 73)
+if ( isset($term_id) )
+	$args['category_id'] = $term_id;
 
 $events = get_current_month_events($args);
+
+// Remove this soon
 $colors = array('blue', 'red', 'green', 'yellow');
 
+// Loop through events and add the data to the $date_cells array
 foreach ($events as $event) {
 	$e_id      = $event->ID;
 	$e_start   = get_post_meta( $e_id, 'tz_start', true );
@@ -204,12 +209,15 @@ foreach ($events as $event) {
 	$start_key = date('j', strtotime($e_start));
 	$end_key   = date('j', strtotime($e_end));
 
-	// This will happen if it goes to the next month.
+	// If the event goes from one month to the next, then set the end key to the
+	// last day of the month.
 	if ($end_key < $start_key) {
 		$end_key = date('t');
 	}
 
-	// All-Day or Multi-Day Events
+	/////////////////////////////////////////
+	//  2a. All/Multi-Day Events  //////////
+	///////////////////////////////////////
 	if ($e_allday == 1) {
 		$color_key = array_rand($colors);
 
@@ -236,7 +244,7 @@ foreach ($events as $event) {
 			if ($math != 0 && $math % 7 == '0') {
 				$l_key = 0;
 			}
-			// Do this on the first day, or if we've gone throught the week.
+			// Do this on the first day, or if we've gone through the week.
 			if ($i == $start_key || ($math != 0 && $math % 7 == '0') ) {
 				$show_title = 'show-title';
 			}
@@ -255,11 +263,10 @@ foreach ($events as $event) {
 			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
 			$date_cells[$i]['rectangles'][$l_key] = '<div class="event day-'. $daynumber .' '. $show_title .'"><div class="time">All Day</div><div class="text rectangle '. $colors[$color_key] .' level-'. $l_key .' duration-'. $duration .'">'. $title . $description .'</div></div>';
 		}
-
-		// Don't reuse the same color.
-		//unset($colors[$color_key]);
 	}
-	// Single Day Events
+	/////////////////////////////////////////
+	//  2b. Single-Day Events  /////////////
+	///////////////////////////////////////
 	else {
 		// Format the start/end times
 		$time = tz_get_event_dates($e_id, 'g:i a');
@@ -275,12 +282,15 @@ foreach ($events as $event) {
 		$date_cells[$start_key]['circles'][] = '<span class="circle"></span>';
 		$date_cells[$start_key]['titles'][] = '<div class="event"><div class="time">'. $e_time .'</div><div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>'. $description .'</div></div>';
 
-		// See line 192.
+		// See line 248.
 		$date_cells[$start_key]['event_starts'] = $date_cells[$start_key]['event_starts'] + 1;
 	}
 }
 
-// Output the completed date cells.
+////////////////////////////////////////////////////////////////////////////////
+// 3. Output Completed Cells  /////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
 foreach ($date_cells as $key => $cell) {
 	// Add in any circles or titles
 	if ( isset($cell['circles']) ) {
@@ -333,6 +343,10 @@ foreach ($date_cells as $key => $cell) {
 	if ( ($key + $startkey) % 7 == 0 && isset($date_cells[$key+1]) ) {echo '</div><div class="tzolkin-row row-'. ( ($startkey + $key) / 7 ) .'">';}
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Finishing Touches  /////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
 // Add an end-offset for cosmetic purposes.
 $end_offset = ( 7-(($startkey + $dates) % 7) );
 if ($end_offset != 0 ) {
@@ -350,11 +364,11 @@ echo '</div>'; // tzolkin-calendar
 
 add_shortcode( 'tz_calendar', 'tz_calendar_shortcode' );
 
-
-function calendar_styles() {
+function tz_scripts_and_styles() {
 	// GOLIVE: Change this URL
-	wp_enqueue_style( 'tzolkin_grid_styles', '/wp-content/plugins/tzolkin/css/style.css' );
-	wp_enqueue_script( 'tzolkin_grid_scripts', '/wp-content/plugins/tzolkin/js/min/shortcode-ck.js' );
+	wp_enqueue_style( 'tzolkin_grid_styles', '/wp-content/plugins/tzolkin/css/style.css', false );
+	wp_enqueue_script( 'tzolkin_grid_scripts', '/wp-content/plugins/tzolkin/js/min/shortcode-ck.js', array('jquery'), false, true );
 }
 
-add_action('wp_head', 'calendar_styles');
+add_action('wp_enqueue_scripts', 'tz_scripts_and_styles');
+

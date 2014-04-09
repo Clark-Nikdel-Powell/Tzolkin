@@ -287,25 +287,32 @@ final class TZ_Event {
 		return get_terms('tz_category');
 	}
 
-	public static function dropdown_categories($args=0) {
+	public static function dropdown_categories($args) {
 
 		$defaults = array(
 			'hide_if_empty'    => true
-		,	'class'            => 'tz-categories'
+		,	'class'            => 'tzolkin-categories'
 		,	'show_option_none' => 'Select a Category'
 		);
 
 		// Parse incoming $args into an array and merge it with $defaults
 		$args = wp_parse_args( $args, $defaults );
 
-		// Keep taxonomy as a constant.
+		// Keep some constants.
 		$args['taxonomy'] = 'tz_category';
 		$args['echo']     = 0;
 		$args['name']     = 'tz_category';
 
-		// Paragraph added because :before element doesn't work on <select> tags
-		$output = '<p class="container '. $args['class'] .'">' . wp_dropdown_categories($args) . '</p>';
-		$output = preg_replace("#<select([^>]*)>#", "<select$1 onchange='return this.form.submit()'>", $output);
+		// Div added because :before element doesn't work on <select> tags
+		$output  = '<div class="dropdown tzolkin-categories"><div class="container">' . wp_dropdown_categories($args) . '</div>';
+		$output  = preg_replace("#<select([^>]*)>#", "<select$1 onchange='return this.form.submit()'>", $output);
+
+		// Add a clear button if there's a category selected
+		if ( isset($args['selected']) && $args['selected'] != 0 && $args['selected'] != -1 ) {
+			$output .= '<button class="clear" type="submit" name="clear_category">Clear</button>';
+		}
+		$output .= '</div>';
+
 		return $output;
 	}
 
