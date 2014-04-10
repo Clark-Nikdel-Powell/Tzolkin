@@ -97,10 +97,10 @@ function get_current_month_events($user_args) {
 
 				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
 				$currentDayName = date('l', $thisTimeStamp);
-		
 
-				if (   $thisTimeStamp > strtotime($eventStart) 
-					&& $thisTimeStamp < strtotime($recEnd) 
+
+				if (   $thisTimeStamp > strtotime($eventStart)
+					&& $thisTimeStamp < strtotime($recEnd)
 					&& $currentDayName == $startDayName
 					) {
 
@@ -271,9 +271,6 @@ if ( isset($term_id) )
 
 $events = get_current_month_events($args);
 
-// Remove this soon
-$colors = array('blue', 'red', 'green', 'yellow');
-
 // Loop through events and add the data to the $date_cells array
 foreach ($events as $event) {
 	$e_id      = $event->ID;
@@ -283,6 +280,33 @@ foreach ($events as $event) {
 
 	$start_key = date('j', strtotime($e_start));
 	$end_key   = date('j', strtotime($e_end));
+
+	// Set up category classes.
+	$cats = get_the_terms($e_id, 'tz_category');
+
+	if ( !empty($cats) ) {
+		$cats = array_values($cats);
+		$cat_classes = '';
+
+		foreach ($cats as $cat) {
+			$cat_classes .= ' ' . $cat->slug;
+		}
+
+		// Set color class
+		$term_meta = get_option( 'taxonomy_term_'.$cats[0]->term_id );
+
+		if ( isset($term_meta['color']) ) {
+			$color = $term_meta['color'];
+		} else {
+			// If there's a category, but the category has no color, make it gray.
+			$color = 'gray';
+		}
+
+	} else {
+		// If there is no category, make it gray.
+		$color = 'gray';
+		$cat_classes = ' no-category';
+	}
 
 	// If the event goes from one month to the next, then set the end key to the
 	// last day of the month.
@@ -294,7 +318,6 @@ foreach ($events as $event) {
 	//  2a. All/Multi-Day Events  //////////
 	///////////////////////////////////////
 	if ($e_allday == 1) {
-		$color_key = array_rand($colors);
 
 		// Set the level based on what the order is at the beginning of the event.
 		if ( isset($date_cells[$start_key]['rectangles'][0]) ) {
@@ -336,7 +359,7 @@ foreach ($events as $event) {
 
 			$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
 			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
-			$date_cells[$i]['rectangles'][$l_key] = '<div class="event day-'. $daynumber .' '. $show_title .'"><div class="time">All Day</div><div class="text rectangle '. $colors[$color_key] .' level-'. $l_key .' duration-'. $duration .'">'. $title . $description .'</div></div>';
+			$date_cells[$i]['rectangles'][$l_key] = '<div class="event day-'. $daynumber .' '. $show_title .'"><div class="time">All Day</div><div class="text rectangle '. $color .' level-'. $l_key .' duration-'. $duration . $cat_classes .'">'. $title . $description .'</div></div>';
 		}
 	}
 	/////////////////////////////////////////

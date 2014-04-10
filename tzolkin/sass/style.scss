@@ -1,9 +1,12 @@
 // Colors
-$color: #9FC6E7;
-$blue: #4986E7;
-$red: #FA573C;
-$green: #7BD148;
-$yellow: #FBE983;
+$circle: #9FC6E7;
+$gray: #CBD0D3; //DADEE0
+$blue: #3498db; //70B6E5
+$red: #e74c3c; //EE8176
+$yellow: #f1c40f; //F5D556
+$green: #2ecc71; //6CDB9B
+$orange: #e67e22; //EDA463
+$purple: #9b59b6; //B88ACB
 
 .tzolkin-calendar {
 	.month.current, .format, .month-navigation {width: 98%;}
@@ -290,7 +293,7 @@ $yellow: #FBE983;
 			height: .5em;
 			margin: .25em .125em 0;
 			display: inline-block;
-			background-color: $color;
+			background-color: $circle;
 			border-radius: 100%;
 		}
 	}
@@ -301,14 +304,16 @@ $yellow: #FBE983;
 		display: inline-block;
 
 		.rectangle {
+			$lighten: 35%;
+
 			width: 100%;
 			height: $height;
+			margin-top: 1px;
 			display: block;
 			position: relative;
 
 			&:before, &:after {
 				height: $height;
-				background-color: $color;
 				content: " ";
 				display: block;
 				position: absolute;
@@ -322,7 +327,7 @@ $yellow: #FBE983;
 				&:last-child, &:first-child {
 					.rectangles .rectangle {
 
-						// Using both before & after because after is already taken. #120
+						// Using both before & after because after is already taken.
 						&:before, &:after {
 							border-style: solid;
 							border-top: $height/2 solid transparent;
@@ -337,8 +342,8 @@ $yellow: #FBE983;
 						right: ceil(-$height/3);
 						border-left-width: floor($height/3);
 					}
-					@each $class, $color in (blue: $blue, red: $red, green: $green, yellow: $yellow) {
-						&.#{$class}:after {border-left-color: $color;}
+					@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+						&.#{$class}:after {border-left-color: lighten($color, $lighten);}
 					}
 				}
 				&:first-child .rectangles .rectangle {
@@ -348,18 +353,18 @@ $yellow: #FBE983;
 						left: ceil(-$height/3);
 						border-right-width: floor($height/3);
 					}
-					@each $class, $color in (blue: $blue, red: $red, green: $green, yellow: $yellow) {
-						&.#{$class}:before {border-right-color: $color;}
+					@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+						&.#{$class}:before {border-right-color: lighten($color, $lighten);}
 					}
 				}
 			}
 			// Why not try some løveli colors?
-			@each $class, $color in (blue: $blue, red: $red, green: $green, yellow: $yellow) {
+			@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
 				&.#{$class} {
-					background-color: $color;
+					background-color: lighten($color, $lighten);
 
 					&:after {
-						background-color: $color;
+						background-color: lighten($color, $lighten);
 					}
 				}
 			}
@@ -382,10 +387,10 @@ $yellow: #FBE983;
 			}
 		}
 		// Levels
-		.event:first-child .level-1 {margin-top: $height;}
-		.event:first-child .level-2 {margin-top: $height*2;}
-		.event:first-child .level-3 {margin-top: $height*3;}
-		.event:first-child .level-4 {margin-top: $height*4;}
+		.event:first-child .rectangle {margin-top: 0;}
+		@for $i from 1 through 20 {
+			.event:first-child .level-#{$i} {margin-top: $height * $i + $i;}
+		}
 
 		// Titles
 		.title {display: none;}

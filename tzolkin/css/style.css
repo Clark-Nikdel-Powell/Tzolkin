@@ -43,7 +43,7 @@
   background-color: transparent;
   cursor: pointer; }
   .tzolkin-calendar .tzolkin-categories .clear:hover {
-    background-color: #fa573c;
+    background-color: #e74c3c;
     color: #fff;
     border-color: #fff; }
 .tzolkin-calendar form {
@@ -206,11 +206,11 @@
     .tzolkin-grid .rectangles .rectangle {
       width: 100%;
       height: 20px;
+      margin-top: 1px;
       display: block;
       position: relative; }
       .tzolkin-grid .rectangles .rectangle:before, .tzolkin-grid .rectangles .rectangle:after {
         height: 20px;
-        background-color: #9fc6e7;
         content: " ";
         display: block;
         position: absolute;
@@ -226,42 +226,66 @@
         background-color: transparent;
         right: -6px;
         border-left-width: 6px; }
+      .tzolkin-row .cell:last-child .rectangles .rectangle.gray:after {
+        border-left-color: white; }
       .tzolkin-row .cell:last-child .rectangles .rectangle.blue:after {
-        border-left-color: #4986e7; }
+        border-left-color: #cce5f6; }
       .tzolkin-row .cell:last-child .rectangles .rectangle.red:after {
-        border-left-color: #fa573c; }
+        border-left-color: #fbdedb; }
       .tzolkin-row .cell:last-child .rectangles .rectangle.green:after {
-        border-left-color: #7bd148; }
+        border-left-color: #bcf0d2; }
       .tzolkin-row .cell:last-child .rectangles .rectangle.yellow:after {
-        border-left-color: #fbe983; }
+        border-left-color: #fbedb8; }
+      .tzolkin-row .cell:last-child .rectangles .rectangle.orange:after {
+        border-left-color: #f8dcc2; }
+      .tzolkin-row .cell:last-child .rectangles .rectangle.purple:after {
+        border-left-color: #e6d5ed; }
       .tzolkin-row .cell:first-child .rectangles .rectangle:before {
         background-color: transparent;
         left: -6px;
         border-right-width: 6px; }
+      .tzolkin-row .cell:first-child .rectangles .rectangle.gray:before {
+        border-right-color: white; }
       .tzolkin-row .cell:first-child .rectangles .rectangle.blue:before {
-        border-right-color: #4986e7; }
+        border-right-color: #cce5f6; }
       .tzolkin-row .cell:first-child .rectangles .rectangle.red:before {
-        border-right-color: #fa573c; }
+        border-right-color: #fbdedb; }
       .tzolkin-row .cell:first-child .rectangles .rectangle.green:before {
-        border-right-color: #7bd148; }
+        border-right-color: #bcf0d2; }
       .tzolkin-row .cell:first-child .rectangles .rectangle.yellow:before {
-        border-right-color: #fbe983; }
+        border-right-color: #fbedb8; }
+      .tzolkin-row .cell:first-child .rectangles .rectangle.orange:before {
+        border-right-color: #f8dcc2; }
+      .tzolkin-row .cell:first-child .rectangles .rectangle.purple:before {
+        border-right-color: #e6d5ed; }
+      .tzolkin-grid .rectangles .rectangle.gray {
+        background-color: white; }
+        .tzolkin-grid .rectangles .rectangle.gray:after {
+          background-color: white; }
       .tzolkin-grid .rectangles .rectangle.blue {
-        background-color: #4986e7; }
+        background-color: #cce5f6; }
         .tzolkin-grid .rectangles .rectangle.blue:after {
-          background-color: #4986e7; }
+          background-color: #cce5f6; }
       .tzolkin-grid .rectangles .rectangle.red {
-        background-color: #fa573c; }
+        background-color: #fbdedb; }
         .tzolkin-grid .rectangles .rectangle.red:after {
-          background-color: #fa573c; }
+          background-color: #fbdedb; }
       .tzolkin-grid .rectangles .rectangle.green {
-        background-color: #7bd148; }
+        background-color: #bcf0d2; }
         .tzolkin-grid .rectangles .rectangle.green:after {
-          background-color: #7bd148; }
+          background-color: #bcf0d2; }
       .tzolkin-grid .rectangles .rectangle.yellow {
-        background-color: #fbe983; }
+        background-color: #fbedb8; }
         .tzolkin-grid .rectangles .rectangle.yellow:after {
-          background-color: #fbe983; }
+          background-color: #fbedb8; }
+      .tzolkin-grid .rectangles .rectangle.orange {
+        background-color: #f8dcc2; }
+        .tzolkin-grid .rectangles .rectangle.orange:after {
+          background-color: #f8dcc2; }
+      .tzolkin-grid .rectangles .rectangle.purple {
+        background-color: #e6d5ed; }
+        .tzolkin-grid .rectangles .rectangle.purple:after {
+          background-color: #e6d5ed; }
       .tzolkin-grid .rectangles .rectangle .title {
         padding-top: .375em;
         position: relative;
@@ -275,14 +299,48 @@
         padding-right: .75em;
         overflow: hidden;
         text-overflow: ellipsis; }
+    .tzolkin-grid .rectangles .event:first-child .rectangle {
+      margin-top: 0; }
     .tzolkin-grid .rectangles .event:first-child .level-1 {
-      margin-top: 20px; }
+      margin-top: 21px; }
     .tzolkin-grid .rectangles .event:first-child .level-2 {
-      margin-top: 40px; }
+      margin-top: 42px; }
     .tzolkin-grid .rectangles .event:first-child .level-3 {
-      margin-top: 60px; }
+      margin-top: 63px; }
     .tzolkin-grid .rectangles .event:first-child .level-4 {
-      margin-top: 80px; }
+      margin-top: 84px; }
+    .tzolkin-grid .rectangles .event:first-child .level-5 {
+      margin-top: 105px; }
+    .tzolkin-grid .rectangles .event:first-child .level-6 {
+      margin-top: 126px; }
+    .tzolkin-grid .rectangles .event:first-child .level-7 {
+      margin-top: 147px; }
+    .tzolkin-grid .rectangles .event:first-child .level-8 {
+      margin-top: 168px; }
+    .tzolkin-grid .rectangles .event:first-child .level-9 {
+      margin-top: 189px; }
+    .tzolkin-grid .rectangles .event:first-child .level-10 {
+      margin-top: 210px; }
+    .tzolkin-grid .rectangles .event:first-child .level-11 {
+      margin-top: 231px; }
+    .tzolkin-grid .rectangles .event:first-child .level-12 {
+      margin-top: 252px; }
+    .tzolkin-grid .rectangles .event:first-child .level-13 {
+      margin-top: 273px; }
+    .tzolkin-grid .rectangles .event:first-child .level-14 {
+      margin-top: 294px; }
+    .tzolkin-grid .rectangles .event:first-child .level-15 {
+      margin-top: 315px; }
+    .tzolkin-grid .rectangles .event:first-child .level-16 {
+      margin-top: 336px; }
+    .tzolkin-grid .rectangles .event:first-child .level-17 {
+      margin-top: 357px; }
+    .tzolkin-grid .rectangles .event:first-child .level-18 {
+      margin-top: 378px; }
+    .tzolkin-grid .rectangles .event:first-child .level-19 {
+      margin-top: 399px; }
+    .tzolkin-grid .rectangles .event:first-child .level-20 {
+      margin-top: 420px; }
     .tzolkin-grid .rectangles .title {
       display: none; }
     .tzolkin-grid .rectangles .event.show-title .title {
