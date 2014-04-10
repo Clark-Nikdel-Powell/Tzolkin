@@ -286,6 +286,18 @@ foreach ($events as $event) {
 
 	$event->duration = $duration;
 }
+
+function subval_sort($a,$subkey) {
+	foreach($a as $k=>$v) {
+		$b[$k] = strtolower($v->$subkey);
+	}
+	arsort($b);
+	foreach($b as $key=>$val) {
+		$c[] = $a[$key];
+	}
+	return $c;
+}
+$events = subval_sort($events,'duration'); 
 print_r($events);
 
 // Loop through events and add the data to the $date_cells array
