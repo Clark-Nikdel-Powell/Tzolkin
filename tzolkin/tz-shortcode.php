@@ -265,11 +265,28 @@ for ($i=1; $i <= $dates; $i++) {
 // Set up $args, get the events
 $args = array('current_month' => $currentMonth);
 
-// Get events by category if it's set. (line 73)
+// Get events by category if it's set.
 if ( isset($term_id) )
 	$args['category_id'] = $term_id;
 
 $events = get_current_month_events($args);
+
+// Sort events by duration first.
+foreach ($events as $event) {
+	$e_start   = $event->tz_start;
+	$e_end     = $event->tz_end;
+	$start_key = date('j', strtotime($e_start));
+	$end_key   = date('j', strtotime($e_end));
+
+	if ($end_key < $start_key) {
+		$end_key = date('t');
+	}
+
+	$duration  = $end_key - $start_key + 1;
+
+	$event->duration = $duration;
+}
+print_r($events);
 
 // Loop through events and add the data to the $date_cells array
 foreach ($events as $event) {
@@ -338,13 +355,18 @@ foreach ($events as $event) {
 			$show_title = '';
 			$description = '';
 			$math = ($i - $start_key + $e_offset);
+			$duration  = $end_key - $start_key + 1;
+			$daynumber = $i - $start_key;
+
 			// if we've gone through the week and come around to the beginning..
 			if ($math != 0 && $math % 7 == '0') {
 				$l_key = 0;
 			}
 			// Do this on the first day, or if we've gone through the week.
 			if ($i == $start_key || ($math != 0 && $math % 7 == '0') ) {
-				$show_title = 'show-title';
+				$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
+			} else {
+				$title = '';
 			}
 			// Do this on the first day of the event.
 			if ($i == $start_key) {
@@ -354,12 +376,15 @@ foreach ($events as $event) {
 					$description = '<div class="description">'. $event->post_excerpt .'</div>';
 				}
 			}
-			$duration  = $end_key - $start_key + 1;
-			$daynumber = $i - $start_key;
+			// Do this on the last day.
+			if ( $i == $end_key ) {
+				$last_day = ' last-day';
+			} else {
+				$last_day = '';
+			}
 
-			$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
 			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
-			$date_cells[$i]['rectangles'][$l_key] = '<div class="event day-'. $daynumber .' '. $show_title .'"><div class="time">All Day</div><div class="text rectangle '. $color .' level-'. $l_key .' duration-'. $duration . $cat_classes .'">'. $title . $description .'</div></div>';
+			$date_cells[$i]['rectangles'][$l_key] = '<div class="event start-'. $e_offset .' day-'. $daynumber .' duration-'. $duration . $last_day .'"><div class="time">All Day</div><div class="text rectangle '. $color .' level-'. $l_key . $cat_classes .'">'. $title . $description .'</div></div>';
 		}
 	}
 	/////////////////////////////////////////

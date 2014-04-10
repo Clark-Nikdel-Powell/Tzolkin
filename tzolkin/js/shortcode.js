@@ -13,10 +13,10 @@ jQuery(function($) {
 					maxHeight = $(this).outerHeight();
 				}
 			});
-			$(".row-"+i).css("height", maxHeight);
+			$(".row-"+i+", .row-"+i+" .date-top").css("height", maxHeight);
 		}
 	}
-	matchRowHeights();
+	$(window).on('load', matchRowHeights());
 
 	////////////////////////////////////////////////////////////////////////////
 	//  Open the row  //////////////////////////////////////////////////////////

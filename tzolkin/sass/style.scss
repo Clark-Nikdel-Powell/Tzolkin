@@ -304,7 +304,7 @@ $purple: #9b59b6; //B88ACB
 		display: inline-block;
 
 		.rectangle {
-			$lighten: 35%;
+			$lighten: 30%;
 
 			width: 100%;
 			height: $height;
@@ -335,7 +335,7 @@ $purple: #9b59b6; //B88ACB
 						}
 					}
 				}
-				&:last-child .rectangles .rectangle {
+				&:last-child .rectangles .event:not(.last-day) .rectangle {
 
 					&:after {
 						background-color: transparent;
@@ -346,7 +346,7 @@ $purple: #9b59b6; //B88ACB
 						&.#{$class}:after {border-left-color: lighten($color, $lighten);}
 					}
 				}
-				&:first-child .rectangles .rectangle {
+				&:first-child .rectangles .event:not(.day-0) .rectangle {
 
 					&:before {
 						background-color: transparent;
@@ -370,20 +370,23 @@ $purple: #9b59b6; //B88ACB
 			}
 
 			.title {
-				padding-top: .375em;
 				position: relative;
 				left: .375em;
-				z-index: 2;
-				white-space: nowrap;
 				color: #1d1d1d;
+				line-height: $height;
+				white-space: nowrap;
+				z-index: 2;
 			}
-			&.duration-1 {
+		}
+		.duration-1 {
+			.rectangle {
+				overflow: hidden;
+				text-overflow: ellipsis;
+
 				&:before, &:after {display: none;}
-				.title {
-					padding-right: .75em;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
+			}
+			.title {
+				padding-right: .75em;
 			}
 		}
 		// Levels
@@ -391,10 +394,6 @@ $purple: #9b59b6; //B88ACB
 		@for $i from 1 through 20 {
 			.event:first-child .level-#{$i} {margin-top: $height * $i + $i;}
 		}
-
-		// Titles
-		.title {display: none;}
-		.event.show-title .title {display: block;}
 	}
 	.details {
 		position: relative;
