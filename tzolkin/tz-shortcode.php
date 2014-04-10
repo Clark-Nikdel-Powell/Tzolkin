@@ -297,7 +297,7 @@ function subval_sort($a,$subkey) {
 	}
 	return $c;
 }
-$events = subval_sort($events,'duration'); 
+$events = subval_sort($events,'duration');
 print_r($events);
 
 // Loop through events and add the data to the $date_cells array
