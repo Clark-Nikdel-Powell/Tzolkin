@@ -1,12 +1,12 @@
 // Colors
 $circle: #9FC6E7;
-$gray: #CBD0D3; //DADEE0
-$blue: #3498db; //70B6E5
-$red: #e74c3c; //EE8176
-$yellow: #f1c40f; //F5D556
-$green: #2ecc71; //6CDB9B
-$orange: #e67e22; //EDA463
-$purple: #9b59b6; //B88ACB
+$gray: #7F8C8D;
+$blue: #3498db;
+$red: #e74c3c;
+$yellow: #f1c40f;
+$green: #2ecc71;
+$orange: #e67e22;
+$purple: #9b59b6;
 
 .tzolkin-calendar {
 	.month.current, .format, .month-navigation {width: 98%;}
@@ -285,13 +285,16 @@ $purple: #9b59b6; //B88ACB
 
 	// Circles on the main calendar
 	.circles {
+		margin-top: .5em;
+		padding: 0 1.25em;
+		line-height: .5em;
 		text-align: center;
 		overflow: hidden;
 
 		.circle {
 			width: .5em;
 			height: .5em;
-			margin: .25em .125em 0;
+			margin: 0 .125em 0;
 			display: inline-block;
 			background-color: $circle;
 			border-radius: 100%;
@@ -380,21 +383,20 @@ $purple: #9b59b6; //B88ACB
 		}
 		.duration-1 {
 			.rectangle {
+				padding-right: .75em;
 				overflow: hidden;
 				text-overflow: ellipsis;
 
 				&:before, &:after {display: none;}
 			}
-			.title {
-				padding-right: .75em;
-			}
 		}
 		// Levels
-		.event:first-child .rectangle {margin-top: 0;}
-		@for $i from 1 through 20 {
-			.event:first-child .level-#{$i} {margin-top: $height * $i + $i;}
+		@for $i from 2 through 20 {
+			.level-#{$i}:first-child {margin-top: $height * ($i - 1) + $i;}
+			.level-#{$i - 1} + .level-#{$i + 1} {margin-top: $height * ($i - 1) + $i;}
 		}
 	}
+	.event.last-day .rectangle:after {display: none;}
 	.details {
 		position: relative;
 		width: 100%;

@@ -287,18 +287,14 @@ foreach ($events as $event) {
 	$event->duration = $duration;
 }
 
-function subval_sort($a,$subkey) {
-	foreach($a as $k=>$v) {
-		$b[$k] = strtolower($v->$subkey);
-	}
-	arsort($b);
-	foreach($b as $key=>$val) {
-		$c[] = $a[$key];
-	}
-	return $c;
+// Get a list of sort columns and their data to pass to array_multisort
+$sort = array();
+foreach($events as $k=>$v) {
+    $sort['tz_start'][$k] = $v->tz_start;
+    $sort['duration'][$k] = $v->duration;
 }
-$events = subval_sort($events,'duration');
-print_r($events);
+// sort by tz_start asc and then duration desc
+array_multisort($sort['tz_start'], SORT_ASC, $sort['duration'], SORT_DESC,$events);
 
 // Loop through events and add the data to the $date_cells array
 foreach ($events as $event) {
@@ -349,12 +345,18 @@ foreach ($events as $event) {
 	if ($e_allday == 1) {
 
 		// Set the level based on what the order is at the beginning of the event.
-		if ( isset($date_cells[$start_key]['rectangles'][0]) ) {
-			$l_key = count($date_cells[$start_key]['rectangles']);
+		$i = 1;
+		while ( isset($date_cells[$start_key]['rectangles'][$i]) ) {
+			$i++;
 		}
-		else {
-			$l_key = 0;
-		}
+		$l_key = $i;
+
+		// if ( isset($date_cells[$start_key]['rectangles'][1]) ) {
+		// 	$l_key = count($date_cells[$start_key]['rectangles'])+1;
+		// }
+		// else {
+		// 	$l_key = 1;
+		// }
 
 		// Reset the level to 0 if the event wraps to the next week.
 		$start_day = strtolower( date('l', strtotime($e_start)) );
@@ -372,7 +374,21 @@ foreach ($events as $event) {
 
 			// if we've gone through the week and come around to the beginning..
 			if ($math != 0 && $math % 7 == '0') {
-				$l_key = 0;
+
+				// Slightly different from above. We need to check based on
+				// where we are now, hence $i instead of $start_key.
+				// if ( isset($date_cells[$i]['rectangles'][1]) ) {
+				// 	$l_key = count($date_cells[$i]['rectangles'])+1;
+				// }
+				// else {
+				// 	$l_key = 1;
+				// }
+
+				$int = 1;
+				while ( isset($date_cells[$i]['rectangles'][$int]) ) {
+					$int++;
+				}
+				$l_key = $int;
 			}
 			// Do this on the first day, or if we've gone through the week.
 			if ($i == $start_key || ($math != 0 && $math % 7 == '0') ) {
@@ -396,7 +412,7 @@ foreach ($events as $event) {
 			}
 
 			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
-			$date_cells[$i]['rectangles'][$l_key] = '<div class="event start-'. $e_offset .' day-'. $daynumber .' duration-'. $duration . $last_day .'"><div class="time">All Day</div><div class="text rectangle '. $color .' level-'. $l_key . $cat_classes .'">'. $title . $description .'</div></div>';
+			$date_cells[$i]['rectangles'][$l_key] = '<div class="event level-'. $l_key .' start-'. $e_offset .' day-'. $daynumber .' duration-'. $duration . $last_day .'"><div class="time">All Day</div><div class="text rectangle '. $color . $cat_classes .'">'. $title . $description .'</div></div>';
 		}
 	}
 	/////////////////////////////////////////

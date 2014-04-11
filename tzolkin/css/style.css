@@ -191,12 +191,15 @@
   .tzolkin-grid .time {
     display: none; }
   .tzolkin-grid .circles {
+    margin-top: .5em;
+    padding: 0 1.25em;
+    line-height: .5em;
     text-align: center;
     overflow: hidden; }
     .tzolkin-grid .circles .circle {
       width: .5em;
       height: .5em;
-      margin: .25em .125em 0;
+      margin: 0 .125em 0;
       display: inline-block;
       background-color: #9fc6e7;
       border-radius: 100%; }
@@ -227,7 +230,7 @@
         right: -6px;
         border-left-width: 6px; }
       .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.gray:after {
-        border-left-color: white; }
+        border-left-color: #d0d5d5; }
       .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.blue:after {
         border-left-color: #b6daf2; }
       .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.red:after {
@@ -245,7 +248,7 @@
         left: -6px;
         border-right-width: 6px; }
       .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.gray:before {
-        border-right-color: white; }
+        border-right-color: #d0d5d5; }
       .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.blue:before {
         border-right-color: #b6daf2; }
       .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.red:before {
@@ -259,9 +262,9 @@
       .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.purple:before {
         border-right-color: #dbc3e5; }
       .tzolkin-grid .rectangles .rectangle.gray {
-        background-color: white; }
+        background-color: #d0d5d5; }
         .tzolkin-grid .rectangles .rectangle.gray:after {
-          background-color: white; }
+          background-color: #d0d5d5; }
       .tzolkin-grid .rectangles .rectangle.blue {
         background-color: #b6daf2; }
         .tzolkin-grid .rectangles .rectangle.blue:after {
@@ -294,54 +297,89 @@
         white-space: nowrap;
         z-index: 2; }
     .tzolkin-grid .rectangles .duration-1 .rectangle {
+      padding-right: .75em;
       overflow: hidden;
       text-overflow: ellipsis; }
       .tzolkin-grid .rectangles .duration-1 .rectangle:before, .tzolkin-grid .rectangles .duration-1 .rectangle:after {
         display: none; }
-    .tzolkin-grid .rectangles .duration-1 .title {
-      padding-right: .75em; }
-    .tzolkin-grid .rectangles .event:first-child .rectangle {
-      margin-top: 0; }
-    .tzolkin-grid .rectangles .event:first-child .level-1 {
-      margin-top: 21px; }
-    .tzolkin-grid .rectangles .event:first-child .level-2 {
-      margin-top: 42px; }
-    .tzolkin-grid .rectangles .event:first-child .level-3 {
-      margin-top: 63px; }
-    .tzolkin-grid .rectangles .event:first-child .level-4 {
-      margin-top: 84px; }
-    .tzolkin-grid .rectangles .event:first-child .level-5 {
-      margin-top: 105px; }
-    .tzolkin-grid .rectangles .event:first-child .level-6 {
-      margin-top: 126px; }
-    .tzolkin-grid .rectangles .event:first-child .level-7 {
-      margin-top: 147px; }
-    .tzolkin-grid .rectangles .event:first-child .level-8 {
-      margin-top: 168px; }
-    .tzolkin-grid .rectangles .event:first-child .level-9 {
-      margin-top: 189px; }
-    .tzolkin-grid .rectangles .event:first-child .level-10 {
-      margin-top: 210px; }
-    .tzolkin-grid .rectangles .event:first-child .level-11 {
-      margin-top: 231px; }
-    .tzolkin-grid .rectangles .event:first-child .level-12 {
-      margin-top: 252px; }
-    .tzolkin-grid .rectangles .event:first-child .level-13 {
-      margin-top: 273px; }
-    .tzolkin-grid .rectangles .event:first-child .level-14 {
-      margin-top: 294px; }
-    .tzolkin-grid .rectangles .event:first-child .level-15 {
-      margin-top: 315px; }
-    .tzolkin-grid .rectangles .event:first-child .level-16 {
-      margin-top: 336px; }
-    .tzolkin-grid .rectangles .event:first-child .level-17 {
-      margin-top: 357px; }
-    .tzolkin-grid .rectangles .event:first-child .level-18 {
-      margin-top: 378px; }
-    .tzolkin-grid .rectangles .event:first-child .level-19 {
-      margin-top: 399px; }
-    .tzolkin-grid .rectangles .event:first-child .level-20 {
-      margin-top: 420px; }
+    .tzolkin-grid .rectangles .level-2:first-child {
+      margin-top: 22px; }
+    .tzolkin-grid .rectangles .level-1 + .level-3 {
+      margin-top: 22px; }
+    .tzolkin-grid .rectangles .level-3:first-child {
+      margin-top: 43px; }
+    .tzolkin-grid .rectangles .level-2 + .level-4 {
+      margin-top: 43px; }
+    .tzolkin-grid .rectangles .level-4:first-child {
+      margin-top: 64px; }
+    .tzolkin-grid .rectangles .level-3 + .level-5 {
+      margin-top: 64px; }
+    .tzolkin-grid .rectangles .level-5:first-child {
+      margin-top: 85px; }
+    .tzolkin-grid .rectangles .level-4 + .level-6 {
+      margin-top: 85px; }
+    .tzolkin-grid .rectangles .level-6:first-child {
+      margin-top: 106px; }
+    .tzolkin-grid .rectangles .level-5 + .level-7 {
+      margin-top: 106px; }
+    .tzolkin-grid .rectangles .level-7:first-child {
+      margin-top: 127px; }
+    .tzolkin-grid .rectangles .level-6 + .level-8 {
+      margin-top: 127px; }
+    .tzolkin-grid .rectangles .level-8:first-child {
+      margin-top: 148px; }
+    .tzolkin-grid .rectangles .level-7 + .level-9 {
+      margin-top: 148px; }
+    .tzolkin-grid .rectangles .level-9:first-child {
+      margin-top: 169px; }
+    .tzolkin-grid .rectangles .level-8 + .level-10 {
+      margin-top: 169px; }
+    .tzolkin-grid .rectangles .level-10:first-child {
+      margin-top: 190px; }
+    .tzolkin-grid .rectangles .level-9 + .level-11 {
+      margin-top: 190px; }
+    .tzolkin-grid .rectangles .level-11:first-child {
+      margin-top: 211px; }
+    .tzolkin-grid .rectangles .level-10 + .level-12 {
+      margin-top: 211px; }
+    .tzolkin-grid .rectangles .level-12:first-child {
+      margin-top: 232px; }
+    .tzolkin-grid .rectangles .level-11 + .level-13 {
+      margin-top: 232px; }
+    .tzolkin-grid .rectangles .level-13:first-child {
+      margin-top: 253px; }
+    .tzolkin-grid .rectangles .level-12 + .level-14 {
+      margin-top: 253px; }
+    .tzolkin-grid .rectangles .level-14:first-child {
+      margin-top: 274px; }
+    .tzolkin-grid .rectangles .level-13 + .level-15 {
+      margin-top: 274px; }
+    .tzolkin-grid .rectangles .level-15:first-child {
+      margin-top: 295px; }
+    .tzolkin-grid .rectangles .level-14 + .level-16 {
+      margin-top: 295px; }
+    .tzolkin-grid .rectangles .level-16:first-child {
+      margin-top: 316px; }
+    .tzolkin-grid .rectangles .level-15 + .level-17 {
+      margin-top: 316px; }
+    .tzolkin-grid .rectangles .level-17:first-child {
+      margin-top: 337px; }
+    .tzolkin-grid .rectangles .level-16 + .level-18 {
+      margin-top: 337px; }
+    .tzolkin-grid .rectangles .level-18:first-child {
+      margin-top: 358px; }
+    .tzolkin-grid .rectangles .level-17 + .level-19 {
+      margin-top: 358px; }
+    .tzolkin-grid .rectangles .level-19:first-child {
+      margin-top: 379px; }
+    .tzolkin-grid .rectangles .level-18 + .level-20 {
+      margin-top: 379px; }
+    .tzolkin-grid .rectangles .level-20:first-child {
+      margin-top: 400px; }
+    .tzolkin-grid .rectangles .level-19 + .level-21 {
+      margin-top: 400px; }
+  .tzolkin-grid .event.last-day .rectangle:after {
+    display: none; }
   .tzolkin-grid .details {
     position: relative;
     width: 100%;
