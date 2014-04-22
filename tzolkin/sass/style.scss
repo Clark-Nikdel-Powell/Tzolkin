@@ -232,6 +232,7 @@ $purple: #9b59b6;
 		border-right: $bwidth solid $bcolor;
 		text-align: center;
 		vertical-align: top;
+		box-sizing: border-box;
 
 		&:first-child {border-left: $bwidth solid $bcolor;}
 		&.offset {

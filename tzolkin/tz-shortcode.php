@@ -65,13 +65,13 @@ function get_current_month_events($user_args) {
 				,'compare' => 'EXISTS'
 
 			)
-			,array(
-				'key' => 'tz_rec_end'
-				,'value' => $nextMonth
-				,'compare' => '<='
-				,'type'    => 'DATETIME'
-
-			)
+//			,array(
+//				'key' => 'tz_rec_end'
+//				,'value' => $nextMonth
+//				,'compare' => '<='
+//				,'type'    => 'DATETIME'
+//
+//			)
 		)
 	);
 	$reocurringEvents = get_posts($rArgs);
@@ -91,13 +91,35 @@ function get_current_month_events($user_args) {
 
 		$startDayName = date('l', strtotime($eventStart));
 
-		if ($recType==='w') {
+		if ($recType==='d') {
+
+			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
+
+				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
+
+				if (   $thisTimeStamp > strtotime($eventStart)
+					&& $thisTimeStamp < strtotime($recEnd)
+					) {
+
+					$newStart 	= date('Y-m-d H:i:s', $thisTimeStamp);
+					$newEnd 	= date('Y-m-d H:i:s', strtotime('+'.$eventLength.' day', $thisTimeStamp));
+
+					$eventCopy 				= clone $recEvent;
+					$eventCopy->tz_start 	= $newStart;
+					$eventCopy->tz_end 		= $newEnd;
+					$eventCopy->tz_all_day 	= $allDay;
+
+					array_push($events, $eventCopy);
+				}
+
+			}
+
+		} else if ($recType==='w') {
 
 			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
 
 				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
 				$currentDayName = date('l', $thisTimeStamp);
-
 
 				if (   $thisTimeStamp > strtotime($eventStart)
 					&& $thisTimeStamp < strtotime($recEnd)
@@ -114,11 +136,99 @@ function get_current_month_events($user_args) {
 
 					array_push($events, $eventCopy);
 				}
+
 			}
+
+		} else if ($recType==='m1') {
+			
+			$eventWeekOfMonth = week_of_month(strtotime($eventStart));
+			
+			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
+
+				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
+				$currentDayName = date('l', $thisTimeStamp);
+
+				if ( $thisTimeStamp > strtotime($eventStart)
+					&& $thisTimeStamp < strtotime($recEnd)
+					&& $eventWeekOfMonth == week_of_month($thisTimeStamp)
+					&& $currentDayName == $startDayName
+					) {
+
+					$newStart 	= date('Y-m-d H:i:s', $thisTimeStamp);
+					$newEnd 	= date('Y-m-d H:i:s', strtotime('+'.$eventLength.' day', $thisTimeStamp));
+
+					$eventCopy 				= clone $recEvent;
+					$eventCopy->tz_start 	= $newStart;
+					$eventCopy->tz_end 		= $newEnd;
+					$eventCopy->tz_all_day 	= $allDay;
+
+					array_push($events, $eventCopy);
+				}
+
+			}
+
+		} else if ($recType==='m2') {
+			
+			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
+
+				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
+				$currentDayName = date('l', $thisTimeStamp);
+
+				if ( $thisTimeStamp > strtotime($eventStart)
+					&& $thisTimeStamp < strtotime($recEnd)
+					&& $daynumber == date('j', strtotime($eventStart))
+					) {
+
+					$newStart 	= date('Y-m-d H:i:s', $thisTimeStamp);
+					$newEnd 	= date('Y-m-d H:i:s', strtotime('+'.$eventLength.' day', $thisTimeStamp));
+
+					$eventCopy 				= clone $recEvent;
+					$eventCopy->tz_start 	= $newStart;
+					$eventCopy->tz_end 		= $newEnd;
+					$eventCopy->tz_all_day 	= $allDay;
+
+					array_push($events, $eventCopy);
+				}
+
+			}
+
+		} else if ($recType==='y') {
+			
+			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
+
+				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
+				$currentDayName = date('l', $thisTimeStamp);
+
+				if ( $thisTimeStamp > strtotime($eventStart)
+					&& $thisTimeStamp < strtotime($recEnd)
+					&& $currentMonth == date('n', strtotime($eventStart))
+					&& $daynumber == date('j', strtotime($eventStart))
+					) {
+
+					$newStart 	= date('Y-m-d H:i:s', $thisTimeStamp);
+					$newEnd 	= date('Y-m-d H:i:s', strtotime('+'.$eventLength.' day', $thisTimeStamp));
+
+					$eventCopy 				= clone $recEvent;
+					$eventCopy->tz_start 	= $newStart;
+					$eventCopy->tz_end 		= $newEnd;
+					$eventCopy->tz_all_day 	= $allDay;
+
+					array_push($events, $eventCopy);
+				}
+
+			}
+
 		}
 	}
 
 	return $events;
+}
+
+function week_of_month($date) {
+	$day_of_first = date('N', mktime(0,0,0,date('m',$date),1,date('Y',$date)));
+	if ($day_of_first == 7) $day_of_first = 0;
+	$day_of_month = date('j', $date); 		
+	return floor(($day_of_first + $day_of_month) / 7) + 1; 	
 }
 
 ////////////////////////////////////////////////////////////////////////////////
