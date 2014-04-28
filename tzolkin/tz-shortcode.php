@@ -140,9 +140,9 @@ function get_current_month_events($user_args) {
 			}
 
 		} else if ($recType==='m1') {
-			
+
 			$eventWeekOfMonth = week_of_month(strtotime($eventStart));
-			
+
 			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
 
 				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
@@ -168,7 +168,7 @@ function get_current_month_events($user_args) {
 			}
 
 		} else if ($recType==='m2') {
-			
+
 			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
 
 				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
@@ -193,7 +193,7 @@ function get_current_month_events($user_args) {
 			}
 
 		} else if ($recType==='y') {
-			
+
 			for ($daynumber=1; $daynumber<=$lastDayOfMonth; $daynumber++) {
 
 				$thisTimeStamp = strtotime($currentMonth.'/'.$daynumber.'/'.$currentYear);
@@ -227,8 +227,8 @@ function get_current_month_events($user_args) {
 function week_of_month($date) {
 	$day_of_first = date('N', mktime(0,0,0,date('m',$date),1,date('Y',$date)));
 	if ($day_of_first == 7) $day_of_first = 0;
-	$day_of_month = date('j', $date); 		
-	return floor(($day_of_first + $day_of_month) / 7) + 1; 	
+	$day_of_month = date('j', $date);
+	return floor(($day_of_first + $day_of_month) / 7) + 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,11 +360,12 @@ for ($i=1; $i <= $dates; $i++) {
 	}
 
 	// Get weekday based off current month and current $i value
-	$currentDate = $i.' '.$currentMonth;
-	$currentDay  = date('D', strtotime($currentDate) );
+	$currentDate   = $i.' '.$currentMonth;
+	$currentDay    = date('D', strtotime($currentDate) );
+	$currentDayInt = date('w', strtotime($currentDate) );
 
 	// Build the cells
-	$date_cells[$i]['markup'] = '<div class="cell no-events date-'. $i .' '. $p_p_or_f .'"><div class="date-top"><div class="date"><div class="day">'. $currentDay .'</div><div class="number">'. $i .'</div></div></div></div>';
+	$date_cells[$i]['markup'] = '<div class="cell no-events weekday-'. $currentDayInt .' date-'. $i .' '. $p_p_or_f .'"><div class="date-top"><div class="date"><div class="day">'. $currentDay .'</div><div class="number">'. $i .'</div></div></div></div>';
 	$date_cells[$i]['event_starts'] = 0;
 }
 
@@ -380,6 +381,8 @@ if ( isset($term_id) )
 	$args['category_id'] = $term_id;
 
 $events = get_current_month_events($args);
+
+if ( !empty($events) ) {
 
 // Sort events by duration first.
 foreach ($events as $event) {
@@ -461,13 +464,6 @@ foreach ($events as $event) {
 		}
 		$l_key = $i;
 
-		// if ( isset($date_cells[$start_key]['rectangles'][1]) ) {
-		// 	$l_key = count($date_cells[$start_key]['rectangles'])+1;
-		// }
-		// else {
-		// 	$l_key = 1;
-		// }
-
 		// Reset the level to 0 if the event wraps to the next week.
 		$start_day = strtolower( date('l', strtotime($e_start)) );
 		$e_offset  = array_search($start_day, $days);
@@ -485,15 +481,6 @@ foreach ($events as $event) {
 			// if we've gone through the week and come around to the beginning..
 			if ($math != 0 && $math % 7 == '0') {
 
-				// Slightly different from above. We need to check based on
-				// where we are now, hence $i instead of $start_key.
-				// if ( isset($date_cells[$i]['rectangles'][1]) ) {
-				// 	$l_key = count($date_cells[$i]['rectangles'])+1;
-				// }
-				// else {
-				// 	$l_key = 1;
-				// }
-
 				$int = 1;
 				while ( isset($date_cells[$i]['rectangles'][$int]) ) {
 					$int++;
@@ -501,11 +488,12 @@ foreach ($events as $event) {
 				$l_key = $int;
 			}
 			// Do this on the first day, or if we've gone through the week.
-			if ($i == $start_key || ($math != 0 && $math % 7 == '0') ) {
+			//if ($i == $start_key || ($math != 0 && $math % 7 == '0') ) {
 				$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
-			} else {
-				$title = '';
-			}
+			// } else {
+			// 	$title = '';
+			// }
+
 			// Do this on the first day of the event.
 			if ($i == $start_key) {
 				// Keep track of how many events start on this day. Helpful for list output.
@@ -546,6 +534,8 @@ foreach ($events as $event) {
 		// See line 248.
 		$date_cells[$start_key]['event_starts'] = $date_cells[$start_key]['event_starts'] + 1;
 	}
+}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

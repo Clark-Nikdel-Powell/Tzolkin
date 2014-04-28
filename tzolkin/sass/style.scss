@@ -9,6 +9,11 @@ $orange: #e67e22;
 $purple: #9b59b6;
 
 .tzolkin-calendar {
+	margin-left: 20px;
+	font-size: 16px;
+
+	a {text-decoration: none;}
+	select, button, input {outline: none;}
 	.month.current, .format, .month-navigation {width: 98%;}
 	.month.current {
 		font-size: 1.5em;
@@ -97,6 +102,14 @@ $purple: #9b59b6;
 			}
 			&:first-child {margin-right: .375em;}
 
+			.list, .grid {
+				&:before, &:after {
+					-webkit-box-sizing: border-box;
+					-moz-box-sizing: border-box;
+					box-sizing: border-box;
+				}
+			}
+
 			// List Format
 			.list {
 
@@ -156,8 +169,10 @@ $purple: #9b59b6;
 			-webkit-appearance: none;
 			height: auto;
 			background-color: transparent;
+			border: none;
 			color: #0E325D;
 			cursor: pointer;
+			font-size: 1em;
 		}
 		.next-month {float: right;}
 	}
@@ -279,7 +294,9 @@ $purple: #9b59b6;
 	}
 
 	// Shape Variables
-	$height: 20px;
+	$height: 1.25em;
+
+	//.event {font-size: $height-.25;}
 
 	// Hide times on grid.
 	.time {display: none;}
@@ -334,8 +351,12 @@ $purple: #9b59b6;
 						// Using both before & after because after is already taken.
 						&:before, &:after {
 							border-style: solid;
-							border-top: $height/2 solid transparent;
-							border-bottom: $height/2 solid transparent;
+							border-color: transparent;
+							border-top-width: $height/2;
+							border-bottom-width: $height/2;
+							-webkit-box-sizing: border-box;
+							-moz-box-sizing: border-box;
+							box-sizing: border-box;
 						}
 					}
 				}
@@ -343,8 +364,9 @@ $purple: #9b59b6;
 
 					&:after {
 						background-color: transparent;
-						right: ceil(-$height/3);
-						border-left-width: floor($height/3);
+						right: (-$height/3)+.0366;
+						border-left-width: ($height/3);
+						border-right-width: 0;
 					}
 					@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
 						&.#{$class}:after {border-left-color: lighten($color, $lighten);}
@@ -354,8 +376,9 @@ $purple: #9b59b6;
 
 					&:before {
 						background-color: transparent;
-						left: ceil(-$height/3);
-						border-right-width: floor($height/3);
+						left: (-$height/3)+.0366;
+						border-right-width: ($height/3);
+						border-left-width: 0;
 					}
 					@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
 						&.#{$class}:before {border-right-color: lighten($color, $lighten);}
@@ -374,10 +397,11 @@ $purple: #9b59b6;
 			}
 
 			.title {
+				display: none;
 				position: relative;
 				left: .375em;
 				color: #1d1d1d;
-				line-height: $height;
+				line-height: $height + .5;
 				white-space: nowrap;
 				z-index: 2;
 			}
@@ -393,8 +417,15 @@ $purple: #9b59b6;
 		}
 		// Levels
 		@for $i from 2 through 20 {
-			.level-#{$i}:first-child {margin-top: $height * ($i - 1) + $i;}
-			.level-#{$i - 1} + .level-#{$i + 1} {margin-top: $height * ($i - 1) + $i;}
+			$base: .05;
+			// If the first rectangle isn't at level-1, here's how much of a margin to give it.
+			// the pixel way -> .level-#{$i}:first-child {margin-top: $height * ($i - 1) + $i;}
+			.level-#{$i}:first-child {margin-top: $height * ($i - 1) + ($base * ($i + 1));}
+
+			// If we skip from level-1 to level-3, then level-2 needs some top padding.
+			// If you somehow skip from level-0 to level-3, you're on your own.
+			//.level-#{$i - 1} + .level-#{$i + 1} {margin-top: $height * ($i - 1) + $i;}
+			.level-#{$i - 1} + .level-#{$i + 1} {margin-top: $height * ($i - 1) + ($base * ($i + 1));}
 		}
 	}
 	.event.last-day .rectangle:after {display: none;}
@@ -404,8 +435,9 @@ $purple: #9b59b6;
 		padding: .75em 0 1em;
 		opacity: 0;
 		border-top: 1px dotted $bcolor;
-		font-size: .75em;
 		text-align: left;
+
+		a {font-size: .75em;}
 	}
 	.titles {
 		margin: .5em;
@@ -415,6 +447,7 @@ $purple: #9b59b6;
 			margin-top: .5em;
 		}
 	}
+	.cell.weekday-0, .event.day-0 { .rectangle .title {display: block;} }
 	.description {display: none;}
 
 	@media (min-width: 500px) {
@@ -437,6 +470,7 @@ $purple: #9b59b6;
 		padding-bottom: 1.5em;
 		overflow: hidden;
 	}
+	.date-top {height: auto !important;}
 	.date {
 		width: 2.675em;
 		margin-right: 1em;
