@@ -34,7 +34,7 @@ function get_current_month_events($user_args) {
 	,	'numberposts'      => -1
 	);
 
-	if ( isset($user_args['category_id']) ) {
+	if ( isset($user_args['category_id']) && $user_args['category_id'] != -1 ) {
 		$args['tax_query'][] = array(
 			'taxonomy' => 'tz_category'
 		,	'terms'    => $user_args['category_id']
