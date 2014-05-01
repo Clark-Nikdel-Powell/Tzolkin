@@ -1,5 +1,5 @@
 .tzolkin-calendar {
-  margin-left: 20px;
+  margin-left: 8px;
   font-size: 16px; }
   .tzolkin-calendar a {
     text-decoration: none; }
@@ -121,6 +121,9 @@
     .tzolkin-calendar .month-navigation .next-month {
       float: right; }
 
+@media (min-width: 500px) {
+  .tzolkin-calendar {
+    margin-left: 20px; } }
 .tzolkin-grid {
   width: 100%;
   margin-top: 1em; }
@@ -136,18 +139,6 @@
     overflow: hidden; }
     .tzolkin-grid .tzolkin-row:last-child .cell {
       border-bottom: 1px solid #dddddd; }
-    .tzolkin-grid .tzolkin-row:hover:after, .tzolkin-grid .tzolkin-row.open:after {
-      opacity: 1; }
-    .tzolkin-grid .tzolkin-row:hover .cell, .tzolkin-grid .tzolkin-row.open .cell {
-      background-color: #f9f9f9; }
-      .tzolkin-grid .tzolkin-row:hover .cell.past:after, .tzolkin-grid .tzolkin-row.open .cell.past:after {
-        background-color: rgba(255, 255, 255, 0); }
-    .tzolkin-grid .tzolkin-row.open {
-      overflow: inherit; }
-      .tzolkin-grid .tzolkin-row.open .cell:after {
-        display: none; }
-      .tzolkin-grid .tzolkin-row.open .details {
-        opacity: 1; }
   .tzolkin-grid .days {
     height: 2em;
     font-size: .875em; }
@@ -159,12 +150,12 @@
     width: 14%;
     height: 100%;
     display: inline-block;
-    position: relative;
     border-top: 1px solid #dddddd;
     border-right: 1px solid #dddddd;
     text-align: center;
     vertical-align: top;
-    box-sizing: border-box; }
+    box-sizing: border-box;
+    font-size: .875em; }
     .tzolkin-grid .cell:first-child {
       border-left: 1px solid #dddddd; }
     .tzolkin-grid .cell.offset {
@@ -181,21 +172,24 @@
         width: 70%; }
       .tzolkin-grid .cell.offset.offset-6 {
         width: 84%; }
-    .tzolkin-grid .cell.past:after {
-      width: 101%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      content: " ";
-      display: block;
-      background-color: rgba(255, 255, 255, 0.4); }
     .tzolkin-grid .cell.past .number {
       color: #777; }
     .tzolkin-grid .cell.present .number {
       font-weight: bold; }
+    .tzolkin-grid .cell.open {
+      position: static;
+      background-color: #EEE; }
+      .tzolkin-grid .cell.open:after {
+        display: none; }
+      .tzolkin-grid .cell.open .details {
+        visibility: visible;
+        opacity: 1;
+        z-index: 2; }
   .tzolkin-grid .date-top {
-    padding: 1em 0; }
+    padding: 1em 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
   .tzolkin-grid .day {
     display: none; }
   .tzolkin-grid .number {
@@ -214,214 +208,276 @@
       width: .5em;
       height: .5em;
       margin: 0 .125em 0;
-      display: inline-block;
+      display: none;
       background-color: #9fc6e7;
       border-radius: 100%; }
-  .tzolkin-grid .rectangles {
-    width: 100%;
-    display: inline-block; }
-    .tzolkin-grid .rectangles .rectangle {
-      width: 100%;
-      height: 1.25em;
-      margin-top: 1px;
-      display: block;
-      position: relative; }
-      .tzolkin-grid .rectangles .rectangle:before, .tzolkin-grid .rectangles .rectangle:after {
-        height: 1.25em;
-        content: " ";
-        display: block;
-        position: absolute;
-        top: 0; }
-      .tzolkin-grid .rectangles .rectangle:after {
-        width: 1px;
-        right: -1px; }
-      .tzolkin-row .cell:last-child .rectangles .rectangle:before, .tzolkin-row .cell:last-child .rectangles .rectangle:after, .tzolkin-row .cell:first-child .rectangles .rectangle:before, .tzolkin-row .cell:first-child .rectangles .rectangle:after {
-        border-style: solid;
-        border-color: transparent;
-        border-top-width: 0.625em;
-        border-bottom-width: 0.625em;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle:after {
-        background-color: transparent;
-        right: -0.38007em;
-        border-left-width: 0.41667em;
-        border-right-width: 0; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.gray:after {
-        border-left-color: #d0d5d5; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.blue:after {
-        border-left-color: #b6daf2; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.red:after {
-        border-left-color: #f8c9c4; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.green:after {
-        border-left-color: #a8ebc4; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.yellow:after {
-        border-left-color: #f9e8a0; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.orange:after {
-        border-left-color: #f6ceab; }
-      .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.purple:after {
-        border-left-color: #dbc3e5; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle:before {
-        background-color: transparent;
-        left: -0.38007em;
-        border-right-width: 0.41667em;
-        border-left-width: 0; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.gray:before {
-        border-right-color: #d0d5d5; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.blue:before {
-        border-right-color: #b6daf2; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.red:before {
-        border-right-color: #f8c9c4; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.green:before {
-        border-right-color: #a8ebc4; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.yellow:before {
-        border-right-color: #f9e8a0; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.orange:before {
-        border-right-color: #f6ceab; }
-      .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.purple:before {
-        border-right-color: #dbc3e5; }
-      .tzolkin-grid .rectangles .rectangle.gray {
-        background-color: #d0d5d5; }
-        .tzolkin-grid .rectangles .rectangle.gray:after {
-          background-color: #d0d5d5; }
-      .tzolkin-grid .rectangles .rectangle.blue {
-        background-color: #b6daf2; }
-        .tzolkin-grid .rectangles .rectangle.blue:after {
-          background-color: #b6daf2; }
-      .tzolkin-grid .rectangles .rectangle.red {
-        background-color: #f8c9c4; }
-        .tzolkin-grid .rectangles .rectangle.red:after {
-          background-color: #f8c9c4; }
-      .tzolkin-grid .rectangles .rectangle.green {
-        background-color: #a8ebc4; }
-        .tzolkin-grid .rectangles .rectangle.green:after {
-          background-color: #a8ebc4; }
-      .tzolkin-grid .rectangles .rectangle.yellow {
-        background-color: #f9e8a0; }
-        .tzolkin-grid .rectangles .rectangle.yellow:after {
-          background-color: #f9e8a0; }
-      .tzolkin-grid .rectangles .rectangle.orange {
-        background-color: #f6ceab; }
-        .tzolkin-grid .rectangles .rectangle.orange:after {
-          background-color: #f6ceab; }
-      .tzolkin-grid .rectangles .rectangle.purple {
-        background-color: #dbc3e5; }
-        .tzolkin-grid .rectangles .rectangle.purple:after {
-          background-color: #dbc3e5; }
-      .tzolkin-grid .rectangles .rectangle .title {
-        display: none;
-        position: relative;
-        left: .375em;
-        color: #1d1d1d;
-        line-height: 1.75em;
-        white-space: nowrap;
-        z-index: 2; }
-    .tzolkin-grid .rectangles .duration-1 .rectangle {
-      padding-right: .75em;
-      overflow: hidden;
-      text-overflow: ellipsis; }
-      .tzolkin-grid .rectangles .duration-1 .rectangle:before, .tzolkin-grid .rectangles .duration-1 .rectangle:after {
-        display: none; }
-    .tzolkin-grid .rectangles .level-2:first-child {
-      margin-top: 1.4em; }
-    .tzolkin-grid .rectangles .level-1 + .level-3 {
-      margin-top: 1.4em; }
-    .tzolkin-grid .rectangles .level-3:first-child {
-      margin-top: 2.7em; }
-    .tzolkin-grid .rectangles .level-2 + .level-4 {
-      margin-top: 2.7em; }
-    .tzolkin-grid .rectangles .level-4:first-child {
-      margin-top: 4em; }
-    .tzolkin-grid .rectangles .level-3 + .level-5 {
-      margin-top: 4em; }
-    .tzolkin-grid .rectangles .level-5:first-child {
-      margin-top: 5.3em; }
-    .tzolkin-grid .rectangles .level-4 + .level-6 {
-      margin-top: 5.3em; }
-    .tzolkin-grid .rectangles .level-6:first-child {
-      margin-top: 6.6em; }
-    .tzolkin-grid .rectangles .level-5 + .level-7 {
-      margin-top: 6.6em; }
-    .tzolkin-grid .rectangles .level-7:first-child {
-      margin-top: 7.9em; }
-    .tzolkin-grid .rectangles .level-6 + .level-8 {
-      margin-top: 7.9em; }
-    .tzolkin-grid .rectangles .level-8:first-child {
-      margin-top: 9.2em; }
-    .tzolkin-grid .rectangles .level-7 + .level-9 {
-      margin-top: 9.2em; }
-    .tzolkin-grid .rectangles .level-9:first-child {
-      margin-top: 10.5em; }
-    .tzolkin-grid .rectangles .level-8 + .level-10 {
-      margin-top: 10.5em; }
-    .tzolkin-grid .rectangles .level-10:first-child {
-      margin-top: 11.8em; }
-    .tzolkin-grid .rectangles .level-9 + .level-11 {
-      margin-top: 11.8em; }
-    .tzolkin-grid .rectangles .level-11:first-child {
-      margin-top: 13.1em; }
-    .tzolkin-grid .rectangles .level-10 + .level-12 {
-      margin-top: 13.1em; }
-    .tzolkin-grid .rectangles .level-12:first-child {
-      margin-top: 14.4em; }
-    .tzolkin-grid .rectangles .level-11 + .level-13 {
-      margin-top: 14.4em; }
-    .tzolkin-grid .rectangles .level-13:first-child {
-      margin-top: 15.7em; }
-    .tzolkin-grid .rectangles .level-12 + .level-14 {
-      margin-top: 15.7em; }
-    .tzolkin-grid .rectangles .level-14:first-child {
-      margin-top: 17em; }
-    .tzolkin-grid .rectangles .level-13 + .level-15 {
-      margin-top: 17em; }
-    .tzolkin-grid .rectangles .level-15:first-child {
-      margin-top: 18.3em; }
-    .tzolkin-grid .rectangles .level-14 + .level-16 {
-      margin-top: 18.3em; }
-    .tzolkin-grid .rectangles .level-16:first-child {
-      margin-top: 19.6em; }
-    .tzolkin-grid .rectangles .level-15 + .level-17 {
-      margin-top: 19.6em; }
-    .tzolkin-grid .rectangles .level-17:first-child {
-      margin-top: 20.9em; }
-    .tzolkin-grid .rectangles .level-16 + .level-18 {
-      margin-top: 20.9em; }
-    .tzolkin-grid .rectangles .level-18:first-child {
-      margin-top: 22.2em; }
-    .tzolkin-grid .rectangles .level-17 + .level-19 {
-      margin-top: 22.2em; }
-    .tzolkin-grid .rectangles .level-19:first-child {
-      margin-top: 23.5em; }
-    .tzolkin-grid .rectangles .level-18 + .level-20 {
-      margin-top: 23.5em; }
-    .tzolkin-grid .rectangles .level-20:first-child {
-      margin-top: 24.8em; }
-    .tzolkin-grid .rectangles .level-19 + .level-21 {
-      margin-top: 24.8em; }
-  .tzolkin-grid .event.last-day .rectangle:after {
-    display: none; }
+      .tzolkin-grid .circles .circle:first-child {
+        display: inline-block; }
   .tzolkin-grid .details {
+    width: 709%;
     position: relative;
-    width: 100%;
-    padding: .75em 0 1em;
-    opacity: 0;
+    padding: .75em 0 1em 1em;
+    opacity: 1;
+    visibility: hidden;
+    background-color: #EEE;
     border-top: 1px dotted #dddddd;
-    text-align: left; }
+    text-align: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
+    .tzolkin-grid .details.h100 {
+      height: 100%; }
     .tzolkin-grid .details a {
       font-size: .75em; }
-  .tzolkin-grid .titles {
-    margin: .5em; }
-    .tzolkin-grid .titles .title {
-      display: block;
-      margin-top: .5em; }
-  .tzolkin-grid .cell.weekday-0 .rectangle .title, .tzolkin-grid .event.day-0 .rectangle .title {
-    display: block; }
+  @media (max-width: 500px) {
+    .tzolkin-grid .weekday-0 .details {
+      width: 722%; }
+    .tzolkin-grid .weekday-1 .details {
+      margin-left: -100%; }
+    .tzolkin-grid .weekday-2 .details {
+      margin-left: -202%; }
+    .tzolkin-grid .weekday-3 .details {
+      margin-left: -303%; }
+    .tzolkin-grid .weekday-4 .details {
+      margin-left: -405%; }
+    .tzolkin-grid .weekday-5 .details {
+      margin-left: -507%; }
+    .tzolkin-grid .weekday-6 .details {
+      margin-left: -609%; } }
   .tzolkin-grid .description {
     display: none; }
   @media (min-width: 500px) {
+    .tzolkin-grid .tzolkin-row:hover:after, .tzolkin-grid .tzolkin-row.open:after {
+      opacity: 1; }
+    .tzolkin-grid .tzolkin-row:hover .cell, .tzolkin-grid .tzolkin-row.open .cell {
+      background-color: #f9f9f9; }
+      .tzolkin-grid .tzolkin-row:hover .cell.past:after, .tzolkin-grid .tzolkin-row.open .cell.past:after {
+        background-color: rgba(255, 255, 255, 0); }
+    .tzolkin-grid .tzolkin-row.open {
+      overflow: inherit; }
+      .tzolkin-grid .tzolkin-row.open .cell:after {
+        display: none; }
+      .tzolkin-grid .tzolkin-row.open .details {
+        opacity: 1; }
     .tzolkin-grid .days .full-day {
-      display: inline; } }
+      display: inline; }
+    .tzolkin-grid .cell {
+      position: relative;
+      font-size: 1em; }
+      .tzolkin-grid .cell.past:after {
+        width: 101%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: " ";
+        display: block;
+        background-color: rgba(255, 255, 255, 0.4); }
+    .tzolkin-grid .details {
+      width: 100%;
+      height: auto;
+      position: relative;
+      left: 0;
+      padding: .75em 0 1em;
+      opacity: 0;
+      visibility: visible;
+      background-color: transparent; }
+    .tzolkin-grid .titles {
+      margin: .5em; }
+      .tzolkin-grid .titles .title {
+        display: block;
+        margin-top: .5em; }
+    .tzolkin-grid .circles .circle {
+      display: inline-block; }
+    .tzolkin-grid .rectangles {
+      width: 100%;
+      display: inline-block; }
+      .tzolkin-grid .rectangles .rectangle {
+        width: 100%;
+        height: 1.25em;
+        margin-top: 1px;
+        display: block;
+        position: relative;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box; }
+        .tzolkin-grid .rectangles .rectangle:before, .tzolkin-grid .rectangles .rectangle:after {
+          height: 1.25em;
+          content: " ";
+          display: block;
+          position: absolute;
+          top: 0; }
+        .tzolkin-grid .rectangles .rectangle:after {
+          width: 1px;
+          right: -1px; }
+        .tzolkin-row .cell:last-child .rectangles .rectangle:before, .tzolkin-row .cell:last-child .rectangles .rectangle:after, .tzolkin-row .cell:first-child .rectangles .rectangle:before, .tzolkin-row .cell:first-child .rectangles .rectangle:after {
+          border-style: solid;
+          border-color: transparent;
+          border-top-width: 0.625em;
+          border-bottom-width: 0.625em;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle:after {
+          background-color: transparent;
+          right: -0.38007em;
+          border-left-width: 0.41667em;
+          border-right-width: 0; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.gray:after {
+          border-left-color: #d0d5d5; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.blue:after {
+          border-left-color: #b6daf2; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.red:after {
+          border-left-color: #f8c9c4; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.green:after {
+          border-left-color: #a8ebc4; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.yellow:after {
+          border-left-color: #f9e8a0; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.orange:after {
+          border-left-color: #f6ceab; }
+        .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle.purple:after {
+          border-left-color: #dbc3e5; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle:before {
+          background-color: transparent;
+          left: -0.38007em;
+          border-right-width: 0.41667em;
+          border-left-width: 0; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.gray:before {
+          border-right-color: #d0d5d5; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.blue:before {
+          border-right-color: #b6daf2; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.red:before {
+          border-right-color: #f8c9c4; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.green:before {
+          border-right-color: #a8ebc4; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.yellow:before {
+          border-right-color: #f9e8a0; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.orange:before {
+          border-right-color: #f6ceab; }
+        .tzolkin-row .cell:first-child .rectangles .event:not(.day-0) .rectangle.purple:before {
+          border-right-color: #dbc3e5; }
+        .tzolkin-grid .rectangles .rectangle.gray {
+          background-color: #d0d5d5; }
+          .tzolkin-grid .rectangles .rectangle.gray:after {
+            background-color: #d0d5d5; }
+        .tzolkin-grid .rectangles .rectangle.blue {
+          background-color: #b6daf2; }
+          .tzolkin-grid .rectangles .rectangle.blue:after {
+            background-color: #b6daf2; }
+        .tzolkin-grid .rectangles .rectangle.red {
+          background-color: #f8c9c4; }
+          .tzolkin-grid .rectangles .rectangle.red:after {
+            background-color: #f8c9c4; }
+        .tzolkin-grid .rectangles .rectangle.green {
+          background-color: #a8ebc4; }
+          .tzolkin-grid .rectangles .rectangle.green:after {
+            background-color: #a8ebc4; }
+        .tzolkin-grid .rectangles .rectangle.yellow {
+          background-color: #f9e8a0; }
+          .tzolkin-grid .rectangles .rectangle.yellow:after {
+            background-color: #f9e8a0; }
+        .tzolkin-grid .rectangles .rectangle.orange {
+          background-color: #f6ceab; }
+          .tzolkin-grid .rectangles .rectangle.orange:after {
+            background-color: #f6ceab; }
+        .tzolkin-grid .rectangles .rectangle.purple {
+          background-color: #dbc3e5; }
+          .tzolkin-grid .rectangles .rectangle.purple:after {
+            background-color: #dbc3e5; }
+        .tzolkin-grid .rectangles .rectangle .title {
+          display: none;
+          position: relative;
+          left: .375em;
+          color: #1d1d1d;
+          line-height: 1.75em;
+          white-space: nowrap;
+          z-index: 2; }
+      .tzolkin-grid .rectangles .duration-1 .rectangle {
+        padding-right: .75em;
+        overflow: hidden;
+        text-overflow: ellipsis; }
+        .tzolkin-grid .rectangles .duration-1 .rectangle:before, .tzolkin-grid .rectangles .duration-1 .rectangle:after {
+          display: none; }
+      .tzolkin-grid .rectangles .level-2:first-child {
+        margin-top: 1.4em; }
+      .tzolkin-grid .rectangles .level-1 + .level-3 {
+        margin-top: 1.4em; }
+      .tzolkin-grid .rectangles .level-3:first-child {
+        margin-top: 2.7em; }
+      .tzolkin-grid .rectangles .level-2 + .level-4 {
+        margin-top: 2.7em; }
+      .tzolkin-grid .rectangles .level-4:first-child {
+        margin-top: 4em; }
+      .tzolkin-grid .rectangles .level-3 + .level-5 {
+        margin-top: 4em; }
+      .tzolkin-grid .rectangles .level-5:first-child {
+        margin-top: 5.3em; }
+      .tzolkin-grid .rectangles .level-4 + .level-6 {
+        margin-top: 5.3em; }
+      .tzolkin-grid .rectangles .level-6:first-child {
+        margin-top: 6.6em; }
+      .tzolkin-grid .rectangles .level-5 + .level-7 {
+        margin-top: 6.6em; }
+      .tzolkin-grid .rectangles .level-7:first-child {
+        margin-top: 7.9em; }
+      .tzolkin-grid .rectangles .level-6 + .level-8 {
+        margin-top: 7.9em; }
+      .tzolkin-grid .rectangles .level-8:first-child {
+        margin-top: 9.2em; }
+      .tzolkin-grid .rectangles .level-7 + .level-9 {
+        margin-top: 9.2em; }
+      .tzolkin-grid .rectangles .level-9:first-child {
+        margin-top: 10.5em; }
+      .tzolkin-grid .rectangles .level-8 + .level-10 {
+        margin-top: 10.5em; }
+      .tzolkin-grid .rectangles .level-10:first-child {
+        margin-top: 11.8em; }
+      .tzolkin-grid .rectangles .level-9 + .level-11 {
+        margin-top: 11.8em; }
+      .tzolkin-grid .rectangles .level-11:first-child {
+        margin-top: 13.1em; }
+      .tzolkin-grid .rectangles .level-10 + .level-12 {
+        margin-top: 13.1em; }
+      .tzolkin-grid .rectangles .level-12:first-child {
+        margin-top: 14.4em; }
+      .tzolkin-grid .rectangles .level-11 + .level-13 {
+        margin-top: 14.4em; }
+      .tzolkin-grid .rectangles .level-13:first-child {
+        margin-top: 15.7em; }
+      .tzolkin-grid .rectangles .level-12 + .level-14 {
+        margin-top: 15.7em; }
+      .tzolkin-grid .rectangles .level-14:first-child {
+        margin-top: 17em; }
+      .tzolkin-grid .rectangles .level-13 + .level-15 {
+        margin-top: 17em; }
+      .tzolkin-grid .rectangles .level-15:first-child {
+        margin-top: 18.3em; }
+      .tzolkin-grid .rectangles .level-14 + .level-16 {
+        margin-top: 18.3em; }
+      .tzolkin-grid .rectangles .level-16:first-child {
+        margin-top: 19.6em; }
+      .tzolkin-grid .rectangles .level-15 + .level-17 {
+        margin-top: 19.6em; }
+      .tzolkin-grid .rectangles .level-17:first-child {
+        margin-top: 20.9em; }
+      .tzolkin-grid .rectangles .level-16 + .level-18 {
+        margin-top: 20.9em; }
+      .tzolkin-grid .rectangles .level-18:first-child {
+        margin-top: 22.2em; }
+      .tzolkin-grid .rectangles .level-17 + .level-19 {
+        margin-top: 22.2em; }
+      .tzolkin-grid .rectangles .level-19:first-child {
+        margin-top: 23.5em; }
+      .tzolkin-grid .rectangles .level-18 + .level-20 {
+        margin-top: 23.5em; }
+      .tzolkin-grid .rectangles .level-20:first-child {
+        margin-top: 24.8em; }
+      .tzolkin-grid .rectangles .level-19 + .level-21 {
+        margin-top: 24.8em; }
+    .tzolkin-grid .event.last-day .rectangle:after {
+      display: none; }
+    .tzolkin-grid .cell.weekday-0 .rectangle .title, .tzolkin-grid .event.day-0 .rectangle .title {
+      display: block; } }
 
 .tzolkin-list .days, .tzolkin-list .offset, .tzolkin-list .no-events {
   display: none; }

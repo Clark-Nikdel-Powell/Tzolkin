@@ -16,11 +16,14 @@ jQuery(function($) {
 			$(".row-"+i+", .row-"+i+" .date-top").css("height", maxHeight);
 		}
 	}
-	$(window).on('load', matchRowHeights());
+	$(window).on("load", matchRowHeights());
 
 	////////////////////////////////////////////////////////////////////////////
-	//  Open the row  //////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////
+	//  Desktop: Open the row  ////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+
+	// Mobile check
+	if ($(window).width() > 500) {
 
 	$("body").on("click",".tzolkin-grid .tzolkin-row", function() {
 
@@ -51,6 +54,42 @@ jQuery(function($) {
 		}
 	});
 
+	}
+
+	////////////////////////////////////////////////////////////////////////////
+	//  Mobile: Open the cell  ////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+
+	if ($(window).width() < 500) {
+
+	$("body").on("click",".tzolkin-grid .tzolkin-row .cell", function() {
+
+		// Find the right height, and open the cell.
+		if ( !$(this).hasClass("open") ) {
+
+			$(this).parent().find(".cell").removeClass("open");
+
+			// Make sure that this cell has events
+			if ( $(this).find(".circles").length !== 0 ) {
+
+				// Get open height
+				var openHeight = 0;
+				openHeight = $(this).find(".date-top").outerHeight(true) + $(this).find(".details").outerHeight(true);
+				$(this).addClass("open").parent().css("height", openHeight);
+			}
+
+		} else {
+
+			// Get closed height
+			var closedHeight = $(this).find(".date-top").outerHeight();
+			$(this).removeClass("open").parent().css("height", closedHeight);
+
+		}
+
+	});
+
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 	//  Handle Format Switch  /////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
@@ -61,37 +100,37 @@ jQuery(function($) {
 		if ( $(this).hasClass("list") ) {
 
 			// Switch format button class
-			$(".format label").removeClass('active');
-			$(this).parent('label').addClass('active');
+			$(".format label").removeClass("active");
+			$(this).parent("label").addClass("active");
 
 			// Crossfade from grid to list
-			$(".tzolkin-grid").animate({opacity: 0}, 'fast', function() {
+			$(".tzolkin-grid").animate({opacity: 0}, "fast", function() {
 
 				// Reset row heights
 				$(".tzolkin-row").removeAttr("style").removeClass("open");
 
 				// Change grid to list
-				$(".tzolkin-grid").removeClass('tzolkin-grid').addClass('tzolkin-list');
+				$(".tzolkin-grid").removeClass("tzolkin-grid").addClass("tzolkin-list");
 
-			}).animate({opacity: 1}, 'fast');
+			}).animate({opacity: 1}, "fast");
 
 		// List to Grid
 		} else {
 
 			// Switch format button class
-			$(".format label").removeClass('active');
-			$(this).parent('label').addClass('active');
+			$(".format label").removeClass("active");
+			$(this).parent("label").addClass("active");
 
 			// Crossfade from list to grid
-			$(".tzolkin-list").animate({opacity: 0}, 'fast', function() {
+			$(".tzolkin-list").animate({opacity: 0}, "fast", function() {
 
 				// Change list to grid
-				$(".tzolkin-list").removeClass('tzolkin-list').addClass('tzolkin-grid');
+				$(".tzolkin-list").removeClass("tzolkin-list").addClass("tzolkin-grid");
 
 				// Reset row heights
 				matchRowHeights();
 
-			}).animate({opacity: 1}, 'fast');
+			}).animate({opacity: 1}, "fast");
 
 		}
 	});

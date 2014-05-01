@@ -9,7 +9,7 @@ $orange: #e67e22;
 $purple: #9b59b6;
 
 .tzolkin-calendar {
-	margin-left: 20px;
+	margin-left: 8px;
 	font-size: 16px;
 
 	a {text-decoration: none;}
@@ -178,6 +178,13 @@ $purple: #9b59b6;
 	}
 }
 
+@media (min-width: 500px) {
+	.tzolkin-calendar {
+		margin-left: 20px;
+	}
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //  GRID STYLES  ///////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -202,31 +209,8 @@ $purple: #9b59b6;
 		overflow: hidden;
 
 		&:last-child .cell {border-bottom: $bwidth solid $bcolor;}
-
-		// Hover Effects
-		&:hover, &.open {
-			&:after {
-				opacity: 1;
-			}
-
-			.cell {
-				background-color: $bgcolor;
-
-				&.past:after {
-					background-color: rgba(255,255,255,0);
-				}
-			}
-		}
-		// Open Row
-		&.open {
-			overflow: inherit;
-
-			.cell:after {display: none;}
-			.details {
-				opacity: 1;
-			}
-		}
 	}
+
 	// For the Weekday Header
 	.days {
 		height: 2em;
@@ -242,12 +226,12 @@ $purple: #9b59b6;
 		width: $width;
 		height: 100%;
 		display: inline-block;
-		position: relative;
 		border-top: $bwidth solid $bcolor;
 		border-right: $bwidth solid $bcolor;
 		text-align: center;
 		vertical-align: top;
 		box-sizing: border-box;
+		font-size: .875em;
 
 		&:first-child {border-left: $bwidth solid $bcolor;}
 		&.offset {
@@ -263,40 +247,42 @@ $purple: #9b59b6;
 		// Styles for past days/events
 		&.past {
 
-			&:after {
-				width: 101%; // to cover up multi-day :after elements
-				height: 100%;
-				position: absolute;
-				top: 0;
-				left: 0;
-				content: " ";
-				display: block;
-				background-color: rgba(#FFF, .4);
-			}
-
 			.number {color: #777;}
 		}
 		&.present {
 
 			.number {font-weight: bold;}
 		}
+
+		// On mobile, cells open. On desktop, rows open.
+		&.open {
+			position: static;
+			background-color: #EEE;
+
+			&:after {display: none;}
+			.details {
+				visibility: visible;
+				opacity: 1;
+				z-index: 2;
+			}
+		}
 	}
 	.date-top {
 		padding: 1em 0;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
 	}
+
 	// Name of the day, display on list.
 	.day {display: none;}
+
 	// Number of the day
 	.number {
 		display: inline-block;
 		position: relative;
 		font-size: 1.25em;
 	}
-
-	// Shape Variables
-	$height: 1.25em;
-
-	//.event {font-size: $height-.25;}
 
 	// Hide times on grid.
 	.time {display: none;}
@@ -313,14 +299,106 @@ $purple: #9b59b6;
 			width: .5em;
 			height: .5em;
 			margin: 0 .125em 0;
-			display: inline-block;
+			display: none;
 			background-color: $circle;
 			border-radius: 100%;
+
+			&:first-child {display: inline-block;}
 		}
 	}
 
+	.details {
+		width: 709%;
+		position: relative;
+		padding: .75em 0 1em 1em;
+		opacity: 1;
+		visibility: hidden;
+		background-color: #EEE;
+		border-top: 1px dotted $bcolor;
+		text-align: left;
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+
+		&.h100 {height: 100%;}
+		a {font-size: .75em;}
+	}
+	@media (max-width: 500px) {
+		.weekday-0 .details {width: 722%;} // let's handle the width with jQuery...
+		.weekday-1 .details {margin-left: -100%;}
+		.weekday-2 .details {margin-left: -202%;}
+		.weekday-3 .details {margin-left: -303%;}
+		.weekday-4 .details {margin-left: -405%;}
+		.weekday-5 .details {margin-left: -507%;}
+		.weekday-6 .details {margin-left: -609%;}
+	}
+
+	.description {display: none;}
+
+
+// Desktop Grid Styles
+@media (min-width: 500px) {
+	$bgcolor: #f9f9f9;
+
+	.tzolkin-row {
+		// Hover Effects
+		&:hover, &.open {
+			&:after {opacity: 1;}
+
+			.cell {
+				background-color: $bgcolor;
+
+				&.past:after {background-color: rgba(255,255,255,0);}
+			}
+		}
+		// Open Row
+		&.open {
+			overflow: inherit;
+
+			.cell:after {display: none;}
+			.details {opacity: 1;}
+		}
+	}
+	.days .full-day {display: inline;}
+	.cell {
+		position: relative;
+		font-size: 1em;
+
+		&.past:after {
+			width: 101%; // to cover up multi-day :after elements
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			content: " ";
+			display: block;
+			background-color: rgba(#FFF, .4);
+		}
+	}
+	.details {
+		width: 100%;
+		height: auto;
+		position: relative;
+		left: 0;
+		padding: .75em 0 1em;
+		opacity: 0;
+		visibility: visible;
+		background-color: transparent;
+	}
+	.titles {
+		margin: .5em;
+
+		.title {
+			display: block;
+			margin-top: .5em;
+		}
+	}
+	.circles .circle {display: inline-block;}
+
 	// Rectangles in the details view
 	.rectangles {
+		$height: 1.25em;
+
 		width: 100%;
 		display: inline-block;
 
@@ -332,6 +410,9 @@ $purple: #9b59b6;
 			margin-top: 1px;
 			display: block;
 			position: relative;
+			-webkit-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			box-sizing: border-box;
 
 			&:before, &:after {
 				height: $height;
@@ -429,32 +510,9 @@ $purple: #9b59b6;
 		}
 	}
 	.event.last-day .rectangle:after {display: none;}
-	.details {
-		position: relative;
-		width: 100%;
-		padding: .75em 0 1em;
-		opacity: 0;
-		border-top: 1px dotted $bcolor;
-		text-align: left;
-
-		a {font-size: .75em;}
-	}
-	.titles {
-		margin: .5em;
-
-		.title {
-			display: block;
-			margin-top: .5em;
-		}
-	}
 	.cell.weekday-0, .event.day-0 { .rectangle .title {display: block;} }
-	.description {display: none;}
-
-	@media (min-width: 500px) {
-		.days .full-day {display: inline;}
 	}
-
- }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //  LIST STYLES  ///////////////////////////////////////////////////////////////

@@ -449,7 +449,7 @@ foreach ($events as $event) {
 	// If the event goes from one month to the next, then set the end key to the
 	// last day of the month.
 	if ($end_key < $start_key) {
-		$end_key = date('t');
+		$end_key = date('t', strtotime($currentMonth));
 	}
 
 	/////////////////////////////////////////
@@ -542,7 +542,9 @@ foreach ($events as $event) {
 // 3. Output Completed Cells  /////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
+?><!-- <? print_r($date_cells); ?> --><?
 foreach ($date_cells as $key => $cell) {
+
 	// Add in any circles or titles
 	if ( isset($cell['circles']) ) {
 
