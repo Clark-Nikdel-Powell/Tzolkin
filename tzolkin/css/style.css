@@ -1,12 +1,17 @@
 .tzolkin-calendar {
-  margin-left: 8px;
+  margin: 0 1em;
   font-size: 16px; }
+  .tzolkin-calendar, .tzolkin-calendar * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none; }
   .tzolkin-calendar a {
     text-decoration: none; }
   .tzolkin-calendar select, .tzolkin-calendar button, .tzolkin-calendar input {
     outline: none; }
-  .tzolkin-calendar .month.current, .tzolkin-calendar .format, .tzolkin-calendar .month-navigation {
-    width: 98%; }
   .tzolkin-calendar .month.current {
     font-size: 1.5em;
     font-weight: bold;
@@ -56,11 +61,10 @@
   .tzolkin-calendar form {
     padding: 0; }
   .tzolkin-calendar .format {
-    width: 98%;
     margin-top: -1.2em;
     text-align: right; }
     .tzolkin-calendar .format input[type="radio"] {
-      -webkit-appearance: none; }
+      display: none; }
     .tzolkin-calendar .format label {
       color: #aaaaaa;
       cursor: pointer;
@@ -75,10 +79,6 @@
         position: absolute; }
       .tzolkin-calendar .format label:first-child {
         margin-right: .375em; }
-      .tzolkin-calendar .format label .list:before, .tzolkin-calendar .format label .list:after, .tzolkin-calendar .format label .grid:before, .tzolkin-calendar .format label .grid:after {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box; }
       .tzolkin-calendar .format label .list:before, .tzolkin-calendar .format label .list:after {
         width: 14px;
         border-bottom: solid 3px #aaaaaa;
@@ -111,8 +111,10 @@
     margin-top: 2em;
     font-size: .875em; }
     .tzolkin-calendar .month-navigation button {
-      -webkit-appearance: none;
       height: auto;
+      margin: 0;
+      padding: 0;
+      -webkit-appearance: none;
       background-color: transparent;
       border: none;
       color: #0E325D;
@@ -121,15 +123,12 @@
     .tzolkin-calendar .month-navigation .next-month {
       float: right; }
 
-@media (min-width: 500px) {
-  .tzolkin-calendar {
-    margin-left: 20px; } }
 .tzolkin-grid {
   width: 100%;
   margin-top: 1em; }
   .tzolkin-grid .tzolkin-row {
     transition: height .15s ease-in-out; }
-  .tzolkin-grid .cell, .tzolkin-grid .cell:after {
+  .tzolkin-grid .cell, .tzolkin-grid .cell:after, .tzolkin-grid .date-top {
     transition: background-color .15s ease-in-out; }
   .tzolkin-grid .details, .tzolkin-grid .tzolkin-row:after {
     transition: opacity .15s ease-in-out; }
@@ -137,67 +136,75 @@
     position: relative;
     cursor: pointer;
     overflow: hidden; }
-    .tzolkin-grid .tzolkin-row:last-child .cell {
+    .tzolkin-grid .tzolkin-row:last-child {
       border-bottom: 1px solid #dddddd; }
   .tzolkin-grid .days {
     height: 2em;
     font-size: .875em; }
     .tzolkin-grid .days .cell {
-      padding: .5em; }
+      padding: .5em;
+      background-color: transparent; }
     .tzolkin-grid .days .full-day {
       display: none; }
   .tzolkin-grid .cell {
-    width: 14%;
+    width: 14.28571%;
     height: 100%;
     display: inline-block;
+    background-color: #eeeeee;
     border-top: 1px solid #dddddd;
     border-right: 1px solid #dddddd;
     text-align: center;
     vertical-align: top;
-    box-sizing: border-box;
     font-size: .875em; }
     .tzolkin-grid .cell:first-child {
       border-left: 1px solid #dddddd; }
     .tzolkin-grid .cell.offset {
       background-color: #f9f9f9; }
       .tzolkin-grid .cell.offset.offset-1 {
-        width: 14%; }
+        width: 14.28571%; }
       .tzolkin-grid .cell.offset.offset-2 {
-        width: 28%; }
+        width: 28.57143%; }
       .tzolkin-grid .cell.offset.offset-3 {
-        width: 42%; }
+        width: 42.85714%; }
       .tzolkin-grid .cell.offset.offset-4 {
-        width: 56%; }
+        width: 57.14286%; }
       .tzolkin-grid .cell.offset.offset-5 {
-        width: 70%; }
+        width: 71.42857%; }
       .tzolkin-grid .cell.offset.offset-6 {
-        width: 84%; }
+        width: 85.71429%; }
     .tzolkin-grid .cell.past .number {
       color: #777; }
     .tzolkin-grid .cell.present .number {
       font-weight: bold; }
     .tzolkin-grid .cell.open {
-      position: static;
-      background-color: #EEE; }
+      position: static; }
       .tzolkin-grid .cell.open:after {
         display: none; }
       .tzolkin-grid .cell.open .details {
-        visibility: visible;
         opacity: 1;
         z-index: 2; }
+      .tzolkin-grid .cell.open .date-top {
+        background-color: #eeeeee; }
+        .tzolkin-grid .cell.open .date-top:after {
+          content: " "; }
   .tzolkin-grid .date-top {
     padding: 1em 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box; }
+    background-color: #fff;
+    position: relative; }
+    .tzolkin-grid .date-top:after {
+      width: 100%;
+      height: 1px;
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      background-color: #eeeeee;
+      z-index: 3; }
   .tzolkin-grid .day {
     display: none; }
   .tzolkin-grid .number {
     display: inline-block;
     position: relative;
     font-size: 1.25em; }
-  .tzolkin-grid .time {
-    display: none; }
   .tzolkin-grid .circles {
     margin-top: .5em;
     padding: 0 1.25em;
@@ -207,60 +214,46 @@
     .tzolkin-grid .circles .circle {
       width: .5em;
       height: .5em;
-      margin: 0 .125em 0;
       display: none;
       background-color: #9fc6e7;
       border-radius: 100%; }
       .tzolkin-grid .circles .circle:first-child {
         display: inline-block; }
   .tzolkin-grid .details {
-    width: 709%;
     position: relative;
-    padding: .75em 0 1em 1em;
-    opacity: 1;
-    visibility: hidden;
-    background-color: #EEE;
-    border-top: 1px dotted #dddddd;
-    text-align: left;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box; }
-    .tzolkin-grid .details.h100 {
-      height: 100%; }
-    .tzolkin-grid .details a {
-      font-size: .75em; }
-  @media (max-width: 500px) {
-    .tzolkin-grid .weekday-0 .details {
-      width: 722%; }
-    .tzolkin-grid .weekday-1 .details {
-      margin-left: -100%; }
-    .tzolkin-grid .weekday-2 .details {
-      margin-left: -202%; }
-    .tzolkin-grid .weekday-3 .details {
-      margin-left: -303%; }
-    .tzolkin-grid .weekday-4 .details {
-      margin-left: -405%; }
-    .tzolkin-grid .weekday-5 .details {
-      margin-left: -507%; }
-    .tzolkin-grid .weekday-6 .details {
-      margin-left: -609%; } }
+    opacity: 0;
+    background-color: #eeeeee;
+    border-top: 1px solid #dddddd;
+    text-align: left; }
+  .tzolkin-grid .event {
+    padding: .5em;
+    border-bottom: 1px solid #dddddd; }
+  .tzolkin-grid .time {
+    margin-right: 1em; }
+  .tzolkin-grid .time, .tzolkin-grid .text {
+    display: inline;
+    font-size: .875em; }
   .tzolkin-grid .description {
     display: none; }
   @media (min-width: 500px) {
-    .tzolkin-grid .tzolkin-row:hover:after, .tzolkin-grid .tzolkin-row.open:after {
-      opacity: 1; }
-    .tzolkin-grid .tzolkin-row:hover .cell, .tzolkin-grid .tzolkin-row.open .cell {
-      background-color: #f9f9f9; }
-      .tzolkin-grid .tzolkin-row:hover .cell.past:after, .tzolkin-grid .tzolkin-row.open .cell.past:after {
-        background-color: rgba(255, 255, 255, 0); }
-    .tzolkin-grid .tzolkin-row.open {
-      overflow: inherit; }
-      .tzolkin-grid .tzolkin-row.open .cell:after {
-        display: none; }
-      .tzolkin-grid .tzolkin-row.open .details {
+    .tzolkin-grid .tzolkin-row {
+      background-color: transparent; }
+      .tzolkin-grid .tzolkin-row:hover:after, .tzolkin-grid .tzolkin-row.open:after {
         opacity: 1; }
+      .tzolkin-grid .tzolkin-row:hover .cell, .tzolkin-grid .tzolkin-row.open .cell {
+        background-color: #f9f9f9; }
+        .tzolkin-grid .tzolkin-row:hover .cell.past:after, .tzolkin-grid .tzolkin-row.open .cell.past:after {
+          background-color: rgba(255, 255, 255, 0); }
+      .tzolkin-grid .tzolkin-row.open {
+        overflow: inherit; }
+        .tzolkin-grid .tzolkin-row.open .cell:after {
+          display: none; }
+        .tzolkin-grid .tzolkin-row.open .details {
+          opacity: 1; }
     .tzolkin-grid .days .full-day {
       display: inline; }
+    .tzolkin-grid .cell, .tzolkin-grid .date-top, .tzolkin-grid .details {
+      background-color: transparent; }
     .tzolkin-grid .cell {
       position: relative;
       font-size: 1em; }
@@ -279,16 +272,28 @@
       position: relative;
       left: 0;
       padding: .75em 0 1em;
+      border-top: 1px dotted #dddddd;
       opacity: 0;
       visibility: visible;
       background-color: transparent; }
+    .tzolkin-grid .event {
+      margin: 0;
+      padding: 0;
+      border: 0; }
+    .tzolkin-grid .time {
+      display: none; }
+    .tzolkin-grid .text {
+      font-size: 1em; }
     .tzolkin-grid .titles {
       margin: .5em; }
       .tzolkin-grid .titles .title {
         display: block;
         margin-top: .5em; }
+    .tzolkin-grid .title {
+      font-size: .75em; }
     .tzolkin-grid .circles .circle {
-      display: inline-block; }
+      display: inline-block;
+      margin: 0 .125em; }
     .tzolkin-grid .rectangles {
       width: 100%;
       display: inline-block; }
@@ -297,10 +302,7 @@
         height: 1.25em;
         margin-top: 1px;
         display: block;
-        position: relative;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box; }
+        position: relative; }
         .tzolkin-grid .rectangles .rectangle:before, .tzolkin-grid .rectangles .rectangle:after {
           height: 1.25em;
           content: " ";
@@ -311,13 +313,12 @@
           width: 1px;
           right: -1px; }
         .tzolkin-row .cell:last-child .rectangles .rectangle:before, .tzolkin-row .cell:last-child .rectangles .rectangle:after, .tzolkin-row .cell:first-child .rectangles .rectangle:before, .tzolkin-row .cell:first-child .rectangles .rectangle:after {
+          width: 0;
+          height: 0;
           border-style: solid;
           border-color: transparent;
           border-top-width: 0.625em;
-          border-bottom-width: 0.625em;
-          -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          box-sizing: border-box; }
+          border-bottom-width: 0.625em; }
         .tzolkin-row .cell:last-child .rectangles .event:not(.last-day) .rectangle:after {
           background-color: transparent;
           right: -0.38007em;

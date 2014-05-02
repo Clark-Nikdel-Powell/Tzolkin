@@ -542,7 +542,6 @@ foreach ($events as $event) {
 // 3. Output Completed Cells  /////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-?><!-- <? print_r($date_cells); ?> --><?
 foreach ($date_cells as $key => $cell) {
 
 	// Add in any circles or titles
@@ -620,7 +619,7 @@ add_shortcode( 'tz_calendar', 'tz_calendar_shortcode' );
 function tz_scripts_and_styles() {
 	// GOLIVE: Change this URL
 	wp_enqueue_style( 'tzolkin_grid_styles', '/wp-content/plugins/tzolkin/css/style.css', false );
-	wp_enqueue_script( 'tzolkin_grid_scripts', '/wp-content/plugins/tzolkin/js/min/shortcode-ck.js', array('jquery'), false, true );
+	wp_enqueue_script( 'tzolkin_grid_scripts', '/wp-content/plugins/tzolkin/js/app.min.js', array('jquery'), false, true );
 }
 
 add_action('wp_enqueue_scripts', 'tz_scripts_and_styles');

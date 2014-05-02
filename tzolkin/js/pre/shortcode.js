@@ -1,11 +1,35 @@
 jQuery(function($) {
 
+	FastClick.attach(document.body);
+
 	////////////////////////////////////////////////////////////////////////////
-	// Match cell heights  /////////////////////////////////////////////////////
+	// Match cell widths  /////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+
+	$(window).on('ready resize', function() {
+		var c_width  = $(".tzolkin-grid").outerWidth(true);
+		var leftover = c_width % 7;
+
+		var i_width = (c_width - leftover) / 7;
+
+		$(".tzolkin-row").css("marginRight", leftover);
+		$(".tzolkin-grid .cell").css("width", i_width);
+
+		var i = 0;
+		for (i = 0; i < 7; i++) {
+			$(".tzolkin-grid .cell.offset-"+i).css("width", i_width*i);
+		}
+
+	});
+
 	////////////////////////////////////////////////////////////////////////////
+	// Match cell heights  ////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+
 	function matchRowHeights() {
 		var i = 0;
-		for ( i = 0; i < $(".tzolkin-grid .tzolkin-dates .tzolkin-row").length; i++ ) {
+		var last = $(".tzolkin-grid .tzolkin-dates .tzolkin-row").length;
+		for ( i = 0; i < last; i++ ) {
 
 			var maxHeight = 0;
 			$(".row-"+i+" .date-top").each(function() {
@@ -46,8 +70,8 @@ jQuery(function($) {
 		}  else {
 			var closedHeight = 0;
 			$(this).find(".date-top").each(function() {
-				if ( $(this).outerHeight() > closedHeight ) {
-					closedHeight = $(this).outerHeight();
+				if ( $(this).outerHeight(true) > closedHeight ) {
+					closedHeight = $(this).outerHeight(true);
 				}
 			});
 			$(this).css("height", closedHeight).removeClass("open");
@@ -62,15 +86,32 @@ jQuery(function($) {
 
 	if ($(window).width() < 500) {
 
+	$(window).on('ready resize', function() {
+		var rowWidth = parseInt($(".tzolkin-row").outerWidth() - 2);
+
+		$(".tzolkin-grid .details").css("width", rowWidth);
+
+		var c_width  = $(".tzolkin-grid").outerWidth(true);
+		var leftover = c_width % 7;
+
+		var i_width = (c_width - leftover) / 7;
+
+		var i = 1;
+		for (i = 1; i < 7; i++) {
+			$(".tzolkin-grid .weekday-"+ i +" .details").css("left", (-i_width*i) + 1);
+		}
+	});
+
 	$("body").on("click",".tzolkin-grid .tzolkin-row .cell", function() {
 
 		// Find the right height, and open the cell.
 		if ( !$(this).hasClass("open") ) {
 
-			$(this).parent().find(".cell").removeClass("open");
-
 			// Make sure that this cell has events
 			if ( $(this).find(".circles").length !== 0 ) {
+
+				$(".tzolkin-grid").find(".cell").removeClass("open");
+				matchRowHeights();
 
 				// Get open height
 				var openHeight = 0;
@@ -81,7 +122,7 @@ jQuery(function($) {
 		} else {
 
 			// Get closed height
-			var closedHeight = $(this).find(".date-top").outerHeight();
+			var closedHeight = $(this).find(".date-top").outerHeight(true);
 			$(this).removeClass("open").parent().css("height", closedHeight);
 
 		}

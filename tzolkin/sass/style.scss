@@ -9,12 +9,20 @@ $orange: #e67e22;
 $purple: #9b59b6;
 
 .tzolkin-calendar {
-	margin-left: 8px;
+	margin: 0 1em;
 	font-size: 16px;
 
+	&, * {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+		-webkit-user-select: none;
+		-webkit-touch-callout: none;
+	}
 	a {text-decoration: none;}
 	select, button, input {outline: none;}
-	.month.current, .format, .month-navigation {width: 98%;}
+	// .month.current, .format, .month-navigation {width: 98%;}
 	.month.current {
 		font-size: 1.5em;
 		font-weight: bold;
@@ -78,11 +86,10 @@ $purple: #9b59b6;
 	// Format Navigation
 	form {padding: 0;}
 	.format {
-		width: 98%;
 		margin-top: -1.2em;
 		text-align: right;
 
-		input[type="radio"] {-webkit-appearance: none;}
+		input[type="radio"] {display: none;}
 		label {
 			$c_link: #aaa;
 			$c_active: #555;
@@ -104,9 +111,6 @@ $purple: #9b59b6;
 
 			.list, .grid {
 				&:before, &:after {
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
-					box-sizing: border-box;
 				}
 			}
 
@@ -166,8 +170,10 @@ $purple: #9b59b6;
 		font-size: .875em;
 
 		button {
-			-webkit-appearance: none;
 			height: auto;
+			margin: 0;
+			padding: 0;
+			-webkit-appearance: none;
 			background-color: transparent;
 			border: none;
 			color: #0E325D;
@@ -179,9 +185,9 @@ $purple: #9b59b6;
 }
 
 @media (min-width: 500px) {
-	.tzolkin-calendar {
-		margin-left: 20px;
-	}
+	// .tzolkin-calendar {
+	// 	margin-left: 20px;
+	// }
 
 }
 
@@ -193,13 +199,14 @@ $purple: #9b59b6;
 	$bwidth: 1px;
 	$bcolor: #DDD;
 	$bgcolor: #f9f9f9;
+	$open-color: #EEE;
 
 	width: 100%;
 	margin-top: 1em;
 
 	// Animation Setup
 	.tzolkin-row {transition: height .15s ease-in-out;}
-	.cell,.cell:after {transition: background-color .15s ease-in-out;}
+	.cell,.cell:after, .date-top {transition: background-color .15s ease-in-out;}
 	.details, .tzolkin-row:after {transition: opacity .15s ease-in-out;}
 
 	// Row setup
@@ -208,7 +215,7 @@ $purple: #9b59b6;
 		cursor: pointer;
 		overflow: hidden;
 
-		&:last-child .cell {border-bottom: $bwidth solid $bcolor;}
+		&:last-child {border-bottom: $bwidth solid $bcolor;}
 	}
 
 	// For the Weekday Header
@@ -216,21 +223,24 @@ $purple: #9b59b6;
 		height: 2em;
 		font-size: .875em;
 
-		.cell {padding: .5em;}
+		.cell {
+			padding: .5em;
+			background-color: transparent;
+		}
 		.full-day {display: none;}
 	}
 	// Standard Cell Styles
 	.cell {
-		$width: 14%;
+		$width: (100/7) * 1%;
 
 		width: $width;
 		height: 100%;
 		display: inline-block;
+		background-color: $open-color;
 		border-top: $bwidth solid $bcolor;
 		border-right: $bwidth solid $bcolor;
 		text-align: center;
 		vertical-align: top;
-		box-sizing: border-box;
 		font-size: .875em;
 
 		&:first-child {border-left: $bwidth solid $bcolor;}
@@ -257,21 +267,33 @@ $purple: #9b59b6;
 		// On mobile, cells open. On desktop, rows open.
 		&.open {
 			position: static;
-			background-color: #EEE;
 
 			&:after {display: none;}
 			.details {
-				visibility: visible;
 				opacity: 1;
 				z-index: 2;
+			}
+			.date-top {
+				background-color: $open-color;
+
+				&:after {content: " ";}
 			}
 		}
 	}
 	.date-top {
 		padding: 1em 0;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		box-sizing: border-box;
+		background-color: #fff;
+		position: relative;
+
+		&:after {
+			width: 100%;
+			height: 1px;
+			position: absolute;
+			left: 0;
+			bottom: -1px;
+			background-color: $open-color;
+			z-index: 3;
+		}
 	}
 
 	// Name of the day, display on list.
@@ -284,9 +306,6 @@ $purple: #9b59b6;
 		font-size: 1.25em;
 	}
 
-	// Hide times on grid.
-	.time {display: none;}
-
 	// Circles on the main calendar
 	.circles {
 		margin-top: .5em;
@@ -298,7 +317,6 @@ $purple: #9b59b6;
 		.circle {
 			width: .5em;
 			height: .5em;
-			margin: 0 .125em 0;
 			display: none;
 			background-color: $circle;
 			border-radius: 100%;
@@ -307,32 +325,27 @@ $purple: #9b59b6;
 		}
 	}
 
+	// Details contains multiple events for a given day.
 	.details {
-		width: 709%;
 		position: relative;
-		padding: .75em 0 1em 1em;
-		opacity: 1;
-		visibility: hidden;
-		background-color: #EEE;
-		border-top: 1px dotted $bcolor;
+		opacity: 0;
+		background-color: $open-color;
+		border-top: 1px solid $bcolor;
 		text-align: left;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		box-sizing: border-box;
-
-		&.h100 {height: 100%;}
-		a {font-size: .75em;}
-	}
-	@media (max-width: 500px) {
-		.weekday-0 .details {width: 722%;} // let's handle the width with jQuery...
-		.weekday-1 .details {margin-left: -100%;}
-		.weekday-2 .details {margin-left: -202%;}
-		.weekday-3 .details {margin-left: -303%;}
-		.weekday-4 .details {margin-left: -405%;}
-		.weekday-5 .details {margin-left: -507%;}
-		.weekday-6 .details {margin-left: -609%;}
 	}
 
+	// An event contains time and text
+	.event {
+		padding: .5em;
+		border-bottom: 1px solid $bcolor;
+	}
+	.time {margin-right: 1em;}
+	.time, .text {
+		display: inline;
+		font-size: .875em;
+	}
+
+	// Text contains titles and descriptions
 	.description {display: none;}
 
 
@@ -341,6 +354,8 @@ $purple: #9b59b6;
 	$bgcolor: #f9f9f9;
 
 	.tzolkin-row {
+		background-color: transparent;
+
 		// Hover Effects
 		&:hover, &.open {
 			&:after {opacity: 1;}
@@ -360,6 +375,7 @@ $purple: #9b59b6;
 		}
 	}
 	.days .full-day {display: inline;}
+	.cell, .date-top, .details {background-color: transparent;}
 	.cell {
 		position: relative;
 		font-size: 1em;
@@ -381,10 +397,20 @@ $purple: #9b59b6;
 		position: relative;
 		left: 0;
 		padding: .75em 0 1em;
+		border-top: 1px dotted $bcolor;
 		opacity: 0;
 		visibility: visible;
 		background-color: transparent;
 	}
+	.event {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	// Hide times on grid.
+	.time {display: none;}
+	.text {font-size: 1em;}
+
 	.titles {
 		margin: .5em;
 
@@ -393,7 +419,11 @@ $purple: #9b59b6;
 			margin-top: .5em;
 		}
 	}
-	.circles .circle {display: inline-block;}
+	.title {font-size: .75em;}
+	.circles .circle {
+		display: inline-block;
+		margin: 0 .125em;
+	}
 
 	// Rectangles in the details view
 	.rectangles {
@@ -410,9 +440,6 @@ $purple: #9b59b6;
 			margin-top: 1px;
 			display: block;
 			position: relative;
-			-webkit-box-sizing: border-box;
-			-moz-box-sizing: border-box;
-			box-sizing: border-box;
 
 			&:before, &:after {
 				height: $height;
@@ -431,13 +458,12 @@ $purple: #9b59b6;
 
 						// Using both before & after because after is already taken.
 						&:before, &:after {
+							width: 0;
+							height: 0;
 							border-style: solid;
 							border-color: transparent;
 							border-top-width: $height/2;
 							border-bottom-width: $height/2;
-							-webkit-box-sizing: border-box;
-							-moz-box-sizing: border-box;
-							box-sizing: border-box;
 						}
 					}
 				}
