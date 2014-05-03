@@ -12,7 +12,7 @@ jQuery(function($) {
 
 		var i_width = (c_width - leftover) / 7;
 
-		$(".tzolkin-row").css("marginRight", leftover);
+		$(".tzolkin-row").css("marginRight", leftover - 1);
 		$(".tzolkin-grid .cell").css("width", i_width);
 
 		var i = 0;
@@ -147,8 +147,9 @@ jQuery(function($) {
 			// Crossfade from grid to list
 			$(".tzolkin-grid").animate({opacity: 0}, "fast", function() {
 
-				// Reset row heights
-				$(".tzolkin-row").removeAttr("style").removeClass("open");
+				// Reset cell & row heights
+				$(".tzolkin-row, .cell, .details").removeAttr("style");
+				$(".tzolkin-row, .tzolkin-row .cell").removeClass("open");
 
 				// Change grid to list
 				$(".tzolkin-grid").removeClass("tzolkin-grid").addClass("tzolkin-list");

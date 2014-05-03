@@ -7,7 +7,8 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
-    -webkit-touch-callout: none; }
+    -webkit-touch-callout: none;
+    -webkit-backface-visibility: hidden; }
   .tzolkin-calendar a {
     text-decoration: none; }
   .tzolkin-calendar select, .tzolkin-calendar button, .tzolkin-calendar input {
@@ -71,32 +72,33 @@
       padding-left: 1em;
       display: inline-block;
       position: relative; }
-      .tzolkin-calendar .format label input {
-        cursor: pointer; }
-      .tzolkin-calendar .format label input:before, .tzolkin-calendar .format label input:after {
-        content: "";
-        display: block;
-        position: absolute; }
       .tzolkin-calendar .format label:first-child {
         margin-right: .375em; }
-      .tzolkin-calendar .format label .list:before, .tzolkin-calendar .format label .list:after {
+      .tzolkin-calendar .format label.list:before, .tzolkin-calendar .format label.list:after, .tzolkin-calendar .format label.grid:before, .tzolkin-calendar .format label.grid:after {
+        content: "";
+        display: block;
+        position: absolute;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box; }
+      .tzolkin-calendar .format label.list:before, .tzolkin-calendar .format label.list:after {
         width: 14px;
         border-bottom: solid 3px #aaaaaa;
-        left: 0; }
-      .tzolkin-calendar .format label .list:before {
+        left: -1px; }
+      .tzolkin-calendar .format label.list:before {
         border-top: solid 3px #aaaaaa;
         height: 8px;
-        top: 2px; }
-      .tzolkin-calendar .format label .list:after {
-        top: 12px; }
-      .tzolkin-calendar .format label .grid:before, .tzolkin-calendar .format label .grid:after {
+        top: 1px; }
+      .tzolkin-calendar .format label.list:after {
+        top: 11px; }
+      .tzolkin-calendar .format label.grid:before, .tzolkin-calendar .format label.grid:after {
         width: 14px;
         height: 6px;
-        top: 56%;
-        left: 0;
+        top: 50%;
+        left: -1px;
         border-left: solid 6px #aaaaaa;
         border-right: solid 6px #aaaaaa; }
-      .tzolkin-calendar .format label .grid:before {
+      .tzolkin-calendar .format label.grid:before {
         margin-top: -8px; }
       .tzolkin-calendar .format label:hover {
         color: #7f7f7f; }
@@ -105,7 +107,7 @@
       .tzolkin-calendar .format label.active {
         color: #555555;
         font-weight: bold; }
-        .tzolkin-calendar .format label.active input:before, .tzolkin-calendar .format label.active input:after {
+        .tzolkin-calendar .format label.active:before, .tzolkin-calendar .format label.active:after {
           border-color: #555555; }
   .tzolkin-calendar .month-navigation {
     margin-top: 2em;
@@ -285,10 +287,14 @@
     .tzolkin-grid .text {
       font-size: 1em; }
     .tzolkin-grid .titles {
-      margin: .5em; }
+      margin: 0 .5em; }
       .tzolkin-grid .titles .title {
         display: block;
-        margin-top: .5em; }
+        margin-bottom: .5em;
+        padding-bottom: 1px;
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis; }
     .tzolkin-grid .title {
       font-size: .75em; }
     .tzolkin-grid .circles .circle {
@@ -296,6 +302,7 @@
       margin: 0 .125em; }
     .tzolkin-grid .rectangles {
       width: 100%;
+      margin-bottom: .5em;
       display: inline-block; }
       .tzolkin-grid .rectangles .rectangle {
         width: 100%;
@@ -393,11 +400,11 @@
           line-height: 1.75em;
           white-space: nowrap;
           z-index: 2; }
-      .tzolkin-grid .rectangles .duration-1 .rectangle {
+      .tzolkin-grid .rectangles .duration-1 .title {
         padding-right: .75em;
         overflow: hidden;
         text-overflow: ellipsis; }
-        .tzolkin-grid .rectangles .duration-1 .rectangle:before, .tzolkin-grid .rectangles .duration-1 .rectangle:after {
+        .tzolkin-grid .rectangles .duration-1 .title:before, .tzolkin-grid .rectangles .duration-1 .title:after {
           display: none; }
       .tzolkin-grid .rectangles .level-2:first-child {
         margin-top: 1.4em; }

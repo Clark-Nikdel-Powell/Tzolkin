@@ -19,6 +19,7 @@ $purple: #9b59b6;
 		-webkit-tap-highlight-color: rgba(0,0,0,0);
 		-webkit-user-select: none;
 		-webkit-touch-callout: none;
+		-webkit-backface-visibility: hidden;
 	}
 	a {text-decoration: none;}
 	select, button, input {outline: none;}
@@ -101,43 +102,43 @@ $purple: #9b59b6;
 			display: inline-block;
 			position: relative;
 
-			input {cursor: pointer;}
-			input:before, input:after {
-				content: "";
-				display: block;
-				position: absolute;
-			}
 			&:first-child {margin-right: .375em;}
 
-			.list, .grid {
+			&.list, &.grid {
 				&:before, &:after {
+					content: "";
+					display: block;
+					position: absolute;
+					-webkit-box-sizing: border-box;
+					-moz-box-sizing: border-box;
+					box-sizing: border-box;
 				}
 			}
 
 			// List Format
-			.list {
+			&.list {
 
 				&:before, &:after {
 					width: 14px;
 					border-bottom: solid 3px $c_link;
-					left: 0;
+					left: -1px;
 				}
 				&:before {
 					border-top: solid 3px $c_link;
 					height: 8px;
-					top: 2px;
+					top: 1px;
 				}
 				&:after {
-					top: 12px;
+					top: 11px;
 				}
 			}
 			// Grid Format
-			.grid {
+			&.grid {
 				&:before, &:after {
 					width: 14px;
 					height: 6px;
-					top: 56%;
-					left: 0;
+					top: 50%;
+					left: -1px;
 					border-left: solid 6px $c_link;
 					border-right: solid 6px $c_link;
 				}
@@ -158,7 +159,7 @@ $purple: #9b59b6;
 				color: $c_active;
 				font-weight: bold;
 
-				input:before, input:after {
+				&:before, &:after {
 					border-color: $c_active;
 				}
 			}
@@ -412,11 +413,15 @@ $purple: #9b59b6;
 	.text {font-size: 1em;}
 
 	.titles {
-		margin: .5em;
+		margin: 0 .5em;
 
 		.title {
 			display: block;
-			margin-top: .5em;
+			margin-bottom: .5em;
+			padding-bottom: 1px;
+			overflow: hidden;
+			-ms-text-overflow: ellipsis;
+			text-overflow: ellipsis;
 		}
 	}
 	.title {font-size: .75em;}
@@ -430,6 +435,7 @@ $purple: #9b59b6;
 		$height: 1.25em;
 
 		width: 100%;
+		margin-bottom: .5em;
 		display: inline-block;
 
 		.rectangle {
@@ -514,7 +520,7 @@ $purple: #9b59b6;
 			}
 		}
 		.duration-1 {
-			.rectangle {
+			.title {
 				padding-right: .75em;
 				overflow: hidden;
 				text-overflow: ellipsis;

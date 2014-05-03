@@ -285,8 +285,8 @@ echo tz_dropdown_categories($c_args);
 if ( $format == 'grid' ) {
 	echo
 	'<div class="format">
-		<label><input class="toggle list" type="radio" name="format" value="list" />List</label>
-		<label class="active"><input class="toggle grid" type="radio" name="format" value="grid" checked />Grid</label>
+		<label class="list"><input class="toggle list" type="radio" name="format" value="list" />List</label>
+		<label class="grid active"><input class="toggle grid" type="radio" name="format" value="grid" checked />Grid</label>
 	</div>';
 } else {
 	echo
