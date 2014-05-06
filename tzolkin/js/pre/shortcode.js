@@ -3,32 +3,12 @@ jQuery(function($) {
 	FastClick.attach(document.body);
 
 	////////////////////////////////////////////////////////////////////////////
-	// Match cell widths  /////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////
-
-	$(window).on('ready resize', function() {
-		var c_width  = $(".tzolkin-grid").outerWidth(true);
-		var leftover = c_width % 7;
-
-		var i_width = (c_width - leftover) / 7;
-
-		$(".tzolkin-row").css("marginRight", leftover - 1);
-		$(".tzolkin-grid .cell").css("width", i_width);
-
-		var i = 0;
-		for (i = 0; i < 7; i++) {
-			$(".tzolkin-grid .cell.offset-"+i).css("width", i_width*i);
-		}
-
-	});
-
-	////////////////////////////////////////////////////////////////////////////
 	// Match cell heights  ////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 
 	function matchRowHeights() {
 		var i = 0;
-		var last = $(".tzolkin-grid .tzolkin-dates .tzolkin-row").length;
+		var last = $(".tzolkin-grid .tzolkin-row").length;
 		for ( i = 0; i < last; i++ ) {
 
 			var maxHeight = 0;
@@ -37,7 +17,7 @@ jQuery(function($) {
 					maxHeight = $(this).outerHeight();
 				}
 			});
-			$(".row-"+i+", .row-"+i+" .date-top").css("height", maxHeight);
+			$(".row-"+i+", .row-"+i+" .inner").css("height", maxHeight);
 		}
 	}
 	$(window).on("load", matchRowHeights());
@@ -91,14 +71,14 @@ jQuery(function($) {
 
 		$(".tzolkin-grid .details").css("width", rowWidth);
 
-		var c_width  = $(".tzolkin-grid").outerWidth(true);
-		var leftover = c_width % 7;
-
-		var i_width = (c_width - leftover) / 7;
+		var i_width = (rowWidth) / 7;
 
 		var i = 1;
 		for (i = 1; i < 7; i++) {
-			$(".tzolkin-grid .weekday-"+ i +" .details").css("left", (-i_width*i) + 1);
+			var position = $(".tzolkin-grid .weekday-"+ i).position();
+			$(".tzolkin-grid .weekday-"+ i +" .details").css("left", -position.left + 1);
+
+			//console.log(position.left);
 		}
 	});
 

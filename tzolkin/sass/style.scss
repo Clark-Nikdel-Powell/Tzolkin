@@ -9,7 +9,6 @@ $orange: #e67e22;
 $purple: #9b59b6;
 
 .tzolkin-calendar {
-	margin: 0 1em;
 	font-size: 16px;
 
 	&, * {
@@ -19,14 +18,12 @@ $purple: #9b59b6;
 		-webkit-tap-highlight-color: rgba(0,0,0,0);
 		-webkit-user-select: none;
 		-webkit-touch-callout: none;
-		-webkit-backface-visibility: hidden;
+		//-webkit-backface-visibility: hidden;
 	}
 	a {text-decoration: none;}
 	select, button, input {outline: none;}
-	// .month.current, .format, .month-navigation {width: 98%;}
-	.month.current {
-		font-size: 1.5em;
-		font-weight: bold;
+	.tzolkin-title {
+		padding-top: 0;
 		text-align: center;
 	}
 	// Category Navigation
@@ -88,7 +85,7 @@ $purple: #9b59b6;
 	form {padding: 0;}
 	.format {
 		margin-top: -1.2em;
-		text-align: right;
+		float: right;
 
 		input[type="radio"] {display: none;}
 		label {
@@ -208,25 +205,37 @@ $purple: #9b59b6;
 	// Animation Setup
 	.tzolkin-row {transition: height .15s ease-in-out;}
 	.cell,.cell:after, .date-top {transition: background-color .15s ease-in-out;}
-	.details, .tzolkin-row:after {transition: opacity .15s ease-in-out;}
+	.details, .tzolkin-row:after {transition: opacity .15s ease-in-out, z-index .15s ease-in-out;}
 
 	// Row setup
 	.tzolkin-row {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
 		position: relative;
 		cursor: pointer;
 		overflow: hidden;
 
-		&:last-child {border-bottom: $bwidth solid $bcolor;}
+		&:last-child .cell {border-bottom: $bwidth solid $bcolor;}
+		@media (max-width: 500px) {
+			&:last-child {
+				border-bottom: $bwidth solid $bcolor;
+
+				.cell {border-bottom: none;}
+			}
+		}
 	}
 
 	// For the Weekday Header
-	.days {
+	.tzolkin-row.days {
 		height: 2em;
 		font-size: .875em;
 
-		.cell {
-			padding: .5em;
-			background-color: transparent;
+		&, &:hover {
+			.cell {
+				padding: .5em;
+				background-color: transparent;
+			}
 		}
 		.full-day {display: none;}
 	}
@@ -237,6 +246,7 @@ $purple: #9b59b6;
 		width: $width;
 		height: 100%;
 		display: inline-block;
+		display: table-cell;
 		background-color: $open-color;
 		border-top: $bwidth solid $bcolor;
 		border-right: $bwidth solid $bcolor;
@@ -281,10 +291,11 @@ $purple: #9b59b6;
 			}
 		}
 	}
+	.inner {background-color: #fff;}
 	.date-top {
 		padding: 1em 0;
-		background-color: #fff;
 		position: relative;
+		white-space: normal;
 
 		&:after {
 			width: 100%;
@@ -333,6 +344,7 @@ $purple: #9b59b6;
 		background-color: $open-color;
 		border-top: 1px solid $bcolor;
 		text-align: left;
+		white-space: normal;
 	}
 
 	// An event contains time and text
@@ -375,14 +387,14 @@ $purple: #9b59b6;
 			.details {opacity: 1;}
 		}
 	}
-	.days .full-day {display: inline;}
-	.cell, .date-top, .details {background-color: transparent;}
+	.tzolkin-row.days .full-day {display: inline;}
+	.cell, .inner, .details {background-color: transparent;}
 	.cell {
 		position: relative;
 		font-size: 1em;
 
 		&.past:after {
-			width: 101%; // to cover up multi-day :after elements
+			width: 100%;
 			height: 100%;
 			position: absolute;
 			top: 0;
@@ -422,6 +434,8 @@ $purple: #9b59b6;
 			overflow: hidden;
 			-ms-text-overflow: ellipsis;
 			text-overflow: ellipsis;
+			-ms-word-break: normal;
+			word-break: normal;
 		}
 	}
 	.title {font-size: .75em;}
@@ -564,19 +578,22 @@ $purple: #9b59b6;
 	.date {
 		width: 2.675em;
 		margin-right: 1em;
-		padding: .5em 0;
-		background-color: #e1e1e1;
 		float: left;
 		font-size: 1.125em;
 		font-weight: bold;
 		text-align: center;
 
 		.day {
-			margin-bottom: .25em;
+			padding: .375em 0;
+			background-color: #ccc;
 			font-size: .675em;
 			text-transform: uppercase;
 		}
-		.number {font-size: 1.125em;}
+		.number {
+			padding: .5em 0 .375em;
+			background-color: #e1e1e1;
+			font-size: 1.125em;
+		}
 	}
 	.details {
 		width: auto;

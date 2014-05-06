@@ -271,7 +271,7 @@ echo '<div class="tzolkin-calendar">';
 ///////////////////////////////////////
 
 // Month Header
-echo '<header class="month current">'. $currentMonth .'</header>';
+echo '<header><h2 class="tzolkin-title">'. $currentMonth .'</h2>';
 
 echo '<form method="post" action="">';
 
@@ -281,7 +281,7 @@ $c_args = array(
 );
 echo tz_dropdown_categories($c_args);
 
-// Format
+// Format-- probably a more concise way to lay this out.
 if ( $format == 'grid' ) {
 	echo
 	'<div class="format">
@@ -291,8 +291,8 @@ if ( $format == 'grid' ) {
 } else {
 	echo
 	'<div class="format">
-		<label class="active"><input class="toggle list" type="radio" name="format" value="list" checked />List</label>
-		<label><input class="toggle grid" type="radio" name="format" value="grid" />Grid</label>
+		<label class="list active"><input class="toggle list" type="radio" name="format" value="list" checked />List</label>
+		<label class="grid"><input class="toggle grid" type="radio" name="format" value="grid" />Grid</label>
 	</div>';
 }
 
@@ -301,11 +301,11 @@ $lastMonth = date('F Y', strtotime($currentMonth . " last month"));
 $nextMonth = date('F Y', strtotime($currentMonth . " next month"));
 echo
 	'<div class="month-navigation">
-		<button name="month" value="'. $lastMonth .'" type="submit" class="prev-month">&larr; '. $lastMonth .'</button>
-		<button name="month" value="'. $nextMonth .'" type="submit" class="next-month">'. $nextMonth .' &rarr;</button>
+		<button name="month" value="'. $lastMonth .'" type="submit" class="prev-month"><span class="arrow">&larr;</span> '. $lastMonth .'</button>
+		<button name="month" value="'. $nextMonth .'" type="submit" class="next-month">'. $nextMonth .' <span class="arrow">&rarr;</span></button>
 	</div>';
 
-echo '</form>';
+echo '</form></header>';
 
 ////////////////////////////////////////////////////////////////////////////////
 // 1. Set up Date Grid  ///////////////////////////////////////////////////////
@@ -318,7 +318,8 @@ echo '<div class="tzolkin-'. $format .'">';
 $days = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 echo '<header class="tzolkin-row days">';
 foreach($days as $day) {
-	$day_w_span  = substr_replace($day, '<span class="full-day">', 2, 0);
+	$third = substr($day, 2, 1);
+	$day_w_span  = substr_replace($day, '<span class="third">'.$third.'</span><span class="full-day">', 2, 1); // su<span class="third">n</span><span class="full-day">day</span>
 	$day_w_span .= '</span>';
 	echo '<header class="cell '. $day .'">'. ucfirst($day_w_span) .'</header>';
 }
@@ -335,12 +336,15 @@ $startdate = strtolower($startdate['weekday']);
 $startkey  = array_search($startdate, $days);
 
 // Add the first row
-echo '<div class="tzolkin-dates">';
 echo '<div class="tzolkin-row row-0">';
 
 // Add an offset if it's necessary
 if ($startkey != 0) {
-	echo '<div class="cell offset offset-'. $startkey .'">&nbsp;</div>';
+
+	for ( $i = 0; $i < $startkey; $i++ ) {
+		echo '<div class="cell offset offset-1">&nbsp;</div>';
+	}
+	//echo '<div class="cell offset offset-'. $startkey .'">&nbsp;</div>';
 }
 
 // Set the present as today's date number.
@@ -365,7 +369,7 @@ for ($i=1; $i <= $dates; $i++) {
 	$currentDayInt = date('w', strtotime($currentDate) );
 
 	// Build the cells
-	$date_cells[$i]['markup'] = '<div class="cell no-events weekday-'. $currentDayInt .' date-'. $i .' '. $p_p_or_f .'"><div class="date-top"><div class="date"><div class="day">'. $currentDay .'</div><div class="number">'. $i .'</div></div></div></div>';
+	$date_cells[$i]['markup'] = '<div class="cell no-events weekday-'. $currentDayInt .' date-'. $i .' '. $p_p_or_f .'"><div class="inner"><div class="date-top"><div class="date"><div class="day">'. $currentDay .'</div><div class="number">'. $i .'</div></div></div></div></div>';
 	$date_cells[$i]['event_starts'] = 0;
 }
 
@@ -555,7 +559,7 @@ foreach ($date_cells as $key => $cell) {
 		$circles_markup .= '</div>'; // circles
 
 		// Insert the new markup for circles into the existing cell markup.
-		$cell['markup'] = substr_replace($cell['markup'], $circles_markup, -12, -12);
+		$cell['markup'] = substr_replace($cell['markup'], $circles_markup, -18, -18);
 
 		// Add all rectangles and/or titles
 		$details_markup = '<div class="details">';
@@ -581,7 +585,7 @@ foreach ($date_cells as $key => $cell) {
 		$details_markup .= '</div>'; // details
 
 		// Insert the new markup for shapes and details into the existing cell markup.
-		$cell['markup'] = substr_replace($cell['markup'], $details_markup, -6, -6);
+		$cell['markup'] = substr_replace($cell['markup'], $details_markup, -12, -12);
 
 		// Throw in some more classes.
 		$newclasses = 'cell has-events count-'. count($cell['circles']) .' starts-'. $cell['event_starts'];
@@ -603,12 +607,14 @@ foreach ($date_cells as $key => $cell) {
 $end_offset = ( 7-(($startkey + $dates) % 7) );
 if ($end_offset != 0 ) {
 	if ($end_offset != 7) {
-		echo '<div class="cell offset offset-'. $end_offset .'"">&nbsp;</div>';
+		for ( $i = 0; $i < $end_offset; $i++ ) {
+			echo '<div class="cell offset offset-1">&nbsp;</div>';
+		}
+		//echo '<div class="cell offset offset-'. $end_offset .'"">&nbsp;</div>';
 	}
 }
 
 echo '</div>'; // last row
-echo '</div>'; // tzolkin-dates
 echo '</div>'; // tzolkin-grid
 echo '</div>'; // tzolkin-calendar
 

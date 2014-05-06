@@ -1,5 +1,4 @@
 .tzolkin-calendar {
-  margin: 0 1em;
   font-size: 16px; }
   .tzolkin-calendar, .tzolkin-calendar * {
     -webkit-box-sizing: border-box;
@@ -7,15 +6,13 @@
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
-    -webkit-touch-callout: none;
-    -webkit-backface-visibility: hidden; }
+    -webkit-touch-callout: none; }
   .tzolkin-calendar a {
     text-decoration: none; }
   .tzolkin-calendar select, .tzolkin-calendar button, .tzolkin-calendar input {
     outline: none; }
-  .tzolkin-calendar .month.current {
-    font-size: 1.5em;
-    font-weight: bold;
+  .tzolkin-calendar .tzolkin-title {
+    padding-top: 0;
     text-align: center; }
   .tzolkin-calendar .tzolkin-categories .container {
     width: auto;
@@ -63,7 +60,7 @@
     padding: 0; }
   .tzolkin-calendar .format {
     margin-top: -1.2em;
-    text-align: right; }
+    float: right; }
     .tzolkin-calendar .format input[type="radio"] {
       display: none; }
     .tzolkin-calendar .format label {
@@ -133,25 +130,34 @@
   .tzolkin-grid .cell, .tzolkin-grid .cell:after, .tzolkin-grid .date-top {
     transition: background-color .15s ease-in-out; }
   .tzolkin-grid .details, .tzolkin-grid .tzolkin-row:after {
-    transition: opacity .15s ease-in-out; }
+    transition: opacity .15s ease-in-out, z-index .15s ease-in-out; }
   .tzolkin-grid .tzolkin-row {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
     position: relative;
     cursor: pointer;
     overflow: hidden; }
-    .tzolkin-grid .tzolkin-row:last-child {
+    .tzolkin-grid .tzolkin-row:last-child .cell {
       border-bottom: 1px solid #dddddd; }
-  .tzolkin-grid .days {
+    @media (max-width: 500px) {
+      .tzolkin-grid .tzolkin-row:last-child {
+        border-bottom: 1px solid #dddddd; }
+        .tzolkin-grid .tzolkin-row:last-child .cell {
+          border-bottom: none; } }
+  .tzolkin-grid .tzolkin-row.days {
     height: 2em;
     font-size: .875em; }
-    .tzolkin-grid .days .cell {
+    .tzolkin-grid .tzolkin-row.days .cell, .tzolkin-grid .tzolkin-row.days:hover .cell {
       padding: .5em;
       background-color: transparent; }
-    .tzolkin-grid .days .full-day {
+    .tzolkin-grid .tzolkin-row.days .full-day {
       display: none; }
   .tzolkin-grid .cell {
     width: 14.28571%;
     height: 100%;
     display: inline-block;
+    display: table-cell;
     background-color: #eeeeee;
     border-top: 1px solid #dddddd;
     border-right: 1px solid #dddddd;
@@ -189,10 +195,12 @@
         background-color: #eeeeee; }
         .tzolkin-grid .cell.open .date-top:after {
           content: " "; }
+  .tzolkin-grid .inner {
+    background-color: #fff; }
   .tzolkin-grid .date-top {
     padding: 1em 0;
-    background-color: #fff;
-    position: relative; }
+    position: relative;
+    white-space: normal; }
     .tzolkin-grid .date-top:after {
       width: 100%;
       height: 1px;
@@ -226,7 +234,8 @@
     opacity: 0;
     background-color: #eeeeee;
     border-top: 1px solid #dddddd;
-    text-align: left; }
+    text-align: left;
+    white-space: normal; }
   .tzolkin-grid .event {
     padding: .5em;
     border-bottom: 1px solid #dddddd; }
@@ -252,15 +261,15 @@
           display: none; }
         .tzolkin-grid .tzolkin-row.open .details {
           opacity: 1; }
-    .tzolkin-grid .days .full-day {
+    .tzolkin-grid .tzolkin-row.days .full-day {
       display: inline; }
-    .tzolkin-grid .cell, .tzolkin-grid .date-top, .tzolkin-grid .details {
+    .tzolkin-grid .cell, .tzolkin-grid .inner, .tzolkin-grid .details {
       background-color: transparent; }
     .tzolkin-grid .cell {
       position: relative;
       font-size: 1em; }
       .tzolkin-grid .cell.past:after {
-        width: 101%;
+        width: 100%;
         height: 100%;
         position: absolute;
         top: 0;
@@ -294,7 +303,9 @@
         padding-bottom: 1px;
         overflow: hidden;
         -ms-text-overflow: ellipsis;
-        text-overflow: ellipsis; }
+        text-overflow: ellipsis;
+        -ms-word-break: normal;
+        word-break: normal; }
     .tzolkin-grid .title {
       font-size: .75em; }
     .tzolkin-grid .circles .circle {
@@ -498,17 +509,18 @@
 .tzolkin-list .date {
   width: 2.675em;
   margin-right: 1em;
-  padding: .5em 0;
-  background-color: #e1e1e1;
   float: left;
   font-size: 1.125em;
   font-weight: bold;
   text-align: center; }
   .tzolkin-list .date .day {
-    margin-bottom: .25em;
+    padding: .375em 0;
+    background-color: #ccc;
     font-size: .675em;
     text-transform: uppercase; }
   .tzolkin-list .date .number {
+    padding: .5em 0 .375em;
+    background-color: #e1e1e1;
     font-size: 1.125em; }
 .tzolkin-list .details {
   width: auto;
