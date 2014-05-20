@@ -9,6 +9,7 @@ $orange: #e67e22;
 $purple: #9b59b6;
 
 .tzolkin-calendar {
+	margin: 0 1em;
 	font-size: 16px;
 
 	&, * {
@@ -381,7 +382,6 @@ $purple: #9b59b6;
 		}
 		// Open Row
 		&.open {
-			overflow: inherit;
 
 			.cell:after {display: none;}
 			.details {opacity: 1;}
