@@ -242,22 +242,26 @@ function tz_calendar_shortcode( ) {
 /////////////////////////////////////////////////
 
 // Base the current month off user input, if it exists
-if ( isset($_POST['month']) ) {
-	$currentMonth = $_POST['month'];
+if ( isset($_GET['user_month']) ) {
+	$currentMonth = $_GET['user_month'];
+
+} elseif ( isset($_GET['current_month'])) {
+	$currentMonth = $_GET['current_month'];
+
 } else {
 	$currentMonth = date('F Y');
 }
 
 // Set the format off user input, if it exists.
-if ( isset($_POST['format']) ) {
-	$format = $_POST['format'];
+if ( isset($_GET['format']) ) {
+	$format = $_GET['format'];
 } else {
 	$format = 'grid';
 }
 
 // Use the category input unless the clear button was clicked.
-if ( isset($_POST['tz_category']) && !isset($_POST['clear_category']) ) {
-	$term_id = $_POST['tz_category'];
+if ( isset($_GET['tz_category']) && !isset($_GET['clear_category']) ) {
+	$term_id = $_GET['tz_category'];
 }
 
 ///////////////////////////////////////////////////
@@ -273,7 +277,7 @@ echo '<div class="tzolkin-calendar">';
 // Month Header
 echo '<header><h2 class="tzolkin-title">'. $currentMonth .'</h2>';
 
-echo '<form method="post" action="">';
+echo '<form method="get" action="">';
 
 // Categories
 $c_args = array(
@@ -301,9 +305,11 @@ $lastMonth = date('F Y', strtotime($currentMonth . " last month"));
 $nextMonth = date('F Y', strtotime($currentMonth . " next month"));
 echo
 	'<div class="month-navigation">
-		<button name="month" value="'. $lastMonth .'" type="submit" class="prev-month"><span class="arrow">&larr;</span> '. $lastMonth .'</button>
-		<button name="month" value="'. $nextMonth .'" type="submit" class="next-month">'. $nextMonth .' <span class="arrow">&rarr;</span></button>
+		<button name="user_month" value="'. $lastMonth .'" type="submit" class="prev-month"><span class="arrow">&larr;</span> '. $lastMonth .'</button>
+		<button name="user_month" value="'. $nextMonth .'" type="submit" class="next-month">'. $nextMonth .' <span class="arrow">&rarr;</span></button>
 	</div>';
+
+echo '<input type="hidden" name="current_month" value="'. $currentMonth .'" />';
 
 echo '</form></header>';
 
@@ -385,6 +391,9 @@ if ( isset($term_id) )
 	$args['category_id'] = $term_id;
 
 $events = get_current_month_events($args);
+
+if ( empty($events) )
+	echo '<div class="list message">There are no events scheduled for '. $currentMonth .'.</div>';
 
 if ( !empty($events) ) {
 
@@ -492,11 +501,7 @@ foreach ($events as $event) {
 				$l_key = $int;
 			}
 			// Do this on the first day, or if we've gone through the week.
-			//if ($i == $start_key || ($math != 0 && $math % 7 == '0') ) {
-				$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
-			// } else {
-			// 	$title = '';
-			// }
+			$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
 
 			// Do this on the first day of the event.
 			if ($i == $start_key) {
@@ -522,8 +527,8 @@ foreach ($events as $event) {
 	///////////////////////////////////////
 	else {
 		// Format the start/end times
-		$time = tz_get_event_dates($e_id, 'g:i a');
-		$e_time = $time['start'].'-'.$time['end'];
+		$time = tz_get_event_dates($e_id, 'g:ia');
+		$e_time = $time['start'].' - '.$time['end'];
 
 		$description = '';
 		// Add Description
@@ -531,16 +536,17 @@ foreach ($events as $event) {
 			$description = '<div class="description">'. $event->post_excerpt .'</div>';
 		}
 
-		// Add the markup
-		$date_cells[$start_key]['circles'][] = '<span class="circle"></span>';
-		$date_cells[$start_key]['titles'][] = '<div class="event"><div class="time">'. $e_time .'</div><div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>'. $description .'</div></div>';
+		// Add the markup to each day that the event occurs.
+		for ($i=$start_key; $i <= $end_key ; $i++) {
+			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
+			$date_cells[$i]['titles'][] = '<div class="event"><div class="time">'. $e_time .'</div><div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>'. $description .'</div></div>';
+		}
 
-		// See line 248.
 		$date_cells[$start_key]['event_starts'] = $date_cells[$start_key]['event_starts'] + 1;
 	}
 }
 
-}
+} // if (!empty($events))
 
 ////////////////////////////////////////////////////////////////////////////////
 // 3. Output Completed Cells  /////////////////////////////////////////////////
@@ -610,7 +616,6 @@ if ($end_offset != 0 ) {
 		for ( $i = 0; $i < $end_offset; $i++ ) {
 			echo '<div class="cell offset offset-1">&nbsp;</div>';
 		}
-		//echo '<div class="cell offset offset-'. $end_offset .'"">&nbsp;</div>';
 	}
 }
 
@@ -623,7 +628,7 @@ echo '</div>'; // tzolkin-calendar
 add_shortcode( 'tz_calendar', 'tz_calendar_shortcode' );
 
 function tz_scripts_and_styles() {
-	// GOLIVE: Change this URL
+	// GOLIVE: Change this URL from /wp-content/plugins/tzolkin/ to TZ_URL.
 	wp_enqueue_style( 'tzolkin_grid_styles', '/wp-content/plugins/tzolkin/css/style.css', false );
 	wp_enqueue_script( 'tzolkin_grid_scripts', '/wp-content/plugins/tzolkin/js/app.min.js', array('jquery'), false, true );
 }

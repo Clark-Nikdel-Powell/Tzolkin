@@ -558,6 +558,7 @@ $purple: #9b59b6;
 	.event.last-day .rectangle:after {display: none;}
 	.cell.weekday-0, .event.day-0 { .rectangle .title {display: block;} }
 	}
+	.list.message {display: none;}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -575,6 +576,14 @@ $purple: #9b59b6;
 		overflow: hidden;
 	}
 	.date-top {height: auto !important;}
+	.list.message {
+		margin-top: 1.5em;
+		padding: 2em;
+		display: block;
+		background-color: #f9f9f9;
+		border: 1px solid #ddd;
+		text-align: center;
+	}
 	.date {
 		width: 2.675em;
 		margin-right: 1em;
