@@ -1,3 +1,14 @@
+@font-face {
+	font-family: 'icomoon';
+	src:url('../resources/images/icons/icomoon.eot?-snzod2');
+	src:url('../resources/images/icons/icomoon.eot?#iefix-snzod2') format('embedded-opentype'),
+		url('../resources/images/icons/icomoon.woff?-snzod2') format('woff'),
+		url('../resources/images/icons/icomoon.ttf?-snzod2') format('truetype'),
+		url('../resources/images/icons/icomoon.svg?-snzod2#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
 // Colors
 $circle: #9FC6E7;
 $gray: #7F8C8D;
@@ -21,6 +32,39 @@ $purple: #9b59b6;
 		-webkit-touch-callout: none;
 		//-webkit-backface-visibility: hidden;
 	}
+	[class^="icon-"], [class*=" icon-"] {
+		font-family: 'icomoon';
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	.icon-clock:before {
+		content: "\e600";
+	}
+	.icon-location:before {
+		content: "\e601";
+	}
+	.icon-list:before {
+		content: "\e602";
+	}
+	.icon-grid:before {
+		content: "\e603";
+	}
+	.icon-expand:before {
+		content: "\e604";
+	}
+	.icon-collapse:before {
+		content: "\e605";
+	}
+
 	a {text-decoration: none;}
 	select, button, input {outline: none;}
 	.tzolkin-title {
@@ -85,7 +129,7 @@ $purple: #9b59b6;
 	// Format Navigation
 	form {padding: 0;}
 	.format {
-		margin-top: -1.2em;
+		margin-top: -1.55em;
 		float: right;
 
 		input[type="radio"] {display: none;}
@@ -96,70 +140,78 @@ $purple: #9b59b6;
 
 			color: $c_link;
 			cursor: pointer;
-			padding-left: 1em;
 			display: inline-block;
 			position: relative;
 
-			&:first-child {margin-right: .375em;}
-
+			//&:first-child {margin-right: .375em;}
+			i {
+				margin: 0em .125em;
+				display: inline-block;
+				vertical-align: middle;
+				border: 1px solid #DDD;
+				-webkit-border-radius: 4px;
+				-moz-border-radius: 4px;
+				border-radius: 4px;
+			}
+			&.expand-collapse i {
+				display: none;
+				padding: .19em;
+			}
 			&.list, &.grid {
-				&:before, &:after {
-					content: "";
-					display: block;
-					position: absolute;
-					-webkit-box-sizing: border-box;
-					-moz-box-sizing: border-box;
-					box-sizing: border-box;
-				}
-			}
 
-			// List Format
-			&.list {
+				i {font-size: 1.375em;}
+			}
+			// &.list, &.grid {
+			// 	&:before, &:after {
+			// 		content: "";
+			// 		display: block;
+			// 		position: absolute;
+			// 		-webkit-box-sizing: border-box;
+			// 		-moz-box-sizing: border-box;
+			// 		box-sizing: border-box;
+			// 	}
+			// }
 
-				&:before, &:after {
-					width: 14px;
-					border-bottom: solid 3px $c_link;
-					left: -1px;
-				}
-				&:before {
-					border-top: solid 3px $c_link;
-					height: 8px;
-					top: 1px;
-				}
-				&:after {
-					top: 11px;
-				}
-			}
-			// Grid Format
-			&.grid {
-				&:before, &:after {
-					width: 14px;
-					height: 6px;
-					top: 50%;
-					left: -1px;
-					border-left: solid 6px $c_link;
-					border-right: solid 6px $c_link;
-				}
-				&:before {
-					margin-top: -8px;
-				}
-			}
+			// // List Format
+			// &.list {
+
+			// 	&:before, &:after {
+			// 		width: 14px;
+			// 		border-bottom: solid 3px $c_link;
+			// 		left: -1px;
+			// 	}
+			// 	&:before {
+			// 		border-top: solid 3px $c_link;
+			// 		height: 8px;
+			// 		top: 1px;
+			// 	}
+			// 	&:after {
+			// 		top: 11px;
+			// 	}
+			// }
+			// // Grid Format
+			// &.grid {
+			// 	&:before, &:after {
+			// 		width: 14px;
+			// 		height: 6px;
+			// 		top: 50%;
+			// 		left: -1px;
+			// 		border-left: solid 6px $c_link;
+			// 		border-right: solid 6px $c_link;
+			// 	}
+			// 	&:before {
+			// 		margin-top: -8px;
+			// 	}
+			// }
 			// Style for hover
-			&:hover {
+			&:hover i {
 				color: $c_hover;
-
-				input:before, input:after {
-					border-color: $c_hover;
-				}
+				border-color: lighten($c_hover, 20%);
 			}
 			// Styles for current format
-			&.active {
+			&.active i {
 				color: $c_active;
-				font-weight: bold;
-
-				&:before, &:after {
-					border-color: $c_active;
-				}
+				border-color: $c_active;
 			}
 		}
 	}
@@ -184,10 +236,9 @@ $purple: #9b59b6;
 }
 
 @media (min-width: 500px) {
-	// .tzolkin-calendar {
-	// 	margin-left: 20px;
-	// }
-
+	.tzolkin-calendar .format label.expand-collapse.show {
+		i {display: inline-block;}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -353,8 +404,17 @@ $purple: #9b59b6;
 		padding: .5em;
 		border-bottom: 1px solid $bcolor;
 	}
-	.time {margin-right: 1em;}
-	.time, .text {
+	// Meta contains time & location. For now.
+	.meta {
+		margin-right: 1em;
+
+		.location {margin-left: .5em;}
+		i {
+			margin-right: .25em;
+			font-size: .75em;
+		}
+	}
+	.meta, .text {
 		display: inline;
 		font-size: .875em;
 	}
@@ -363,7 +423,11 @@ $purple: #9b59b6;
 	.description {display: none;}
 
 
-// Desktop Grid Styles
+////////////////////////////////////////////////////////////////////////////////
+// DESKTOP GRID STYLES  ///////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+
 @media (min-width: 500px) {
 	$bgcolor: #f9f9f9;
 
@@ -421,7 +485,7 @@ $purple: #9b59b6;
 		border: 0;
 	}
 	// Hide times on grid.
-	.time {display: none;}
+	.meta {display: none;}
 	.text {font-size: 1em;}
 
 	.titles {
@@ -442,6 +506,10 @@ $purple: #9b59b6;
 	.circles .circle {
 		display: inline-block;
 		margin: 0 .125em;
+
+		@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+			&.#{$class} {background-color: $color;}
+		}
 	}
 
 	// Rectangles in the details view
@@ -491,25 +559,29 @@ $purple: #9b59b6;
 
 					&:after {
 						background-color: transparent;
-						right: (-$height/3)+.0366;
-						border-left-width: ($height/3);
+						right: 0;
+						border-top-color: $bgcolor;
+						border-bottom-color: $bgcolor;
+						border-left-width: .35em;
 						border-right-width: 0;
 					}
-					@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
-						&.#{$class}:after {border-left-color: lighten($color, $lighten);}
-					}
+					// @each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+					// 	&.#{$class}:after {border-left-color: lighten($color, $lighten);}
+					// }
 				}
 				&:first-child .rectangles .event:not(.day-0) .rectangle {
 
 					&:before {
 						background-color: transparent;
-						left: (-$height/3)+.0366;
-						border-right-width: ($height/3);
+						left: 0;
+						border-top-color: $bgcolor;
+						border-bottom-color: $bgcolor;
+						border-right-width: .35em;
 						border-left-width: 0;
 					}
-					@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
-						&.#{$class}:before {border-right-color: lighten($color, $lighten);}
-					}
+					// @each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+					// 	&.#{$class}:before {border-right-color: lighten($color, $lighten);}
+					// }
 				}
 			}
 			// Why not try some løveli colors?
@@ -526,7 +598,7 @@ $purple: #9b59b6;
 			.title {
 				display: none;
 				position: relative;
-				left: .375em;
+				left: .75em;
 				color: #1d1d1d;
 				line-height: $height + .5;
 				white-space: nowrap;
@@ -614,15 +686,26 @@ $purple: #9b59b6;
 		border-bottom: 1px dotted #CCC;
 	}
 	.text {
-		width: 75%;
+		width: 55%;
 		display: inline-block;
 		vertical-align: top;
 	}
-	.time {
-		width: 20%;
+	.meta {
+		width: 35%;
 		display: inline-block;
 		font-size: .875em;
 		vertical-align: baseline;
+
+		span {
+			margin-bottom: .375em;
+			display: block;
+
+			&.location {margin-left: 0;}
+			i {
+				margin-right: .375em;
+				font-size: .75em;
+			}
+		}
 	}
 	.title {font-weight: bold;}
 	.description {
@@ -630,5 +713,10 @@ $purple: #9b59b6;
 		font-size: .875em;
 		font-style: italic;
 		line-height: 1.4em;
+	}
+
+	@media (min-width: 500px) {
+		.text {width: 75%;}
+		.meta {width: 20%;}
 	}
 }

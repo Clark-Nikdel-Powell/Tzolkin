@@ -286,19 +286,17 @@ $c_args = array(
 echo tz_dropdown_categories($c_args);
 
 // Format-- probably a more concise way to lay this out.
+echo '<div class="format">';
 if ( $format == 'grid' ) {
-	echo
-	'<div class="format">
-		<label class="list"><input class="toggle list" type="radio" name="format" value="list" />List</label>
-		<label class="grid active"><input class="toggle grid" type="radio" name="format" value="grid" checked />Grid</label>
-	</div>';
+	echo '<label class="expand-collapse expand-all show" title="Expand Rows"><i class="icon-expand"></i></label>';
+	echo '<label class="list" title="View List"><input class="toggle list" type="radio" name="format" value="list" /><i class="icon-list"></i></label>';
+	echo '<label class="grid active" title="View Grid"><input class="toggle grid" type="radio" name="format" value="grid" checked /><i class="icon-grid"></i></label>';
 } else {
-	echo
-	'<div class="format">
-		<label class="list active"><input class="toggle list" type="radio" name="format" value="list" checked />List</label>
-		<label class="grid"><input class="toggle grid" type="radio" name="format" value="grid" />Grid</label>
-	</div>';
+	echo '<label class="expand-collapse expand-all" title="Expand Rows"><i class="icon-expand"></i></label>';
+	echo '<label class="list active" title="View List"><input class="toggle list" type="radio" name="format" value="list" checked /><i class="icon-list"></i></label>';
+	echo '<label class="grid" title="View Grid"><input class="toggle grid" type="radio" name="format" value="grid" /><i class="icon-grid"></i></label>';
 }
+echo '</div>';
 
 // Month Navigation
 $lastMonth = date('F Y', strtotime($currentMonth . " last month"));
@@ -424,10 +422,11 @@ array_multisort($sort['tz_start'], SORT_ASC, $sort['duration'], SORT_DESC,$event
 
 // Loop through events and add the data to the $date_cells array
 foreach ($events as $event) {
-	$e_id      = $event->ID;
-	$e_start   = $event->tz_start;
-	$e_end     = $event->tz_end;
-	$e_allday  = $event->tz_all_day;
+	$e_id       = $event->ID;
+	$e_start    = $event->tz_start;
+	$e_end      = $event->tz_end;
+	$e_allday   = $event->tz_all_day;
+	$e_location = $event->tz_location;
 
 	$start_key = date('j', strtotime($e_start));
 	$end_key   = date('j', strtotime($e_end));
@@ -500,7 +499,7 @@ foreach ($events as $event) {
 				}
 				$l_key = $int;
 			}
-			// Do this on the first day, or if we've gone through the week.
+			// Do this on every day: gets displayed once on desktop, but in every instance on tablet and handheld.
 			$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
 
 			// Do this on the first day of the event.
@@ -518,8 +517,10 @@ foreach ($events as $event) {
 				$last_day = '';
 			}
 
-			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
-			$date_cells[$i]['rectangles'][$l_key] = '<div class="event level-'. $l_key .' start-'. $e_offset .' day-'. $daynumber .' duration-'. $duration . $last_day .'"><div class="time">All Day</div><div class="text rectangle '. $color . $cat_classes .'">'. $title . $description .'</div></div>';
+			$date_cells[$i]['circles'][] = '<span class="circle '. $color .'"></span>';
+			$date_cells[$i]['rectangles'][$l_key]  = '<div class="event level-'. $l_key .' start-'. $e_offset .' day-'. $daynumber .' duration-'. $duration . $last_day .'">';
+			$date_cells[$i]['rectangles'][$l_key] .= '<div class="meta"><span class="time"><i class="icon-clock"></i>All Day</span>'. ( !empty($e_location) ? '<span class="location"><i class="icon-location"></i>'. $e_location .'</span>' : '') .'</div>';
+			$date_cells[$i]['rectangles'][$l_key] .= '<div class="text rectangle '. $color . $cat_classes .'">'. $title . $description .'</div></div>';
 		}
 	}
 	/////////////////////////////////////////
@@ -538,8 +539,10 @@ foreach ($events as $event) {
 
 		// Add the markup to each day that the event occurs.
 		for ($i=$start_key; $i <= $end_key ; $i++) {
-			$date_cells[$i]['circles'][] = '<span class="circle"></span>';
-			$date_cells[$i]['titles'][] = '<div class="event"><div class="time">'. $e_time .'</div><div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>'. $description .'</div></div>';
+			$date_cells[$i]['circles'][] = '<span class="circle '. $color .'"></span>';
+			$date_cells[$i]['titles'][]  = '<div class="event">';
+			$date_cells[$i]['titles'][] .= '<div class="meta"><span class="time"><i class="icon-clock"></i>'. $e_time .'</span>'. ( !empty($e_location) ? '<span class="location"><i class="icon-location"></i>'. $e_location .'</span>' : '') .'</div>';
+			$date_cells[$i]['titles'][] .= '<div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>'. $description .'</div></div>';
 		}
 
 		$date_cells[$start_key]['event_starts'] = $date_cells[$start_key]['event_starts'] + 1;
