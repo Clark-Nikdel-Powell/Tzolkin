@@ -109,6 +109,7 @@ $purple: #9b59b6;
 			display: block;
 			float: left;
 			overflow: hidden;
+			background-color: #fff;
 		}
 		.clear {
 			width: auto;
@@ -306,7 +307,6 @@ $purple: #9b59b6;
 		vertical-align: top;
 		font-size: .875em;
 
-		&:first-child {border-left: $bwidth solid $bcolor;}
 		&.offset {
 			background-color: $bgcolor;
 
@@ -343,6 +343,7 @@ $purple: #9b59b6;
 			}
 		}
 	}
+	.cell:first-child, .list.message + .cell {border-left: $bwidth solid $bcolor;}
 	.inner {background-color: #fff;}
 	.date-top {
 		padding: 1em 0;
