@@ -74,6 +74,8 @@ function get_current_month_events($user_args) {
 //			)
 		)
 	);
+
+	if (isset($args['tax_query'])) $rArgs['tax_query'] = $args['tax_query'];
 	$reocurringEvents = get_posts($rArgs);
 
 	$lastDayOfMonth = date('d',strtotime($nextMonth)-1);
