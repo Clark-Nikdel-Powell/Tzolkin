@@ -29,9 +29,9 @@
 
 
 // DETERMINE LOCAL OR LIVE
-$localhost = true;
+$localhost = false;
 if ($localhost===true) $url = '/wp-content/plugins/tzolkin/';
-else $url = __FILE__;
+else $url = plugin_dir_url(__FILE__);
 
 //FILESYSTEM CONSTANTS
 define('TZ_PATH', plugin_dir_path(__FILE__));

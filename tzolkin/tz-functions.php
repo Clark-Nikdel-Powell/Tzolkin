@@ -89,6 +89,12 @@ if (!function_exists('is_tzolkin')) {
 	}
 }
 
+if (!function_exists('tz_get_current_month_events')) {
+	function tz_get_current_month_events($user_args) {
+		return TZ_Event::get_current_month_events($user_args);
+	}
+}
+
 
 ///////////////////////////////////////////////////////////////
 //  LOCATION FUNCTIONS  ///////////////////////////////////////

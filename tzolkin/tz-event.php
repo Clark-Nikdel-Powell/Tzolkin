@@ -352,6 +352,11 @@ final class TZ_Event {
 		wp_enqueue_style('tz-styles', TZ_URL.'resources/jquery-ui-timepicker.css');
 	}
 
+	public static function enqueue_styles_frontend() {
+		wp_enqueue_style( 'tzolkin_grid_styles', TZ_URL.'css/style.css', false);
+		wp_enqueue_script( 'tzolkin_grid_scripts', TZ_URL.'js/app.min.js', array('jquery'), false, true);
+	}
+
 	public static function add_meta_box() {
 		add_meta_box(
 			'tz-event-meta',
@@ -455,6 +460,128 @@ final class TZ_Event {
 					 class="widefat tz-input tz-zip" value="<?php esc_attr_e($zip_code); ?>" />
 			</p>
 		<?php
+	}
+
+	public static function get_current_month_events($user_args) {
+
+		$currentMonth = $user_args['current_month'];
+		$currentMonthFormatted = date('Y-m-d H:i:s', strtotime($currentMonth . " this month"));
+		$nextMonth             = date('Y-m-d H:i:s', strtotime($currentMonth . " next month"));
+
+		$args = array(
+			'post_type'        => 'tz_event'
+		,	'suppress_filters' => true
+		,	'meta_query'       => array(
+					'relation' => 'AND'
+				,	array(
+						'key'     => 'tz_start'
+					,	'value'   => $currentMonthFormatted
+					,	'compare' => '>='
+					,	'type'    => 'DATETIME'
+					)
+				,	array(
+						'key'     => 'tz_start'
+					,	'value'   => $nextMonth
+					,	'compare' => '<='
+					,	'type'    => 'DATETIME'
+					)
+				)
+		,	'orderby'          => 'meta_value'
+		,	'meta_key'         => 'tz_start'
+		,	'order'            => 'ASC'
+		,	'numberposts'      => -1
+		);
+
+		if ( isset($user_args['category_id']) && $user_args['category_id'] != -1 ) {
+			$args['tax_query'][] = array(
+				'taxonomy' => 'tz_category'
+			,	'terms'    => $user_args['category_id']
+			);
+		}
+		$events = get_posts($args);
+		foreach ($events as $id=>$event) {
+			$get = array('tz_start','tz_end','tz_all_day');
+			foreach ($get as $key) {
+				$events[$id]->$key = get_post_meta($event->ID, $key, true);
+			}
+		}
+
+
+		$rArgs = array(
+			 'post_type' => 'tz_event'
+			,'suppress_filters' => true
+			,'meta_query' => array(
+				'relation' => 'AND'
+				,array('key' => 'tz_rec_frequency','value' => '','compare' => '!=')
+				,array('key' => 'tz_rec_frequency','compare' => 'EXISTS')
+			)
+		);
+
+		if (isset($args['tax_query'])) $rArgs['tax_query'] = $args['tax_query'];
+
+		$reocurringEvents = get_posts($rArgs);
+		$lastDayOfMonth = date('d',strtotime($nextMonth)-1);
+		$currentMonth = date('m',strtotime($nextMonth)-1);
+		$currentYear = date('Y',strtotime($nextMonth)-1);
+
+		foreach ($reocurringEvents as $recEvent) {
+
+			$eventStart = get_post_meta($recEvent->ID, 'tz_start', true);
+			$eventEnd = get_post_meta($recEvent->ID, 'tz_end', true);
+			$thisArgs = array(
+				 'recType' 			=> get_post_meta($recEvent->ID, 'tz_rec_frequency', true)
+				,'recEnd' 			=> get_post_meta($recEvent->ID, 'tz_rec_end', true)
+				,'eventStart' 		=> $eventStart
+				,'eventEnd' 		=> $eventEnd
+				,'eventLength' 		=> floor((strtotime($eventEnd) - strtotime($eventStart))/(60*60*24))
+				,'allDay' 			=> get_post_meta($recEvent->ID, 'tz_all_day', true)
+				,'lastDayOfMonth' 	=> $lastDayOfMonth
+				,'eventWeekOfMonth' => TZ_Event::week_of_month(strtotime($eventStart))
+				,'startDayName' 	=> date('l', strtotime($eventStart))
+				,'currentMonth' 	=> $currentMonth
+				,'currentYear' 		=> $currentYear
+			);
+			$events = TZ_Event::rec_compare_dates($thisArgs,$recEvent,$events);
+		}
+		return $events;
+	}
+
+	private static function week_of_month($date) {
+		$day_of_first = date('N', mktime(0,0,0,date('m',$date),1,date('Y',$date)));
+		if ($day_of_first == 7) $day_of_first = 0;
+		$day_of_month = date('j', $date);
+		return floor(($day_of_first + $day_of_month) / 7) + 1;
+	}
+
+	private static function rec_compare_dates($args, $event, $events) {
+
+		if (count($events)==0) $events = array();
+		$eventWeekOfMonth = TZ_Event::week_of_month(strtotime($args['eventStart']));
+
+		for ($daynumber=1; $daynumber<=$args['lastDayOfMonth']; $daynumber++) {
+
+			$thisTimeStamp = strtotime($args['currentMonth'].'/'.$daynumber.'/'.$args['currentYear']);
+			$currentDayName = date('l', $thisTimeStamp);
+			$thisAdd = false;
+
+			if ($thisTimeStamp > strtotime($args['eventStart']) && $thisTimeStamp < strtotime($args['recEnd'])) {
+				switch ($args['recType']) {
+					case 'd': 	$thisAdd = true; break;
+					case 'w':	if ($currentDayName == $args['startDayName']) $thisAdd = true; break;
+					case 'm1': 	if ($eventWeekOfMonth == TZ_Event::week_of_month($thisTimeStamp) && $currentDayName == $args['startDayName']) $thisAdd = true; break;
+					case 'm2': 	if ($daynumber == date('j', strtotime($args['eventStart']))) $thisAdd = true; break;
+					case 'y': 	if ($args['currentMonth'] == date('n', strtotime($args['eventStart'])) && $daynumber == date('j', strtotime($args['eventStart']))) $thisAdd = true; break;
+				}
+			}
+			if ($thisAdd===true) {
+				$eventCopy = clone $event;
+				$eventCopy->tz_start = date('Y-m-d H:i:s', $thisTimeStamp);
+				$eventCopy->tz_end = date('Y-m-d H:i:s', strtotime('+'.$args['eventLength'].' day', $thisTimeStamp));
+				$eventCopy->tz_all_day = $args['allDay'];
+				array_push($events, $eventCopy);
+			}
+			return $events;
+		}
 	}
 
 	public static function save_post($post_id, $post) {
@@ -735,7 +862,6 @@ final class TZ_Event {
 		$args = self::$register_args;
 		$args['rewrite']['slug'] = self::$slug;
 		$args = apply_filters('tz_register_args', $args);
-
 		register_post_type(self::$name, $args);
 	}
 
@@ -749,6 +875,8 @@ final class TZ_Event {
 		add_action('admin_init', array(__CLASS__, 'enqueue_styles'));
 		add_filter('wp_title', array(__CLASS__, 'wp_title'), 10, 3);
 		add_action('save_post', array(__CLASS__, 'save_post'), 10, 2);
+		add_action('wp_enqueue_scripts', array(__CLASS__, 'enqueue_styles_frontend'));
+		add_shortcode('tz_calendar', 'tz_calendar_shortcode');
 	}
 
 }
