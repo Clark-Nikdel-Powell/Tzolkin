@@ -510,6 +510,7 @@ final class TZ_Event {
 		$rArgs = array(
 			 'post_type' => 'tz_event'
 			,'suppress_filters' => true
+			,'posts_per_page' => -1
 			,'meta_query' => array(
 				'relation' => 'AND'
 				,array('key' => 'tz_rec_frequency','value' => '','compare' => '!=')
@@ -541,6 +542,7 @@ final class TZ_Event {
 				,'currentMonth' 	=> $currentMonth
 				,'currentYear' 		=> $currentYear
 			);
+
 			$events = TZ_Event::rec_compare_dates($thisArgs,$recEvent,$events);
 		}
 		return $events;
@@ -555,7 +557,6 @@ final class TZ_Event {
 
 	private static function rec_compare_dates($args, $event, $events) {
 
-		if (count($events)==0) $events = array();
 		$eventWeekOfMonth = TZ_Event::week_of_month(strtotime($args['eventStart']));
 
 		for ($daynumber=1; $daynumber<=$args['lastDayOfMonth']; $daynumber++) {
@@ -564,7 +565,7 @@ final class TZ_Event {
 			$currentDayName = date('l', $thisTimeStamp);
 			$thisAdd = false;
 
-			if ($thisTimeStamp > strtotime($args['eventStart']) && $thisTimeStamp < strtotime($args['recEnd'])) {
+			if ($thisTimeStamp > strtotime($args['eventStart']) && $thisTimeStamp <= strtotime($args['recEnd'])) {
 				switch ($args['recType']) {
 					case 'd': 	$thisAdd = true; break;
 					case 'w':	if ($currentDayName == $args['startDayName']) $thisAdd = true; break;
@@ -580,8 +581,8 @@ final class TZ_Event {
 				$eventCopy->tz_all_day = $args['allDay'];
 				array_push($events, $eventCopy);
 			}
-			return $events;
 		}
+		return $events;
 	}
 
 	public static function save_post($post_id, $post) {
