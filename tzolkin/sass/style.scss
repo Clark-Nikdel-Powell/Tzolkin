@@ -346,6 +346,7 @@ $purple: #9b59b6;
 	.cell:first-child, .list.message + .cell {border-left: $bwidth solid $bcolor;}
 	.inner {background-color: #fff;}
 	.date-top {
+		height: 100%;
 		padding: 1em 0;
 		position: relative;
 		white-space: normal;
@@ -627,6 +628,11 @@ $purple: #9b59b6;
 			//.level-#{$i - 1} + .level-#{$i + 1} {margin-top: $height * ($i - 1) + $i;}
 			.level-#{$i - 1} + .level-#{$i + 1} {margin-top: $height * ($i - 1) + ($base * ($i + 1));}
 		}
+	}
+	.weekday-6 .day-0 .rectangle .title {
+		max-width: 75%;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.event.last-day .rectangle:after {display: none;}
 	.cell.weekday-0, .event.day-0 { .rectangle .title {display: block;} }
