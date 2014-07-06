@@ -52,6 +52,7 @@ final class TZ_Event {
 	  'has_archive'        => false,
 	  'hierarchical'       => false,
 	  'menu_position'      => 23,
+	  'menu_icon'          => 'dashicons-calendar',
 	  'rewrite'            => array('with_front' => false),
 
 	  'labels' => array(
