@@ -116,7 +116,10 @@ jQuery(function($) {
 		var i = 1;
 		for (i = 1; i < 7; i++) {
 			var position = $(".tzolkin-grid .weekday-"+ i).position();
-			$(".tzolkin-grid .weekday-"+ i +" .details").css("left", -position.left + 1);
+
+			if (typeof position != 'undefined') {
+				$(".tzolkin-grid .weekday-"+ i +" .details").css("left", -position.left + 1);
+			}
 		}
 	}
 	$(window).on("load resize", matchCellWidths());
