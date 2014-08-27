@@ -68,7 +68,7 @@ $purple: #9b59b6;
 	a {text-decoration: none;}
 	select, button, input {outline: none;}
 	.tzolkin-title {
-		padding-top: 0;
+		padding: 0 0 1em;
 		text-align: center;
 	}
 	// Category Navigation
@@ -218,7 +218,7 @@ $purple: #9b59b6;
 	}
 	// Month Navigation
 	.month-navigation {
-		margin-top: 2em;
+		margin-top: 1.2em;
 		font-size: .875em;
 
 		button {
@@ -253,7 +253,7 @@ $purple: #9b59b6;
 	$open-color: #EEE;
 
 	width: 100%;
-	margin-top: 1em;
+	margin-top: 1.7em;
 
 	// Animation Setup
 	.tzolkin-row {transition: height .15s ease-in-out;}
@@ -290,6 +290,7 @@ $purple: #9b59b6;
 				background-color: transparent;
 			}
 		}
+		.cell {overflow: hidden;}
 		.full-day {display: none;}
 	}
 	// Standard Cell Styles
@@ -645,6 +646,7 @@ $purple: #9b59b6;
 ////////////////////////////////////////////////////////////////////////////////
 
 .tzolkin-list {
+	padding-top: 1em;
 
 	// First, hide the stuff we don't need: the weekday header, offset cells, empty cells.
 	.days, .offset, .no-events {display: none;}
@@ -692,20 +694,27 @@ $purple: #9b59b6;
 		padding-bottom: 1em;
 		border-bottom: 1px dotted #CCC;
 	}
+	.rectangles .event {
+		opacity: .5;
+
+		&.day-0 {opacity: 1;}
+	}
 	.text {
-		width: 55%;
+		width: 66%;
 		display: inline-block;
 		vertical-align: top;
+		padding-left: 5%;
 	}
 	.meta {
-		width: 35%;
+		width: 33%;
 		display: inline-block;
 		font-size: .875em;
 		vertical-align: baseline;
 
 		span {
-			margin-bottom: .375em;
 			display: block;
+			margin-bottom: .4em;
+			line-height: 1.1em;
 
 			&.location {margin-left: 0;}
 			i {
@@ -722,8 +731,4 @@ $purple: #9b59b6;
 		line-height: 1.4em;
 	}
 
-	@media (min-width: 500px) {
-		.text {width: 75%;}
-		.meta {width: 20%;}
-	}
 }
