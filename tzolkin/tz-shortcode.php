@@ -4,21 +4,29 @@
 //  Shortcode Function  ///////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 
-function tz_calendar_shortcode() {
+function tz_calendar_shortcode($options) {
 
 	///////////////////////////////////////////////////
-	// User-Controlled Options	//////////////////////
+	// Shortcode Options	////////////////////////////
+	/////////////////////////////////////////////////
+
+  $args = shortcode_atts(array(
+		'format' => 'grid'
+  ), $options);
+
+	///////////////////////////////////////////////////
+	// URL Query String Options	//////////////////////
 	/////////////////////////////////////////////////
 
 	// Base the current month off user input, if it exists
 	if (isset($_GET['user_month'])) $currentMonth = $_GET['user_month'];
 	elseif (isset($_GET['current_month'])) $currentMonth = $_GET['current_month'];
 	else $currentMonth = date('F Y');
-	
+
 
 	// Set the format off user input, if it exists.
 	if (isset($_GET['format'])) $format = $_GET['format'];
-	else $format = 'grid';
+	else $format = $args['format'];
 
 	// Use the category input unless the clear button was clicked.
 	if (isset($_GET['tz_category']) && !isset($_GET['clear_category'])) $term_id = $_GET['tz_category'];
@@ -105,7 +113,7 @@ function tz_calendar_shortcode() {
 
 	// Add an offset if it's necessary
 	if ($startkey != 0) for ($i=0; $i<$startkey; $i++) echo '<div class="cell offset offset-1">&nbsp;</div>';
-	
+
 	// Set the present as today's date number.
 	$present = date('j');
 
@@ -196,7 +204,7 @@ function tz_calendar_shortcode() {
 				$term_meta = get_option( 'taxonomy_term_'.$cats[0]->term_id );
 				if (isset($term_meta['color'])) $color = $term_meta['color'];
 				else $color = 'gray';
-				
+
 
 			} else {
 				// If there is no category, make it gray.
