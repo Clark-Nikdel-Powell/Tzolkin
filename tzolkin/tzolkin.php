@@ -55,8 +55,10 @@ require_once TZ_PATH.'tz-shortcode.php';
 final class TZ_Tzolkin {
 
 	public static function activation() {
-		add_action('init', array('TZ_Event', 'register'));
-		flush_rewrite_rules();
+		add_action('admin_init', array('TZ_Event', 'register'));
+		add_action('init', function() { 
+			flush_rewrite_rules(); 
+		});
 	}
 
 	public static function deactivation() {
