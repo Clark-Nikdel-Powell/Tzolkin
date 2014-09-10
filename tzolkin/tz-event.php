@@ -876,6 +876,7 @@ final class TZ_Event {
 		add_action('admin_init', array(__CLASS__, 'enqueue_scripts'));
 		add_action('admin_init', array(__CLASS__, 'enqueue_styles'));
 		add_filter('wp_title', array(__CLASS__, 'wp_title'), 10, 3);
+		add_filter('aioseop_title', array(__CLASS__, 'wp_title'), 10, 3);
 		add_action('save_post', array(__CLASS__, 'save_post'), 10, 2);
 		add_action('wp_enqueue_scripts', array(__CLASS__, 'enqueue_styles_frontend'));
 		add_shortcode('tz_calendar', 'tz_calendar_shortcode');
