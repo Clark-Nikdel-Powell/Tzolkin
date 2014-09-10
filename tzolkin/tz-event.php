@@ -342,7 +342,7 @@ final class TZ_Event {
 
 		wp_enqueue_script(
 			'tz-event',
-			TZ_URL.'/resources/tz-event.js',
+			TZ_URL.'resources/tz-event.js',
 			array('tz-jquery-ui-datetime')
 		);
 	}
