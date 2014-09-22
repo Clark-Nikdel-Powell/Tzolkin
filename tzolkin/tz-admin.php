@@ -7,7 +7,7 @@ final class TZ_Admin {
 		$output = array();
 		foreach($cols as $key => $col) {
 			$output[$key] = 'date' === $key ? 'Publish Date' : $col;
-			if ('title' === $key) { 
+			if ('title' === $key) {
 				$output['tz_start'] = 'Start Date';
 				$output['tz_end'] = 'End Date';
 			}
@@ -15,7 +15,7 @@ final class TZ_Admin {
 		return $output;
 	}
 
-	public static function manage_posts_sortable_columns($cols) { 
+	public static function manage_posts_sortable_columns($cols) {
 		$cols['tz_start'] = 'tz_start';
 		$cols['tz_end'] = 'tz_end';
 		return $cols;
@@ -43,7 +43,7 @@ final class TZ_Admin {
 		global $wpdb, $wp_locale;
 		if (!TZ_Event::is_tzolkin()) return;
 		$mysql_format = "'Y-m-d H:i:s'";
-		
+
 		$months = $wpdb->get_results(
 			"SELECT DISTINCT YEAR(meta_value) as year, MONTH(meta_value) as month
 			FROM $wpdb->postmeta
@@ -79,11 +79,16 @@ final class TZ_Admin {
 		<?php
 	}
 
+	public static function enqueue_scripts() {
+		wp_enqueue_script( 'tz_admin_scripts', TZ_URL.'js/pre/admin.js', array('jquery'), false, true);
+	}
+
 	public static function initialize() {
-		add_filter('manage_edit-tz_event_columns', array(__CLASS__, 'add_columns'));
-		add_filter('manage_edit-tz_event_sortable_columns', array(__CLASS__, 'manage_posts_sortable_columns'));
-		add_filter('manage_posts_custom_column', array(__CLASS__, 'manage_posts_custom_column'), 10, 2);
-		add_action('restrict_manage_posts', array(__CLASS__, 'restrict_manage_posts'));
+		add_filter( 'manage_edit-tz_event_columns', array(__CLASS__, 'add_columns') );
+		add_filter( 'manage_edit-tz_event_sortable_columns', array(__CLASS__, 'manage_posts_sortable_columns') );
+		add_filter( 'manage_posts_custom_column', array(__CLASS__, 'manage_posts_custom_column'), 10, 2);
+		add_action( 'restrict_manage_posts', array(__CLASS__, 'restrict_manage_posts') );
+		add_action( 'admin_enqueue_scripts', array(__CLASS__, 'enqueue_scripts') );
 	}
 
 }

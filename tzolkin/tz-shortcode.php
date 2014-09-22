@@ -10,9 +10,10 @@ function tz_calendar_shortcode($options) {
 	// Shortcode Options	////////////////////////////
 	/////////////////////////////////////////////////
 
-  $args = shortcode_atts(array(
+	$args = shortcode_atts(array(
 		'format' => 'grid'
-  ), $options);
+	,	'view'   => 'collapsed'
+	), $options);
 
 	///////////////////////////////////////////////////
 	// URL Query String Options	//////////////////////
@@ -27,6 +28,11 @@ function tz_calendar_shortcode($options) {
 	// Set the format off user input, if it exists.
 	if (isset($_GET['format'])) $format = $_GET['format'];
 	else $format = $args['format'];
+
+	if (isset($_GET['view'])) $view = $_GET['view'];
+	else $view = $args['view'];
+
+	?><!-- <? print_r($args); ?> --><?
 
 	// Use the category input unless the clear button was clicked.
 	if (isset($_GET['tz_category']) && !isset($_GET['clear_category'])) $term_id = $_GET['tz_category'];
@@ -85,7 +91,7 @@ function tz_calendar_shortcode($options) {
 	//////////////////////////////////////////////////////////////////////////////
 
 	// Start up the grid, or the list.
-	echo '<div class="tzolkin-'. $format .'">';
+	echo '<div class="tzolkin-'. $format .' '. $view .'">';
 
 	// Weekday Headers
 	$days = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
@@ -153,6 +159,8 @@ function tz_calendar_shortcode($options) {
 	// get events using this function
 	$events = tz_get_current_month_events($args);
 
+	?><!-- <? print_r($events); ?> --><?
+
 	if (empty($events)) echo '<div class="list message">There are no events scheduled for '. $currentMonth .'.</div>';
 	if (!empty($events)) {
 
@@ -182,11 +190,18 @@ function tz_calendar_shortcode($options) {
 
 		// Loop through events and add the data to the $date_cells array
 		foreach ($events as $event) {
+
+			if ( $event->tz_exclude_from_calendar == 1 ) {
+				continue;
+			}
+
 			$e_id       = $event->ID;
 			$e_start    = $event->tz_start;
 			$e_end      = $event->tz_end;
+			$e_no_end   = $event->tz_no_end_time;
 			$e_allday   = $event->tz_all_day;
 			$e_location = $event->tz_location;
+			( !empty($event->tz_calendar_title) ? $e_title = $event->tz_calendar_title : $e_title = $event->post_title);
 
 			$start_key = date('j', strtotime($e_start));
 			$end_key   = date('j', strtotime($e_end));
@@ -247,7 +262,7 @@ function tz_calendar_shortcode($options) {
 						$l_key = $int;
 					}
 					// Do this on every day: gets displayed once on desktop, but in every instance on tablet and handheld.
-					$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>';
+					$title = '<a class="title" href="'. get_permalink($e_id) .'">'. $e_title .'</a>';
 
 					// Do this on the first day of the event.
 					if ($i == $start_key) {
@@ -275,6 +290,10 @@ function tz_calendar_shortcode($options) {
 				$time = tz_get_event_dates($e_id, 'g:ia');
 				$e_time = $time['start'].' - '.$time['end'];
 
+				if ( $e_no_end == 1 ) {
+					$e_time = $time['start'];
+				}
+
 				$description = '';
 				// Add Description
 				if (has_excerpt($e_id)) $description = '<div class="description">'. $event->post_excerpt .'</div>';
@@ -284,7 +303,7 @@ function tz_calendar_shortcode($options) {
 					$date_cells[$i]['circles'][] = '<span class="circle '. $color .'"></span>';
 					$date_cells[$i]['titles'][]  = '<div class="event">';
 					$date_cells[$i]['titles'][] .= '<div class="meta"><span class="time"><i class="icon-clock"></i>'. $e_time .'</span>'. ( !empty($e_location) ? '<span class="location"><i class="icon-location"></i>'. $e_location .'</span>' : '') .'</div>';
-					$date_cells[$i]['titles'][] .= '<div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $event->post_title .'</a>'. $description .'</div></div>';
+					$date_cells[$i]['titles'][] .= '<div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $e_title .'</a>'. $description .'</div></div>';
 				}
 				$date_cells[$start_key]['event_starts'] = $date_cells[$start_key]['event_starts'] + 1;
 			}

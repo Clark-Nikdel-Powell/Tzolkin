@@ -510,7 +510,7 @@ $purple: #9b59b6;
 		display: inline-block;
 		margin: 0 .125em;
 
-		@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+		@each $class, $color in ("gray": $gray, "blue": $blue, "red": $red, "green": $green, "yellow": $yellow, "orange": $orange, "purple": $purple) {
 			&.#{$class} {background-color: $color;}
 		}
 	}
@@ -544,11 +544,24 @@ $purple: #9b59b6;
 				right: -1px;
 			}
 			@at-root .tzolkin-row .cell {
-				&:last-child, &:first-child {
+				&:first-child {
 					.rectangles .rectangle {
 
-						// Using both before & after because after is already taken.
-						&:before, &:after {
+
+						&:before {
+							width: 0;
+							height: 0;
+							border-style: solid;
+							border-color: transparent;
+							border-top-width: $height/2;
+							border-bottom-width: $height/2;
+						}
+					}
+				}
+				&:last-child {
+					.rectangles .rectangle {
+
+						&:after {
 							width: 0;
 							height: 0;
 							border-style: solid;
@@ -588,7 +601,7 @@ $purple: #9b59b6;
 				}
 			}
 			// Why not try some løveli colors?
-			@each $class, $color in (gray: $gray, blue: $blue, red: $red, green: $green, yellow: $yellow, orange: $orange, purple: $purple) {
+			@each $class, $color in ("gray": $gray, "blue": $blue, "red": $red, "green": $green, "yellow": $yellow, "orange": $orange, "purple": $purple) {
 				&.#{$class} {
 					background-color: lighten($color, $lighten);
 

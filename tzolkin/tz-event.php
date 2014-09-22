@@ -2,24 +2,29 @@
 
 final class TZ_Event {
 
-	private static $name          = 'tz_event';
-	private static $slug          = 'events';
+	private static $name = 'tz_event';
+	private static $slug = 'events';
 
-	private static $nonce         = 'tz-nonce';
-	private static $all_day       = 'tz-all-day';
-	private static $start_date    = 'tz-start-date';
-	private static $start_time    = 'tz-start-time';
-	private static $end_date      = 'tz-end-date';
-	private static $end_time      = 'tz-end-time';
-	private static $rec_frequency = 'tz-rec-frequency';
-	private static $rec_end_date  = 'tz-rec-end-date';
+	private static $nonce                 = 'tz-nonce';
+	private static $all_day               = 'tz-all-day';
+	private static $calendar_title        = 'tz-calendar-title';
+	private static $no_end_time           = 'tz-no-end-time';
+	private static $exclude_from_calendar = 'tz-exclude-from-calendar';
+	private static $start_date            = 'tz-start-date';
+	private static $start_time            = 'tz-start-time';
+	private static $end_date              = 'tz-end-date';
+	private static $end_time              = 'tz-end-time';
+	private static $rec_frequency         = 'tz-rec-frequency';
+	private static $rec_end_date          = 'tz-rec-end-date';
 
-	private static $start_meta    = 'tz_start';
-	private static $end_meta      = 'tz_end';
-	private static $rec_end_meta  = 'tz_rec_end';
-	private static $rec_frequency_meta = 'tz_rec_frequency';
-	private static $all_day_meta  = 'tz_all_day';
-	private static $mysql_format  = 'Y-m-d H:i:s';
+	private static $start_meta                 = 'tz_start';
+	private static $end_meta                   = 'tz_end';
+	private static $rec_end_meta               = 'tz_rec_end';
+	private static $rec_frequency_meta         = 'tz_rec_frequency';
+	private static $all_day_meta               = 'tz_all_day';
+	private static $no_end_time_meta           = 'tz_no_end_time';
+	private static $exclude_from_calendar_meta = 'tz_exclude_from_calendar';
+	private static $mysql_format               = 'Y-m-d H:i:s';
 
 	private static $rec_frequencies = array(
 		 '' => '(none)'
@@ -36,11 +41,12 @@ final class TZ_Event {
 	private static $date_tag      = 'tz_date';
 	private static $archive_tag   = 'tz_archive';
 
-	private static $location_meta = 'tz_location';
-	private static $address_meta  = 'tz_address';
-	private static $city_meta     = 'tz_city';
-	private static $state_meta    = 'tz_state';
-	private static $zip_meta      = 'tz_zip';
+	private static $calendar_title_meta = 'tz_calendar_title';
+	private static $location_meta       = 'tz_location';
+	private static $address_meta        = 'tz_address';
+	private static $city_meta           = 'tz_city';
+	private static $state_meta          = 'tz_state';
+	private static $zip_meta            = 'tz_zip';
 
 	private static $register_args = array(
 	  'public'             => true,
@@ -371,7 +377,9 @@ final class TZ_Event {
 
 	public static function event_meta_box($event, $box) {
 
-		$all_day = (bool)get_post_meta($event->ID, self::$all_day_meta, true);
+		$all_day               = (bool)get_post_meta($event->ID, self::$all_day_meta, true);
+		$no_end_time           = (bool)get_post_meta($event->ID, self::$no_end_time_meta, true);
+		$exclude_from_calendar = (bool)get_post_meta($event->ID, self::$exclude_from_calendar_meta, true);
 
 		$start_str = get_post_meta($event->ID, self::$start_meta, true);
 		$end_str = get_post_meta($event->ID, self::$end_meta, true);
@@ -387,6 +395,7 @@ final class TZ_Event {
 			$rec_end = $rec_end->format('m/d/Y');
 		}
 
+		$calendar_title   = get_post_meta($event->ID, self::$calendar_title_meta, true);
 		$location         = get_post_meta($event->ID, self::$location_meta, true);
 		$street_address   = get_post_meta($event->ID, self::$address_meta, true);
 		$city             = get_post_meta($event->ID, self::$city_meta, true);
@@ -396,25 +405,40 @@ final class TZ_Event {
 		wp_nonce_field(self::$name, self::$nonce, false);
 		?>
 			<h4>Date/Time</h4>
-			<p>
+			<p class="start-date-time">
 				<label for="<?php echo self::$start_date; ?>">Start Date/Time</label><br/>
 				<input type="text" name="<?php echo self::$start_date; ?>" id="<?php echo self::$start_date; ?>"
 				 class="tz-input tz-date" value="<?php esc_attr_e($start->format('m/d/Y h:i A')); ?>" />
 				<input type="text" name="<?php echo self::$start_time; ?>" id="<?php echo self::$start_time; ?>"
 				 class="tz-input tz-time" value="<?php esc_attr_e($start->format('h:i A')); ?>" />
 			</p>
-			<p>
+			<p class="end-date-time">
 				<label for="<?php echo self::$end_date; ?>">End Date/Time</label><br/>
 				<input type="text" name="<?php echo self::$end_date; ?>" id="<?php echo self::$end_date; ?>"
 				 class="tz-input tz-date" value="<?php esc_attr_e($end->format('m/d/Y h:i A')); ?>" />
 				<input type="text" name="<?php echo self::$end_time; ?>" id="<?php echo self::$end_time; ?>"
 				 class="tz-input tz-time" value="<?php esc_attr_e($end->format('h:i A')); ?>" />
 			</p>
+			<h4>Display Options</h4>
 			<p>
 				<label for="<?php echo self::$all_day; ?>">
 					<input type="checkbox" name="<?php echo self::$all_day; ?>" id="<?php echo self::$all_day; ?>"
 					 value="<?php echo self::$all_day; ?>" <?php echo $all_day ? 'checked="checked" ' : ''; ?>/>
 					All Day Event
+				</label>
+			</p>
+			<p>
+				<label for="<?php echo self::$no_end_time_meta; ?>">
+					<input type="checkbox" name="<?php echo self::$no_end_time_meta; ?>" id="<?php echo self::$no_end_time_meta; ?>"
+					 value="<?php echo self::$no_end_time; ?>" <?php echo $no_end_time ? 'checked="checked" ' : ''; ?>/>
+					No End Time
+				</label>
+			</p>
+			<p>
+				<label for="<?php echo self::$exclude_from_calendar; ?>">
+					<input type="checkbox" name="<?php echo self::$exclude_from_calendar_meta; ?>" id="<?php echo self::$exclude_from_calendar; ?>"
+					 value="<?php echo self::$exclude_from_calendar; ?>" <?php echo $exclude_from_calendar ? 'checked="checked" ' : ''; ?>/>
+					Exclude from Calendar
 				</label>
 			</p>
 			<h4>Recurrence</h4>
@@ -435,6 +459,11 @@ final class TZ_Event {
 				 class="tz-input tz-date" value="<?php esc_attr_e($rec_end) ?>" />
 			</p>
 			<h4>Location / Admission</h4>
+			<p>
+				<label for="<?php echo self::$calendar_title_meta; ?>">Calendar Title <em><small>(Optional)</small></em></label><br />
+					<input type="text" name="<?php echo self::$calendar_title_meta; ?>" id="<?php echo self::$calendar_title_meta; ?>"
+					 class="widefat tz-input tz-calendar-title" value="<?php echo ($calendar_title); ?>" />
+			</p>
 			<p>
 				<label for="<?php echo self::$location_meta; ?>">Location Name</label><br />
 					<input type="text" name="<?php echo self::$location_meta; ?>" id="<?php echo self::$location_meta; ?>"
@@ -501,7 +530,7 @@ final class TZ_Event {
 		}
 		$events = get_posts($args);
 		foreach ($events as $id=>$event) {
-			$get = array('tz_start','tz_end','tz_all_day');
+			$get = array('tz_start','tz_end','tz_all_day','tz_no_end_time','tz_exclude_from_calendar','tz_calendar_title');
 			foreach ($get as $key) {
 				$events[$id]->$key = get_post_meta($event->ID, $key, true);
 			}
@@ -588,13 +617,18 @@ final class TZ_Event {
 
 	public static function save_post($post_id, $post) {
 		if (!isset($_POST[self::$nonce])) return $post_id;
-		$all_day = isset($_POST[self::$all_day]);
+
+		$all_day               = isset($_POST[self::$all_day]);
+		$no_end_time           = isset($_POST[self::$no_end_time_meta]);
+		$exclude_from_calendar = isset($_POST[self::$exclude_from_calendar_meta]);
+
 		$start   = new DateTime(sprintf('%s %s', $_POST[self::$start_date], $_POST[self::$start_time]));
 		$end     = new DateTime(sprintf('%s %s', $_POST[self::$end_date], $_POST[self::$end_time]));
 
 		$rec_frequency  = isset($_POST[self::$rec_frequency]) ? $_POST[self::$rec_frequency] : '';
 		$rec_end = new DateTime(sprintf('%s', $_POST[self::$rec_end_date]));
 
+		$calendar_title = isset($_POST[self::$calendar_title_meta]) ? $_POST[self::$calendar_title_meta] : '';
 		$location       = isset($_POST[self::$location_meta]) ? $_POST[self::$location_meta] : '';
 		$street_address = isset($_POST[self::$address_meta]) ? $_POST[self::$address_meta] : '';
 		$city           = isset($_POST[self::$city_meta]) ? $_POST[self::$city_meta] : '';
@@ -610,12 +644,16 @@ final class TZ_Event {
 		}
 
 		update_post_meta($post_id, self::$all_day_meta, $all_day);
+		update_post_meta($post_id, self::$no_end_time_meta, $no_end_time);
+		update_post_meta($post_id, self::$exclude_from_calendar_meta, $exclude_from_calendar);
+
 		update_post_meta($post_id, self::$start_meta, $start->format(self::$mysql_format));
 		update_post_meta($post_id, self::$end_meta, $end->format(self::$mysql_format));
 
 		update_post_meta($post_id, self::$rec_frequency_meta, $rec_frequency);
 		update_post_meta($post_id, self::$rec_end_meta, $rec_end->format(self::$mysql_format));
 
+		update_post_meta($post_id, self::$calendar_title_meta, $calendar_title);
 		update_post_meta($post_id, self::$location_meta, $location);
 		update_post_meta($post_id, self::$address_meta, $street_address);
 		update_post_meta($post_id, self::$city_meta, $city);

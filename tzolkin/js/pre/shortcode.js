@@ -58,11 +58,12 @@ jQuery(function($) {
 		}
 	});
 
-	$("body").on("click",".expand-collapse", function() {
+	function expand_all() {
+		var el = ".expand-collapse";
 
-		if ($(this).hasClass("expand-all")) {
+		if ($(el).hasClass("expand-all")) {
 
-			$(this).removeClass("expand-all").addClass("collapse-all").find("i").attr("class", "icon-collapse");
+			$(el).removeClass("expand-all").addClass("collapse-all").find("i").attr("class", "icon-collapse");
 
 			$(".tzolkin-grid .tzolkin-row").each(function() {
 
@@ -82,7 +83,7 @@ jQuery(function($) {
 
 		} else {
 
-			$(this).removeClass("collapse-all").addClass("expand-all").find("i").attr("class", "icon-expand");
+			$(el).removeClass("collapse-all").addClass("expand-all").find("i").attr("class", "icon-expand");
 
 			$(".tzolkin-grid .tzolkin-row").each(function() {
 				var closedHeight = 0;
@@ -95,8 +96,9 @@ jQuery(function($) {
 			});
 
 		}
-
-	});
+	}
+	$(".expand-collapse").on("click", function() { expand_all(); });
+	if ( $(".tzolkin-grid").hasClass("expanded") ) { expand_all(); }
 
 	}
 
