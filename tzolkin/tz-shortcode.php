@@ -157,8 +157,6 @@ function tz_calendar_shortcode($options) {
 	// get events using this function
 	$events = tz_get_current_month_events($args);
 
-	?><!-- <? print_r($events); ?> --><?
-
 	if (empty($events)) echo '<div class="list message">There are no events scheduled for '. $currentMonth .'.</div>';
 	if (!empty($events)) {
 
