@@ -32,8 +32,6 @@ function tz_calendar_shortcode($options) {
 	if (isset($_GET['view'])) $view = $_GET['view'];
 	else $view = $args['view'];
 
-	?><!-- <? print_r($args); ?> --><?
-
 	// Use the category input unless the clear button was clicked.
 	if (isset($_GET['tz_category']) && !isset($_GET['clear_category'])) $term_id = $_GET['tz_category'];
 
