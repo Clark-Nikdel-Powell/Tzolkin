@@ -13,6 +13,7 @@ function tz_calendar_shortcode($options) {
 	$args = shortcode_atts(array(
 		'format' => 'grid'
 	,	'view'   => 'collapsed'
+	,	'cat'    => ''
 	), $options);
 
 	///////////////////////////////////////////////////
@@ -24,13 +25,15 @@ function tz_calendar_shortcode($options) {
 	elseif (isset($_GET['current_month'])) $currentMonth = $_GET['current_month'];
 	else $currentMonth = date('F Y');
 
-
 	// Set the format off user input, if it exists.
 	if (isset($_GET['format'])) $format = $_GET['format'];
 	else $format = $args['format'];
 
 	if (isset($_GET['view'])) $view = $_GET['view'];
 	else $view = $args['view'];
+
+	// Set the category based off shortcode input first.
+	if (!empty($args['cat'])) $term_id = $args['cat'];
 
 	// Use the category input unless the clear button was clicked.
 	if (isset($_GET['tz_category']) && !isset($_GET['clear_category'])) $term_id = $_GET['tz_category'];
@@ -54,8 +57,10 @@ function tz_calendar_shortcode($options) {
 	// Categories
 	$c_args = array('selected' => isset($term_id) ? $term_id : 0);
 
-	// Get categories to display
-	echo tz_dropdown_categories($c_args);
+	// Get categories to display, unless this is a single-category view.
+	if (empty($args['cat'])) {
+		echo tz_dropdown_categories($c_args);
+	}
 
 	// Format-- probably a more concise way to lay this out.
 	echo '<div class="format">';
