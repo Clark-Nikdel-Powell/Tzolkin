@@ -1,5 +1,2 @@
 .DS_Store
-
-/tzolkin/css/pre/.sass-cache/
-
-/tzolkin/css/style.css
+.sass-cache

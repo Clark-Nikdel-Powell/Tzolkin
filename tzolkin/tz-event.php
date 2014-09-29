@@ -879,7 +879,7 @@ final class TZ_Event {
 		$meta_query = $query->meta_query;
 		if (!is_array($meta_query)) $meta_query = array();
 
-		$now = new DateTime();
+		$now = new DateTime(current_time('mysql'));
 		$meta_query[] = array(
 			'key'     => self::$end_meta,
 			'value'   => $now->format('Y-m-d H:i:s'),
