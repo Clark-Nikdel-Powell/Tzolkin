@@ -33,7 +33,7 @@ function tz_calendar_shortcode($options) {
 	else $view = $args['view'];
 
 	// Set the category based off shortcode input first.
-	if (!empty($args['cat'])) $term_id = $args['cat'];
+	if (isset($args['cat'])) $term_id = explode(",", str_replace(" ", "", $args['cat']));
 
 	// Use the category input unless the clear button was clicked.
 	if (isset($_GET['tz_category']) && !isset($_GET['clear_category'])) $term_id = $_GET['tz_category'];

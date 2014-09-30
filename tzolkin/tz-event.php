@@ -523,9 +523,20 @@ final class TZ_Event {
 		);
 
 		if ( isset($user_args['category_id']) && $user_args['category_id'] != -1 ) {
+			$cat_ids = $user_args['category_id'];
+			$operator = 'IN';
+
+			foreach ($cat_ids as $key => $id) {
+				if ( intval($id) < 0 ) {
+					$cat_ids[$key] = substr($id, 1);
+					$operator = 'NOT IN';
+				}
+			}
+
 			$args['tax_query'][] = array(
 				'taxonomy' => 'tz_category'
-			,	'terms'    => $user_args['category_id']
+			,	'terms'    => $cat_ids
+			,	'operator' => $operator
 			);
 		}
 		$events = get_posts($args);
