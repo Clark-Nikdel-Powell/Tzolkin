@@ -578,7 +578,6 @@ final class TZ_Event {
 				,'eventLength' 		=> floor((strtotime($eventEnd) - strtotime($eventStart))/(60*60*24))
 				,'allDay' 			=> get_post_meta($recEvent->ID, 'tz_all_day', true)
 				,'lastDayOfMonth' 	=> $lastDayOfMonth
-				,'eventWeekOfMonth' => TZ_Event::week_of_month(strtotime($eventStart))
 				,'startDayName' 	=> date('l', strtotime($eventStart))
 				,'currentMonth' 	=> $currentMonth
 				,'currentYear' 		=> $currentYear
@@ -596,10 +595,37 @@ final class TZ_Event {
 		return floor(($day_of_first + $day_of_month) / 7) + 1;
 	}
 
+	/**
+	* 	Gets details about the month for comparison
+	* 	@since 		2.3.2
+	* 	@access 	private
+	* 	@param 		int 		$date 		The unix timestamp of the date getting info for
+	* 	@return 	array 		$details 	An array of string/int details for this date
+	*/
+	private static function x_dayname_in_month($date) {
+		if ( !is_numeric($date) ) {
+			$date = strtotime($date);
+		}
+		$startOfMonth = strtotime(date('m',$date) . '/1/' . date('Y',$date) );
+		$firstWeek = date('W', $startOfMonth );
+		$thisWeek = date('W', $date);
+		$currentWeek = ( $thisWeek - $firstWeek );
+		if ( $currentWeek < 0 ) {
+			$currentWeek = 4;
+		}
+		$dayNameCount = $currentWeek;
+		if ( date('d',$date) > 7 && date('N', $date ) >= date('N', $startOfMonth) ) {
+			$dayNameCount++;
+		}
+		elseif ( $dayNameCount == 0 ) {
+			$dayNameCount = 1;
+		}
+		return $dayNameCount;
+	}
+
 	private static function rec_compare_dates($args, $event, $events) {
 
-		$eventWeekOfMonth = TZ_Event::week_of_month(strtotime($args['eventStart']));
-
+		$x_dayname_in_month = TZ_Event::x_dayname_in_month(strtotime($args['eventStart']));
 		for ($daynumber=1; $daynumber<=$args['lastDayOfMonth']; $daynumber++) {
 
 			$thisTimeStamp = strtotime($args['currentMonth'].'/'.$daynumber.'/'.$args['currentYear']);
@@ -608,11 +634,31 @@ final class TZ_Event {
 
 			if ($thisTimeStamp > strtotime($args['eventStart']) && $thisTimeStamp <= strtotime($args['recEnd'])) {
 				switch ($args['recType']) {
-					case 'd': 	$thisAdd = true; break;
-					case 'w':	if ($currentDayName == $args['startDayName']) $thisAdd = true; break;
-					case 'm1': 	if ($eventWeekOfMonth == TZ_Event::week_of_month($thisTimeStamp) && $currentDayName == $args['startDayName']) $thisAdd = true; break;
-					case 'm2': 	if ($daynumber == date('j', strtotime($args['eventStart']))) $thisAdd = true; break;
-					case 'y': 	if ($args['currentMonth'] == date('n', strtotime($args['eventStart'])) && $daynumber == date('j', strtotime($args['eventStart']))) $thisAdd = true; break;
+					case 'd': 	
+						$thisAdd = true; 
+						break;
+					case 'w':	
+						if ( $currentDayName == $args['startDayName']) {
+							$thisAdd = true;
+						}
+						break;
+					case 'm1':
+						if ( $x_dayname_in_month == TZ_Event::x_dayname_in_month($thisTimeStamp)
+							&& $currentDayName == $args['startDayName']) {
+							$thisAdd = true; 
+						}
+						break;
+					case 'm2': 	
+						if ( $daynumber == date( 'j', strtotime($args['eventStart'] ) ) ) {
+							$thisAdd = true;
+						}
+						break;
+					case 'y': 	
+						if ( $args['currentMonth'] == date( 'n', strtotime($args['eventStart']) ) 
+							&& $daynumber == date('j', strtotime($args['eventStart'] ) ) ) {
+							$thisAdd = true;
+						}
+						break;
 				}
 			}
 			if ($thisAdd===true) {
