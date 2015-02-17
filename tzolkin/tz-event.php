@@ -512,7 +512,7 @@ final class TZ_Event {
 				,	array(
 						'key'     => 'tz_start'
 					,	'value'   => $nextMonth
-					,	'compare' => '<='
+					,	'compare' => '<'
 					,	'type'    => 'DATETIME'
 					)
 				)
