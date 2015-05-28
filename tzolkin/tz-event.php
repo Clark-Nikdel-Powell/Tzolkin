@@ -634,10 +634,10 @@ final class TZ_Event {
 
 			if ($thisTimeStamp > strtotime($args['eventStart']) && $thisTimeStamp <= strtotime($args['recEnd'])) {
 				switch ($args['recType']) {
-					case 'd': 	
-						$thisAdd = true; 
+					case 'd':
+						$thisAdd = true;
 						break;
-					case 'w':	
+					case 'w':
 						if ( $currentDayName == $args['startDayName']) {
 							$thisAdd = true;
 						}
@@ -645,16 +645,16 @@ final class TZ_Event {
 					case 'm1':
 						if ( $x_dayname_in_month == TZ_Event::x_dayname_in_month($thisTimeStamp)
 							&& $currentDayName == $args['startDayName']) {
-							$thisAdd = true; 
+							$thisAdd = true;
 						}
 						break;
-					case 'm2': 	
+					case 'm2':
 						if ( $daynumber == date( 'j', strtotime($args['eventStart'] ) ) ) {
 							$thisAdd = true;
 						}
 						break;
-					case 'y': 	
-						if ( $args['currentMonth'] == date( 'n', strtotime($args['eventStart']) ) 
+					case 'y':
+						if ( $args['currentMonth'] == date( 'n', strtotime($args['eventStart']) )
 							&& $daynumber == date('j', strtotime($args['eventStart'] ) ) ) {
 							$thisAdd = true;
 						}
@@ -854,10 +854,8 @@ final class TZ_Event {
 	}
 
 	public static function pre_get_posts($query) {
-		if (!is_archive()) return;
 		if (!is_array($query->query)) return;
 		if (!array_key_exists('post_type', $query->query)) return;
-		if (isset($query->query['meta_query'])) return;
 		if (self::$name !== $query->query['post_type']) return;
 
 		self::filter_admin($query);
