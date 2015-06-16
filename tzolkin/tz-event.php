@@ -601,7 +601,8 @@ final class TZ_Event {
 	}
 
 	/**
-	* 	Gets details about the month for comparison
+	* 	DEPRECATED: use get_occurrence_in_month instead.
+	*   Gets details about the month for comparison
 	* 	@since 		2.3.2
 	* 	@access 	private
 	* 	@param 		int 		$date 		The unix timestamp of the date getting info for
