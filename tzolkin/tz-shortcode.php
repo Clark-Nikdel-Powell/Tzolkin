@@ -33,11 +33,12 @@ function tz_calendar_shortcode($options) {
 	else $view = $args['view'];
 
 	// Set the category based off shortcode input first.
-	if (isset($args['cat'])) $term_id = explode(",", str_replace(" ", "", $args['cat']));
+	if ( '' != $args['cat'] ) {
+		$term_id = explode(",", str_replace(" ", "", $args['cat']));
+	}
 
 	// Use the category input unless the clear button was clicked.
 	if (isset($_GET['tz_category']) && !isset($_GET['clear_category'])) $term_id = $_GET['tz_category'];
-
 
 	///////////////////////////////////////////////////
 	//  Markup Setup  ////////////////////////////////
@@ -182,12 +183,13 @@ function tz_calendar_shortcode($options) {
 
 		// Get a list of sort columns and their data to pass to array_multisort
 		$sort = array();
-		foreach($events as $k=>$v) {
-		    $sort['tz_start'][$k] = $v->tz_start;
+		foreach($events as $k => $v) {
+		    $sort['tz_start_date'][$k] = date( 'y-m-d', strtotime( $v->tz_start ) );
+		    $sort['tz_start_time'][$k] = $v->tz_start_time;
 		    $sort['duration'][$k] = $v->duration;
 		}
 		// sort by tz_start asc and then duration desc
-		array_multisort($sort['tz_start'], SORT_ASC, $sort['duration'], SORT_DESC,$events);
+		array_multisort( $sort['tz_start_date'], SORT_ASC, $sort['tz_start_time'], SORT_ASC, $sort['duration'], SORT_DESC, $events );
 
 		// Loop through events and add the data to the $date_cells array
 		foreach ($events as $event) {
@@ -304,7 +306,7 @@ function tz_calendar_shortcode($options) {
 					$date_cells[$i]['circles'][] = '<span class="circle '. $color .'"></span>';
 					$date_cells[$i]['titles'][]  = '<div class="event">';
 					$date_cells[$i]['titles'][] .= '<div class="meta"><span class="time"><i class="icon-clock"></i>'. $e_time .'</span>'. ( !empty($e_location) ? '<span class="location"><i class="icon-location"></i>'. $e_location .'</span>' : '') .'</div>';
-					$date_cells[$i]['titles'][] .= '<div class="text"><a class="title" href="'. get_permalink($e_id) .'">'. $e_title .'</a>'. $description .'</div></div>';
+					$date_cells[$i]['titles'][] .= '<div class="text"><a class="title" href="'. get_permalink($e_id) .'?m='. date('M', strtotime( $currentMonth ) ) .'&d='. $i .'&y='. date('Y', strtotime( $currentMonth ) ) .'">'. $e_title .'</a>'. $description .'</div></div>';
 				}
 				$date_cells[$start_key]['event_starts'] = $date_cells[$start_key]['event_starts'] + 1;
 			}
