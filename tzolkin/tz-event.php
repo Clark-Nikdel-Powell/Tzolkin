@@ -545,6 +545,7 @@ final class TZ_Event {
 			foreach ($get as $key) {
 				$events[$id]->$key = get_post_meta($event->ID, $key, true);
 			}
+			$event->tz_start_time = date('H-i', strtotime( $event->tz_start ) );
 		}
 
 
@@ -562,6 +563,7 @@ final class TZ_Event {
 		if (isset($args['tax_query'])) $rArgs['tax_query'] = $args['tax_query'];
 
 		$reocurringEvents = get_posts($rArgs);
+
 		$lastDayOfMonth = date('d',strtotime($nextMonth)-1);
 		$currentMonth = date('m',strtotime($nextMonth)-1);
 		$currentYear = date('Y',strtotime($nextMonth)-1);
@@ -583,8 +585,11 @@ final class TZ_Event {
 				,'currentYear' 		=> $currentYear
 			);
 
-			$events = TZ_Event::rec_compare_dates($thisArgs,$recEvent,$events);
+			$recEvent->tz_start_time = date('H-i', strtotime( $eventStart ) );
+
+			$events = TZ_Event::rec_compare_dates( $thisArgs, $recEvent, $events );
 		}
+
 		return $events;
 	}
 
@@ -603,17 +608,27 @@ final class TZ_Event {
 	* 	@return 	array 		$details 	An array of string/int details for this date
 	*/
 	private static function x_dayname_in_month($date) {
+
 		if ( !is_numeric($date) ) {
 			$date = strtotime($date);
 		}
-		$startOfMonth = strtotime(date('m',$date) . '/1/' . date('Y',$date) );
-		$firstWeek = date('W', $startOfMonth );
-		$thisWeek = date('W', $date);
+
+		$month_number = date( 'm', $date );
+
+		$startOfMonth = strtotime( $month_number . '/1/' . date( 'Y', $date ) );
+		$firstWeek = date( 'W', $startOfMonth );
+
+		$thisWeek = date( 'W', $date );
 		$currentWeek = ( $thisWeek - $firstWeek );
-		if ( $currentWeek < 0 ) {
+
+		if ( $currentWeek <= 0 ) {
 			$currentWeek = 4;
 		}
+
 		$dayNameCount = $currentWeek;
+
+		// If the day of the month is greater than 7 and the day of the week is greater than or equal to the day of the
+		// week of the beginning of the month, add one to day name count.
 		if ( date('d',$date) > 7 && date('N', $date ) >= date('N', $startOfMonth) ) {
 			$dayNameCount++;
 		}
@@ -623,28 +638,65 @@ final class TZ_Event {
 		return $dayNameCount;
 	}
 
+	private static function get_occurrence_in_month($date) {
+
+		if ( !is_numeric($date) ) {
+			$date = strtotime($date);
+		}
+
+		$date_number = date( 'j', $date );
+
+		// This is at least the first occurence in the month.
+		$count = 1;
+
+		// If the number of the date is greater than seven, there's at least
+		// one more occurrence of this day in the month.
+		if ( $date_number > 7 ) {
+
+			// Run a reverse for loop backwards, adding one to the count for every time the
+			// loop isn't less than zero, which would mean that we would have left the month.
+
+			for ( $i = $date_number; $i > 7; $i-- ) {
+
+				$count = $count + 1;
+				$i = $i - 6;
+
+			}
+
+		}
+
+		return $count;
+
+	}
+
 	private static function rec_compare_dates($args, $event, $events) {
 
-		$x_dayname_in_month = TZ_Event::x_dayname_in_month(strtotime($args['eventStart']));
-		for ($daynumber=1; $daynumber<=$args['lastDayOfMonth']; $daynumber++) {
+		// Get the dayname in month of the event.
+		$occurrence_of_event_in_month = TZ_Event::get_occurrence_in_month( strtotime( $args['eventStart'] ) );
+
+		// Loop through the days of the month, adding events if the recurrence settings match the day of the month.
+		for ( $daynumber = 1; $daynumber <= $args['lastDayOfMonth']; $daynumber++ ) {
 
 			$thisTimeStamp = strtotime($args['currentMonth'].'/'.$daynumber.'/'.$args['currentYear']);
 			$currentDayName = date('l', $thisTimeStamp);
+			$currentDayPosition = date('w', $thisTimeStamp);
 			$thisAdd = false;
 
-			if ($thisTimeStamp > strtotime($args['eventStart']) && $thisTimeStamp <= strtotime($args['recEnd'])) {
-				switch ($args['recType']) {
+			if ( $thisTimeStamp > strtotime( $args['eventStart'] ) && $thisTimeStamp <= strtotime( $args['recEnd'] ) ) {
+				switch ( $args['recType'] ) {
 					case 'd':
 						$thisAdd = true;
 						break;
 					case 'w':
-						if ( $currentDayName == $args['startDayName']) {
+						if ( $currentDayName == $args['startDayName'] ) {
 							$thisAdd = true;
 						}
 						break;
 					case 'm1':
-						if ( $x_dayname_in_month == TZ_Event::x_dayname_in_month($thisTimeStamp)
-							&& $currentDayName == $args['startDayName']) {
+
+						$occurence_of_date_in_month = TZ_Event::get_occurrence_in_month( $thisTimeStamp );
+
+						if ( $occurrence_of_event_in_month == $occurence_of_date_in_month && $currentDayName == $args['startDayName'] ) {
 							$thisAdd = true;
 						}
 						break;
@@ -854,9 +906,12 @@ final class TZ_Event {
 	}
 
 	public static function pre_get_posts($query) {
+		if (!is_archive()) return;
 		if (!is_array($query->query)) return;
 		if (!array_key_exists('post_type', $query->query)) return;
+		if (isset($query->query['meta_query'])) return;
 		if (self::$name !== $query->query['post_type']) return;
+
 
 		self::filter_admin($query);
 		self::order_by_event_date($query);
