@@ -8,7 +8,7 @@ jQuery(function($) {
 	var recEndDateTextBox = '#tz-rec-end-date';
 	var recFrequency = '#tz-rec-frequency';
 	var timeFormat = 'h:mm TT';
-	var shared = { 
+	var shared = {
 		timeFormat: timeFormat
 	};
 
@@ -49,18 +49,18 @@ jQuery(function($) {
 
 		startDateTextBox.datetimepicker('option', options);
 		endDateTextBox.datetimepicker('option', options);
-		
+
 		startTimeBox.toggle(!checked);
 		endTimeBox.toggle(!checked);
 	}
 
-	startDateTextBox.datetimepicker($.extend({ 
+	startDateTextBox.datetimepicker($.extend({
 	  onClose: makeOnClose(true),
 	  onSelect: makeOnSelect(true),
 	  altField: '#tz-start-time'
 	}, shared));
 
-	endDateTextBox.datetimepicker($.extend({ 
+	endDateTextBox.datetimepicker($.extend({
 	  onClose: makeOnClose(false),
 	  onSelect: makeOnSelect(false),
 	  altField: '#tz-end-time'
@@ -68,9 +68,9 @@ jQuery(function($) {
 
 	function showEndDate() {
 		if (!$(recFrequency + " option:selected").val())
-			$("#freqp").css("display","none");
+			$("#freqp,#freqs").css("display","none");
 		else
-			$("#freqp").css("display","block");
+			$("#freqp,#freqs").css("display","block");
 	}
 	$(recEndDateTextBox).datepicker();
 	$(recFrequency).on("change", function() { showEndDate(); });

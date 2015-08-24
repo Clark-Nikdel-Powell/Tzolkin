@@ -204,10 +204,23 @@ function tz_calendar_shortcode($options) {
 			$e_no_end   = $event->tz_no_end_time;
 			$e_allday   = $event->tz_all_day;
 			$e_location = $event->tz_location;
+			$e_skip 	= $event->tz_rec_skip;
 			( !empty($event->tz_calendar_title) ? $e_title = $event->tz_calendar_title : $e_title = $event->post_title);
 
 			$start_key = date('j', strtotime($e_start));
 			$end_key   = date('j', strtotime($e_end));
+
+			if(!ctype_space($e_skip) && $e_skip != ''){
+				$should_skip = false;
+				$skips = explode(",", $e_skip);
+				foreach($skips as $skip){
+					$skip_date = date('m/d/y', strtotime($skip));
+					$start_date = date('m/d/y', strtotime($e_start));
+					if( $start_date == $skip_date ) $should_skip = true;
+				}
+				if($should_skip) continue;
+			}
+
 
 			// Set up category classes.
 			$cats = get_the_terms($e_id, 'tz_category');

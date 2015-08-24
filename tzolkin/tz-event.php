@@ -16,6 +16,7 @@ final class TZ_Event {
 	private static $end_time              = 'tz-end-time';
 	private static $rec_frequency         = 'tz-rec-frequency';
 	private static $rec_end_date          = 'tz-rec-end-date';
+	private static $rec_skip_meta    	  = 'tz_rec_skip';
 
 	private static $start_meta                 = 'tz_start';
 	private static $end_meta                   = 'tz_end';
@@ -385,6 +386,7 @@ final class TZ_Event {
 		$end_str = get_post_meta($event->ID, self::$end_meta, true);
 		$rec_end_str = get_post_meta($event->ID, self::$rec_end_meta, true);
 		$rec_frequency_str = get_post_meta($event->ID, self::$rec_frequency_meta, true);
+		$rec_skip = get_post_meta( $event->ID, self::$rec_skip_meta, true );
 
 		$start = new DateTime($start_str ? $start_str : current_time('mysql'));
 		$end = new DateTime($end_str ? $end_str : current_time('mysql'));
@@ -457,6 +459,11 @@ final class TZ_Event {
 				<label for="<?php echo self::$rec_end_date; ?>">End Date (on or before)</label><br/>
 				<input type="text" name="<?php echo self::$rec_end_date; ?>" id="<?php echo self::$rec_end_date; ?>"
 				 class="tz-input tz-date" value="<?php esc_attr_e($rec_end) ?>" />
+			</p>
+			<p id="freqs">
+				<label for="<?php echo self::$rec_skip_meta; ?>">Skip Dates</label><br/>
+				<input type="text" name="<?php echo self::$rec_skip_meta; ?>" id="<?php echo self::$rec_skip_meta; ?>"
+				 class="tz-input" value="<?php esc_attr_e($rec_skip) ?>" />
 			</p>
 			<h4>Location / Admission</h4>
 			<p>
@@ -737,6 +744,7 @@ final class TZ_Event {
 
 		$rec_frequency  = isset($_POST[self::$rec_frequency]) ? $_POST[self::$rec_frequency] : '';
 		$rec_end = new DateTime(sprintf('%s', $_POST[self::$rec_end_date]));
+		$rec_skip = isset($_POST[self::$rec_frequency]) ? $_POST[self::$rec_skip_meta] : '';
 
 		$calendar_title = isset($_POST[self::$calendar_title_meta]) ? $_POST[self::$calendar_title_meta] : '';
 		$location       = isset($_POST[self::$location_meta]) ? $_POST[self::$location_meta] : '';
@@ -761,6 +769,7 @@ final class TZ_Event {
 		update_post_meta($post_id, self::$end_meta, $end->format(self::$mysql_format));
 
 		update_post_meta($post_id, self::$rec_frequency_meta, $rec_frequency);
+		update_post_meta($post_id, self::$rec_skip_meta, $rec_skip);
 		update_post_meta($post_id, self::$rec_end_meta, $rec_end->format(self::$mysql_format));
 
 		update_post_meta($post_id, self::$calendar_title_meta, $calendar_title);

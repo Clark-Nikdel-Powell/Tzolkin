@@ -1,3 +1,5 @@
 .DS_Store
 .sass-cache
 tzolkin/sftp-config.json
+sftp-config.json
+config.codekit
