@@ -461,7 +461,7 @@ final class TZ_Event {
 				 class="tz-input tz-date" value="<?php esc_attr_e($rec_end) ?>" />
 			</p>
 			<p id="freqs">
-				<label for="<?php echo self::$rec_skip_meta; ?>">Skip Dates</label><br/>
+				<label for="<?php echo self::$rec_skip_meta; ?>">Dates to Skip</label><br/>
 				<input type="text" name="<?php echo self::$rec_skip_meta; ?>" id="<?php echo self::$rec_skip_meta; ?>"
 				 class="tz-input" value="<?php esc_attr_e($rec_skip) ?>" />
 			</p>
