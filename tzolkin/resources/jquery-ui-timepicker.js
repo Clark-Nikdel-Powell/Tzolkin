@@ -307,7 +307,7 @@
 					}
 					$.extend(this, parseRes.timeObj);
 				} catch (err) {
-					$.datepicker.log("Error parsing the date/time string: " + err +
+					console.log("Error parsing the date/time string: " + err +
 									"\ndate/time string = " + timeString +
 									"\ntimeFormat = " + this._defaults.timeFormat +
 									"\ndateFormat = " + dp_dateFormat);

@@ -30,23 +30,26 @@
 
 // DETERMINE LOCAL OR LIVE
 $localhost = false;
-if ($localhost===true) $url = '/wp-content/plugins/tzolkin/';
-else $url = plugin_dir_url(__FILE__);
+if ( $localhost === true ) {
+	$url = '/wp-content/plugins/tzolkin/';
+} else {
+	$url = plugin_dir_url( __FILE__ );
+}
 
 //FILESYSTEM CONSTANTS
-define('TZ_PATH', plugin_dir_path(__FILE__));
-define('TZ_URL', $url);
+define( 'TZ_PATH', plugin_dir_path( __FILE__ ) );
+define( 'TZ_URL', $url );
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // PLUGIN DEPENDENCIES
 ////////////////////////////////////////////////////////////////////////////////
 
-require_once TZ_PATH.'tz-category.php';
-require_once TZ_PATH.'tz-event.php';
-require_once TZ_PATH.'tz-functions.php';
-require_once TZ_PATH.'tz-admin.php';
-require_once TZ_PATH.'tz-shortcode.php';
+require_once TZ_PATH . 'tz-category.php';
+require_once TZ_PATH . 'tz-event.php';
+require_once TZ_PATH . 'tz-functions.php';
+require_once TZ_PATH . 'tz-admin.php';
+require_once TZ_PATH . 'tz-shortcode.php';
 
 ////////////////////////////////////////////////////////////////////////////////
 // ROOT PLUGIN CLASS
@@ -55,19 +58,24 @@ require_once TZ_PATH.'tz-shortcode.php';
 final class TZ_Tzolkin {
 
 	public static function activation() {
-		add_action('admin_init', array('TZ_Event', 'register'));
-		add_action('init', function() {
+
+		add_action( 'admin_init', array( 'TZ_Event', 'register' ) );
+		add_action( 'init', function () {
+
 			flush_rewrite_rules();
-		});
+		} );
 	}
 
 	public static function deactivation() {
+
 		flush_rewrite_rules();
 	}
 
-	public static function uninstall() { /* PLUGIN DELETION LOGIC HERE */ }
+	public static function uninstall() { /* PLUGIN DELETION LOGIC HERE */
+	}
 
 	public static function initialize() {
+
 		TZ_Event::initialize();
 		TZ_Admin::initialize();
 	}
@@ -78,7 +86,7 @@ final class TZ_Tzolkin {
 // PLUGIN INITIALIZATION
 ////////////////////////////////////////////////////////////////////////////////
 
-register_activation_hook(__FILE__, array('TZ_Tzolkin', 'activation'));
-register_deactivation_hook(__FILE__, array('TZ_Tzolkin', 'deactivation'));
-register_uninstall_hook(__FILE__, array('TZ_Tzolkin', 'uninstall'));
+register_activation_hook( __FILE__, array( 'TZ_Tzolkin', 'activation' ) );
+register_deactivation_hook( __FILE__, array( 'TZ_Tzolkin', 'deactivation' ) );
+register_uninstall_hook( __FILE__, array( 'TZ_Tzolkin', 'uninstall' ) );
 TZ_Tzolkin::initialize();

@@ -1,4 +1,4 @@
-<?
+<?php
 add_action( 'init', 'create_tz_taxonomy', 0 );
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ function tz_category_taxonomy_custom_fields($tag) {
 	</th>
 	<td>
 		<select id="tz-color" name="term_meta[color]">
-			<?
+			<?php
 			foreach($colors as $color) {
 				// Figure out who's on first.
 				$selected = '';
