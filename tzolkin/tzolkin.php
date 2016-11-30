@@ -2,12 +2,12 @@
 /*
 	Plugin Name: Tzolkin - Events Calendar
 	Plugin URI: https://github.com/Clark-Nikdel-Powell/Tzolkin
-	Version: 2.3.3
+	Version: 2.3.4
 	Description: Event Calendar plugin for WordPress including iCAL support and advanced properties.
-	Author: Chris Roche & Taylor Gorman
+	Author: Joe Cruz, Glenn Welser, Chris Roche & Taylor Gorman
 	Author URI: http://www.clarknikdelpowell.com
 
-	Copyright 2012  Chris Roche & Taylor Gorman (email : wordpress@clarknikdelpowell.com)
+	Copyright 2016  CNP (email : wordpress@clarknikdelpowell.com)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License, version 2, as
