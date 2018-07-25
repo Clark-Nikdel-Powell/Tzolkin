@@ -16,7 +16,6 @@ final class TZ_Event {
 	private static $end_time = 'tz-end-time';
 	private static $rec_frequency = 'tz-rec-frequency';
 	private static $rec_end_date = 'tz-rec-end-date';
-	private static $rec_skip_meta = 'tz_rec_skip';
 
 	private static $start_meta = 'tz_start';
 	private static $end_meta = 'tz_end';
@@ -28,12 +27,17 @@ final class TZ_Event {
 	private static $mysql_format = 'Y-m-d H:i:s';
 
 	private static $rec_frequencies = array(
-		''   => '(none)',
-		'd'  => 'daily',
-		'w'  => 'weekly',
-		'm1' => 'monthly (by day)',
-		'm2' => 'monthly (by date)',
-		'y'  => 'yearly',
+		''   => '(none)'
+	,
+		'd'  => 'daily'
+	,
+		'w'  => 'weekly'
+	,
+		'm1' => 'monthly (by day)'
+	,
+		'm2' => 'monthly (by date)'
+	,
+		'y'  => 'yearly'
 	);
 
 	private static $year_tag = 'tz_year';
@@ -75,7 +79,7 @@ final class TZ_Event {
 			'not_found'          => 'No events found',
 			'not_found_in_trash' => 'No events found in Trash',
 			'parent_item_colon'  => 'Parent Event',
-			'menu_name'          => 'Events',
+			'menu_name'          => 'Events'
 		),
 
 		'supports' => array(
@@ -83,8 +87,8 @@ final class TZ_Event {
 			'editor',
 			'thumbnail',
 			'excerpt',
-			'revisions',
-		),
+			'revisions'
+		)
 	);
 
 	////////////////////////////////////////////////////////////////////////////
@@ -92,9 +96,11 @@ final class TZ_Event {
 	////////////////////////////////////////////////////////////////////////////
 
 	private static function get_event_date( $post_id, $key, $format = '' ) {
-
 		$format   = trim( $format );
 		$date_str = get_post_meta( $post_id, $key, true );
+		if ( ! $date_str && is_preview() ) {
+			$date_str = '1/1/1970 00:00:00';
+		}
 		if ( ! $date_str ) {
 			return $format ? '' : null;
 		}
@@ -104,14 +110,12 @@ final class TZ_Event {
 	}
 
 	private static function get_the_date( $key, $format = '' ) {
-
 		global $post;
 
 		return self::get_event_date( $post->ID, $key, $format );
 	}
 
 	private static function the_date( $key, $format = '' ) {
-
 		$format = trim( $format );
 		if ( ! $format ) {
 			$format = get_option( 'date_format' );
@@ -120,64 +124,53 @@ final class TZ_Event {
 	}
 
 	public static function get_event_dates( $post_id, $format = '' ) {
-
 		return array(
 			'start' => self::get_event_date( $post_id, self::$start_meta, $format ),
-			'end'   => self::get_event_date( $post_id, self::$end_meta, $format ),
+			'end'   => self::get_event_date( $post_id, self::$end_meta, $format )
 		);
 	}
 
 	public static function get_the_dates( $format = '' ) {
-
 		global $post;
 
 		return self::get_event_dates( $post->ID, $format );
 	}
 
 	public static function get_event_start_date( $post_id, $format = '' ) {
-
 		return self::get_event_date( $post_id, self::$start_meta, $format );
 	}
 
 	public static function get_event_end_date( $post_id, $format = '' ) {
-
 		return self::get_event_date( $post_id, self::$end_meta, $format );
 	}
 
 	public static function get_the_start_date( $format = '' ) {
-
 		return self::get_the_date( self::$start_meta, $format );
 	}
 
 	public static function get_the_end_date( $format = '' ) {
-
 		return self::get_the_date( self::$end_meta, $format );
 	}
 
 	public static function the_start_date( $format = '' ) {
-
 		return self::the_date( self::$start_meta, $format );
 	}
 
 	public static function the_end_date( $format = '' ) {
-
 		return self::the_date( self::$end_meta, $format );
 	}
 
 	public static function event_is_all_day( $post_id ) {
-
 		return (bool) get_post_meta( $post_id, self::$all_day_meta, true );
 	}
 
 	public static function is_all_day() {
-
 		global $post;
 
 		return self::event_is_all_day( $post->ID );
 	}
 
 	public static function event_is_same_day( $post_id ) {
-
 		$dates  = self::get_event_dates( $post_id );
 		$start  = $dates['start'];
 		$end    = $dates['end'];
@@ -187,7 +180,6 @@ final class TZ_Event {
 	}
 
 	public static function is_same_day() {
-
 		global $post;
 
 		return self::event_is_same_day( $post->ID );
@@ -199,19 +191,16 @@ final class TZ_Event {
 
 
 	public static function get_event_location( $post_id ) {
-
 		return get_post_meta( $post_id, self::$location_meta, true );
 	}
 
 	public static function get_the_location() {
-
 		global $post;
 
 		return get_post_meta( $post->ID, self::$location_meta, true );
 	}
 
 	public static function the_location() {
-
 		global $post;
 		echo get_post_meta( $post->ID, self::$location_meta, true );
 	}
@@ -221,7 +210,6 @@ final class TZ_Event {
 	////////////////////////////////////////////////////////////////
 
 	public static function gather_full_address( $post_id ) {
-
 		$full_address = get_post_meta( $post_id, self::$address_meta, true );
 		$full_address .= '<br />' . get_post_meta( $post_id, self::$city_meta, true );
 		$full_address .= ', ' . get_post_meta( $post_id, self::$state_meta, true );
@@ -231,14 +219,12 @@ final class TZ_Event {
 	}
 
 	public static function get_full_event_address( $post_id ) {
-
 		$full_address = self::gather_full_address( $post_id );
 
 		return $full_address;
 	}
 
 	public static function get_full_address() {
-
 		global $post;
 		$full_address = self::gather_full_address( $post->ID );
 
@@ -246,26 +232,22 @@ final class TZ_Event {
 	}
 
 	public static function the_full_address() {
-
 		global $post;
 		$full_address = self::gather_full_address( $post->ID );
 		echo $full_address;
 	}
 
 	public static function get_event_address( $post_id ) {
-
 		return get_post_meta( $post_id, self::$address_meta, true );
 	}
 
 	public static function get_the_address() {
-
 		global $post;
 
 		return get_post_meta( $post->ID, self::$address_meta, true );
 	}
 
 	public static function the_address() {
-
 		global $post;
 		echo get_post_meta( $post->ID, self::$address_meta, true );
 	}
@@ -276,19 +258,16 @@ final class TZ_Event {
 
 
 	public static function get_event_city( $post_id ) {
-
 		return get_post_meta( $post_id, self::$city_meta, true );
 	}
 
 	public static function get_the_city() {
-
 		global $post;
 
 		return get_post_meta( $post->ID, self::$city_meta, true );
 	}
 
 	public static function the_city() {
-
 		global $post;
 		echo get_post_meta( $post->ID, self::$city_meta, true );
 	}
@@ -299,19 +278,16 @@ final class TZ_Event {
 
 
 	public static function get_event_state( $post_id ) {
-
 		return get_post_meta( $post_id, self::$state_meta, true );
 	}
 
 	public static function get_the_state() {
-
 		global $post;
 
 		return get_post_meta( $post->ID, self::$state_meta, true );
 	}
 
 	public static function the_state() {
-
 		global $post;
 		echo get_post_meta( $post->ID, self::$state_meta, true );
 	}
@@ -322,19 +298,16 @@ final class TZ_Event {
 
 
 	public static function get_event_zip( $post_id ) {
-
 		return get_post_meta( $post_id, self::$zip_meta, true );
 	}
 
 	public static function get_the_zip() {
-
 		global $post;
 
 		return get_post_meta( $post->ID, self::$zip_meta, true );
 	}
 
 	public static function the_zip() {
-
 		global $post;
 		echo get_post_meta( $post->ID, self::$zip_meta, true );
 	}
@@ -344,7 +317,6 @@ final class TZ_Event {
 	////////////////////////////////////////////////////////////////
 
 	public static function get_categories() {
-
 		return get_terms( 'tz_category' );
 	}
 
@@ -355,7 +327,7 @@ final class TZ_Event {
 		,
 			'class'            => 'tzolkin-categories'
 		,
-			'show_option_none' => 'Select a Category',
+			'show_option_none' => 'Select a Category'
 		);
 
 		// Parse incoming $args into an array and merge it with $defaults
@@ -385,13 +357,11 @@ final class TZ_Event {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static function is_tzolkin() {
-
 		$post_type = is_admin() ? null : get_post_type();
 		if ( isset( $_GET['post_type'] ) ) {
 			$post_type = $_GET['post_type'];
 		} elseif ( isset( $_GET['post'] ) && isset( $_GET['action'] ) &&
-		           $_GET['action'] === 'edit'
-		) {
+		           $_GET['action'] === 'edit' ) {
 			$post_type = get_post_type( $_GET['post'] );
 		}
 
@@ -399,33 +369,24 @@ final class TZ_Event {
 	}
 
 	public static function enqueue_scripts() {
-
 		if ( ! self::is_tzolkin() ) {
 			return;
 		}
 
 		wp_enqueue_script(
 			'tz-jquery-ui-datetime',
-			TZ_URL.'resources/jquery-ui-timepicker.js',
-			array('jquery-ui-datepicker', 'jquery-ui-slider')
+			TZ_URL . 'resources/jquery-ui-timepicker.js',
+			array( 'jquery-ui-datepicker', 'jquery-ui-slider' )
 		);
 
 		wp_enqueue_script(
 			'tz-event',
-			TZ_URL.'resources/tz-event.js',
-			array('tz-jquery-ui-datetime')
-		);
-
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-
-		wp_enqueue_script(
-			'tz-event',
-			TZ_URL . 'resources/tz-event.js'
+			TZ_URL . 'resources/tz-event.js',
+			array( 'tz-jquery-ui-datetime' )
 		);
 	}
 
 	public static function enqueue_styles() {
-
 		if ( ! self::is_tzolkin() ) {
 			return;
 		}
@@ -434,13 +395,11 @@ final class TZ_Event {
 	}
 
 	public static function enqueue_styles_frontend() {
-
 		wp_enqueue_style( 'tzolkin_grid_styles', TZ_URL . 'css/style.css', false );
 		wp_enqueue_script( 'tzolkin_grid_scripts', TZ_URL . 'js/app.min.js', array( 'jquery' ), false, true );
 	}
 
 	public static function add_meta_box() {
-
 		add_meta_box(
 			'tz-event-meta',
 			'Event Details',
@@ -461,7 +420,6 @@ final class TZ_Event {
 		$end_str           = get_post_meta( $event->ID, self::$end_meta, true );
 		$rec_end_str       = get_post_meta( $event->ID, self::$rec_end_meta, true );
 		$rec_frequency_str = get_post_meta( $event->ID, self::$rec_frequency_meta, true );
-		$rec_skip          = get_post_meta( $event->ID, self::$rec_skip_meta, true );
 
 		$start = new DateTime( $start_str ? $start_str : current_time( 'mysql' ) );
 		$end   = new DateTime( $end_str ? $end_str : current_time( 'mysql' ) );
@@ -481,103 +439,98 @@ final class TZ_Event {
 
 		wp_nonce_field( self::$name, self::$nonce, false );
 		?>
-		<h4>Date/Time</h4>
-		<p class="start-date-time">
-			<label for="<?php echo self::$start_date; ?>">Start Date/Time</label><br/>
-			<input type="text" name="<?php echo self::$start_date; ?>" id="<?php echo self::$start_date; ?>"
-					class="tz-input tz-date" value="<?php esc_attr_e( $start->format( 'm/d/Y h:i A' ) ); ?>"/>
-			<input type="text" name="<?php echo self::$start_time; ?>" id="<?php echo self::$start_time; ?>"
-					class="tz-input tz-time" value="<?php esc_attr_e( $start->format( 'h:i A' ) ); ?>"/>
-		</p>
-		<p class="end-date-time">
-			<label for="<?php echo self::$end_date; ?>">End Date/Time</label><br/>
-			<input type="text" name="<?php echo self::$end_date; ?>" id="<?php echo self::$end_date; ?>"
-					class="tz-input tz-date" value="<?php esc_attr_e( $end->format( 'm/d/Y h:i A' ) ); ?>"/>
-			<input type="text" name="<?php echo self::$end_time; ?>" id="<?php echo self::$end_time; ?>"
-					class="tz-input tz-time" value="<?php esc_attr_e( $end->format( 'h:i A' ) ); ?>"/>
-		</p>
-		<h4>Display Options</h4>
-		<p>
-			<label for="<?php echo self::$all_day; ?>">
-				<input type="checkbox" name="<?php echo self::$all_day; ?>" id="<?php echo self::$all_day; ?>"
-						value="<?php echo self::$all_day; ?>" <?php echo $all_day ? 'checked="checked" ' : ''; ?>/>
-				All Day Event
-			</label>
-		</p>
-		<p>
-			<label for="<?php echo self::$no_end_time_meta; ?>">
-				<input type="checkbox" name="<?php echo self::$no_end_time_meta; ?>"
-						id="<?php echo self::$no_end_time_meta; ?>"
-						value="<?php echo self::$no_end_time; ?>" <?php echo $no_end_time ? 'checked="checked" ' : ''; ?>/>
-				No End Time
-			</label>
-		</p>
-		<p>
-			<label for="<?php echo self::$exclude_from_calendar; ?>">
-				<input type="checkbox" name="<?php echo self::$exclude_from_calendar_meta; ?>"
-						id="<?php echo self::$exclude_from_calendar; ?>"
-						value="<?php echo self::$exclude_from_calendar; ?>" <?php echo $exclude_from_calendar ? 'checked="checked" ' : ''; ?>/>
-				Exclude from Calendar
-			</label>
-		</p>
-		<h4>Recurrence</h4>
-		<p>
-			<label>Frequency</label><br/>
-			<select name="<?php echo self::$rec_frequency; ?>" id="<?php echo self::$rec_frequency; ?>">
+        <h4>Date/Time</h4>
+        <p class="start-date-time">
+            <label for="<?php echo self::$start_date; ?>">Start Date/Time</label><br/>
+            <input type="text" name="<?php echo self::$start_date; ?>" id="<?php echo self::$start_date; ?>"
+                   class="tz-input tz-date" value="<?php esc_attr_e( $start->format( 'm/d/Y h:i A' ) ); ?>"/>
+            <input type="text" name="<?php echo self::$start_time; ?>" id="<?php echo self::$start_time; ?>"
+                   class="tz-input tz-time" value="<?php esc_attr_e( $start->format( 'h:i A' ) ); ?>"/>
+        </p>
+        <p class="end-date-time">
+            <label for="<?php echo self::$end_date; ?>">End Date/Time</label><br/>
+            <input type="text" name="<?php echo self::$end_date; ?>" id="<?php echo self::$end_date; ?>"
+                   class="tz-input tz-date" value="<?php esc_attr_e( $end->format( 'm/d/Y h:i A' ) ); ?>"/>
+            <input type="text" name="<?php echo self::$end_time; ?>" id="<?php echo self::$end_time; ?>"
+                   class="tz-input tz-time" value="<?php esc_attr_e( $end->format( 'h:i A' ) ); ?>"/>
+        </p>
+        <h4>Display Options</h4>
+        <p>
+            <label for="<?php echo self::$all_day; ?>">
+                <input type="checkbox" name="<?php echo self::$all_day; ?>" id="<?php echo self::$all_day; ?>"
+                       value="<?php echo self::$all_day; ?>" <?php echo $all_day ? 'checked="checked" ' : ''; ?>/>
+                All Day Event
+            </label>
+        </p>
+        <p>
+            <label for="<?php echo self::$no_end_time_meta; ?>">
+                <input type="checkbox" name="<?php echo self::$no_end_time_meta; ?>"
+                       id="<?php echo self::$no_end_time_meta; ?>"
+                       value="<?php echo self::$no_end_time; ?>" <?php echo $no_end_time ? 'checked="checked" ' : ''; ?>/>
+                No End Time
+            </label>
+        </p>
+        <p>
+            <label for="<?php echo self::$exclude_from_calendar; ?>">
+                <input type="checkbox" name="<?php echo self::$exclude_from_calendar_meta; ?>"
+                       id="<?php echo self::$exclude_from_calendar; ?>"
+                       value="<?php echo self::$exclude_from_calendar; ?>" <?php echo $exclude_from_calendar ? 'checked="checked" ' : ''; ?>/>
+                Exclude from Calendar
+            </label>
+        </p>
+        <h4>Recurrence</h4>
+        <p>
+            <label>Frequency</label><br/>
+            <select name="<?php echo self::$rec_frequency; ?>" id="<?php echo self::$rec_frequency; ?>">
 				<?php foreach ( self::$rec_frequencies as $val => $disp ) {
 					$sel = '';
 					if ( $val == $rec_frequency_str ) {
 						$sel = ' selected';
 					}
 					?>
-					<option value="<?php echo $val ?>"<?php echo $sel ?>><?php echo $disp ?></option><?php
+                    <option value="<?= $val ?>"<?= $sel ?>><?= $disp ?></option><?php
 				} ?>
-			</select>
-		</p>
-		<p id="freqp">
-			<label for="<?php echo self::$rec_end_date; ?>">End Date (on or before)</label><br/>
-			<input type="text" name="<?php echo self::$rec_end_date; ?>" id="<?php echo self::$rec_end_date; ?>"
-					class="tz-input tz-date" value="<?php esc_attr_e( $rec_end ) ?>"/>
-		</p>
-		<p id="freqs">
-			<label for="<?php echo self::$rec_skip_meta; ?>">Dates to Skip</label><br/>
-			<input type="text" name="<?php echo self::$rec_skip_meta; ?>" id="<?php echo self::$rec_skip_meta; ?>"
-					class="tz-input" value="<?php esc_attr_e( $rec_skip ) ?>"/>
-		</p>
-		<h4>Location / Admission</h4>
-		<p>
-			<label for="<?php echo self::$calendar_title_meta; ?>">Calendar Title <em>
-					<small>(Optional)</small>
-				</em></label><br/>
-			<input type="text" name="<?php echo self::$calendar_title_meta; ?>"
-					id="<?php echo self::$calendar_title_meta; ?>"
-					class="widefat tz-input tz-calendar-title" value="<?php echo( $calendar_title ); ?>"/>
-		</p>
-		<p>
-			<label for="<?php echo self::$location_meta; ?>">Location Name</label><br/>
-			<input type="text" name="<?php echo self::$location_meta; ?>" id="<?php echo self::$location_meta; ?>"
-					class="widefat tz-input tz-location" value="<?php echo( $location ); ?>"/>
-		</p>
-		<p>
-			<label for="<?php echo self::$address_meta; ?>">Street Address</label><br/>
-			<input type="text" name="<?php echo self::$address_meta; ?>" id="<?php echo self::$address_meta; ?>"
-					class="widefat tz-input tz-street" value="<?php esc_attr_e( $street_address ); ?>"/>
-		</p>
-		<p>
-			<label for="<?php echo self::$city_meta; ?>">City</label><br/>
-			<input type="text" name="<?php echo self::$city_meta; ?>" id="<?php echo self::$city_meta; ?>"
-					class="widefat tz-input tz-city" value="<?php esc_attr_e( $city ); ?>"/>
-		</p>
-		<p>
-			<label for="<?php echo self::$state_meta; ?>">State</label><br/>
-			<input type="text" name="<?php echo self::$state_meta; ?>" id="<?php echo self::$state_meta; ?>"
-					class="widefat tz-input tz-state" value="<?php esc_attr_e( $state ); ?>"/>
-		</p>
-		<p>
-			<label for="<?php echo self::$zip_meta; ?>">Zip Code</label><br/>
-			<input type="text" name="<?php echo self::$zip_meta; ?>" id="<?php echo self::$zip_meta; ?>"
-					class="widefat tz-input tz-zip" value="<?php esc_attr_e( $zip_code ); ?>"/>
-		</p>
+            </select>
+        </p>
+        <p id="freqp">
+            <label for="<?php echo self::$rec_end_date; ?>">End Date (on or before)</label><br/>
+            <input type="text" name="<?php echo self::$rec_end_date; ?>" id="<?php echo self::$rec_end_date; ?>"
+                   class="tz-input tz-date" value="<?php esc_attr_e( $rec_end ) ?>"/>
+        </p>
+        <h4>Location / Admission</h4>
+        <p>
+            <label for="<?php echo self::$calendar_title_meta; ?>">Calendar Title <em>
+                    <small>(Optional)</small>
+                </em></label><br/>
+            <input type="text" name="<?php echo self::$calendar_title_meta; ?>"
+                   id="<?php echo self::$calendar_title_meta; ?>"
+                   class="widefat tz-input tz-calendar-title" value="<?php echo( $calendar_title ); ?>"/>
+        </p>
+        <p>
+            <label for="<?php echo self::$location_meta; ?>">Location Name</label><br/>
+            <input type="text" name="<?php echo self::$location_meta; ?>" id="<?php echo self::$location_meta; ?>"
+                   class="widefat tz-input tz-location" value="<?php echo( $location ); ?>"/>
+        </p>
+        <p>
+            <label for="<?php echo self::$address_meta; ?>">Street Address</label><br/>
+            <input type="text" name="<?php echo self::$address_meta; ?>" id="<?php echo self::$address_meta; ?>"
+                   class="widefat tz-input tz-street" value="<?php esc_attr_e( $street_address ); ?>"/>
+        </p>
+        <p>
+            <label for="<?php echo self::$city_meta; ?>">City</label><br/>
+            <input type="text" name="<?php echo self::$city_meta; ?>" id="<?php echo self::$city_meta; ?>"
+                   class="widefat tz-input tz-city" value="<?php esc_attr_e( $city ); ?>"/>
+        </p>
+        <p>
+            <label for="<?php echo self::$state_meta; ?>">State</label><br/>
+            <input type="text" name="<?php echo self::$state_meta; ?>" id="<?php echo self::$state_meta; ?>"
+                   class="widefat tz-input tz-state" value="<?php esc_attr_e( $state ); ?>"/>
+        </p>
+        <p>
+            <label for="<?php echo self::$zip_meta; ?>">Zip Code</label><br/>
+            <input type="text" name="<?php echo self::$zip_meta; ?>" id="<?php echo self::$zip_meta; ?>"
+                   class="widefat tz-input tz-zip" value="<?php esc_attr_e( $zip_code ); ?>"/>
+        </p>
 		<?php
 	}
 
@@ -602,7 +555,7 @@ final class TZ_Event {
 				,
 					'compare' => '>='
 				,
-					'type'    => 'DATETIME',
+					'type'    => 'DATETIME'
 				)
 			,
 				array(
@@ -610,10 +563,10 @@ final class TZ_Event {
 				,
 					'value'   => $nextMonth
 				,
-					'compare' => '<'
+					'compare' => '<='
 				,
-					'type'    => 'DATETIME',
-				),
+					'type'    => 'DATETIME'
+				)
 			)
 		,
 			'orderby'          => 'meta_value'
@@ -622,7 +575,7 @@ final class TZ_Event {
 		,
 			'order'            => 'ASC'
 		,
-			'numberposts'      => - 1,
+			'numberposts'      => - 1
 		);
 
 		if ( isset( $user_args['category_id'] ) && $user_args['category_id'] != - 1 ) {
@@ -641,7 +594,7 @@ final class TZ_Event {
 			,
 				'terms'    => $cat_ids
 			,
-				'operator' => $operator,
+				'operator' => $operator
 			);
 		}
 		$events = get_posts( $args );
@@ -652,12 +605,11 @@ final class TZ_Event {
 				'tz_all_day',
 				'tz_no_end_time',
 				'tz_exclude_from_calendar',
-				'tz_calendar_title',
+				'tz_calendar_title'
 			);
 			foreach ( $get as $key ) {
 				$events[ $id ]->$key = get_post_meta( $event->ID, $key, true );
 			}
-			$event->tz_start_time = date( 'H-i', strtotime( $event->tz_start ) );
 		}
 
 
@@ -673,8 +625,8 @@ final class TZ_Event {
 			,
 				array( 'key' => 'tz_rec_frequency', 'value' => '', 'compare' => '!=' )
 			,
-				array( 'key' => 'tz_rec_frequency', 'compare' => 'EXISTS' ),
-			),
+				array( 'key' => 'tz_rec_frequency', 'compare' => 'EXISTS' )
+			)
 		);
 
 		if ( isset( $args['tax_query'] ) ) {
@@ -682,38 +634,37 @@ final class TZ_Event {
 		}
 
 		$reocurringEvents = get_posts( $rArgs );
-
-		$lastDayOfMonth = date( 'd', strtotime( $nextMonth ) - 1 );
-		$currentMonth   = date( 'm', strtotime( $nextMonth ) - 1 );
-		$currentYear    = date( 'Y', strtotime( $nextMonth ) - 1 );
+		$lastDayOfMonth   = date( 'd', strtotime( $nextMonth ) - 1 );
+		$currentMonth     = date( 'm', strtotime( $nextMonth ) - 1 );
+		$currentYear      = date( 'Y', strtotime( $nextMonth ) - 1 );
 
 		foreach ( $reocurringEvents as $recEvent ) {
 
 			$eventStart = get_post_meta( $recEvent->ID, 'tz_start', true );
 			$eventEnd   = get_post_meta( $recEvent->ID, 'tz_end', true );
 			$thisArgs   = array(
-				'recType'        => get_post_meta( $recEvent->ID, 'tz_rec_frequency', true )
+				'recType'          => get_post_meta( $recEvent->ID, 'tz_rec_frequency', true )
 			,
-				'recEnd'         => get_post_meta( $recEvent->ID, 'tz_rec_end', true )
+				'recEnd'           => get_post_meta( $recEvent->ID, 'tz_rec_end', true )
 			,
-				'eventStart'     => $eventStart
+				'eventStart'       => $eventStart
 			,
-				'eventEnd'       => $eventEnd
+				'eventEnd'         => $eventEnd
 			,
-				'eventLength'    => floor( ( strtotime( $eventEnd ) - strtotime( $eventStart ) ) / ( 60 * 60 * 24 ) )
+				'eventLength'      => floor( ( strtotime( $eventEnd ) - strtotime( $eventStart ) ) / ( 60 * 60 * 24 ) )
 			,
-				'allDay'         => get_post_meta( $recEvent->ID, 'tz_all_day', true )
+				'allDay'           => get_post_meta( $recEvent->ID, 'tz_all_day', true )
 			,
-				'lastDayOfMonth' => $lastDayOfMonth
+				'lastDayOfMonth'   => $lastDayOfMonth
 			,
-				'startDayName'   => date( 'l', strtotime( $eventStart ) )
+				'eventWeekOfMonth' => TZ_Event::week_of_month( strtotime( $eventStart ) )
 			,
-				'currentMonth'   => $currentMonth
+				'startDayName'     => date( 'l', strtotime( $eventStart ) )
 			,
-				'currentYear'    => $currentYear,
+				'currentMonth'     => $currentMonth
+			,
+				'currentYear'      => $currentYear
 			);
-
-			$recEvent->tz_start_time = date( 'H-i', strtotime( $eventStart ) );
 
 			$events = TZ_Event::rec_compare_dates( $thisArgs, $recEvent, $events );
 		}
@@ -722,7 +673,6 @@ final class TZ_Event {
 	}
 
 	private static function week_of_month( $date ) {
-
 		$day_of_first = date( 'N', mktime( 0, 0, 0, date( 'm', $date ), 1, date( 'Y', $date ) ) );
 		if ( $day_of_first == 7 ) {
 			$day_of_first = 0;
@@ -732,90 +682,15 @@ final class TZ_Event {
 		return floor( ( $day_of_first + $day_of_month ) / 7 ) + 1;
 	}
 
-	/**
-	 *    DEPRECATED: use get_occurrence_in_month instead.
-	 *   Gets details about the month for comparison
-	 * @since        2.3.2
-	 * @access       private
-	 *
-	 * @param        int $date The unix timestamp of the date getting info for
-	 *
-	 * @return    array        $details    An array of string/int details for this date
-	 */
-	private static function x_dayname_in_month( $date ) {
-
-		if ( ! is_numeric( $date ) ) {
-			$date = strtotime( $date );
-		}
-
-		$month_number = date( 'm', $date );
-
-		$startOfMonth = strtotime( $month_number . '/1/' . date( 'Y', $date ) );
-		$firstWeek    = date( 'W', $startOfMonth );
-
-		$thisWeek    = date( 'W', $date );
-		$currentWeek = ( $thisWeek - $firstWeek );
-
-		if ( $currentWeek <= 0 ) {
-			$currentWeek = 4;
-		}
-
-		$dayNameCount = $currentWeek;
-
-		// If the day of the month is greater than 7 and the day of the week is greater than or equal to the day of the
-		// week of the beginning of the month, add one to day name count.
-		if ( date( 'd', $date ) > 7 && date( 'N', $date ) >= date( 'N', $startOfMonth ) ) {
-			$dayNameCount ++;
-		} elseif ( $dayNameCount == 0 ) {
-			$dayNameCount = 1;
-		}
-
-		return $dayNameCount;
-	}
-
-	private static function get_occurrence_in_month( $date ) {
-
-		if ( ! is_numeric( $date ) ) {
-			$date = strtotime( $date );
-		}
-
-		$date_number = date( 'j', $date );
-
-		// This is at least the first occurence in the month.
-		$count = 1;
-
-		// If the number of the date is greater than seven, there's at least
-		// one more occurrence of this day in the month.
-		if ( $date_number > 7 ) {
-
-			// Run a reverse for loop backwards, adding one to the count for every time the
-			// loop isn't less than zero, which would mean that we would have left the month.
-
-			for ( $i = $date_number; $i > 7; $i -- ) {
-
-				$count = $count + 1;
-				$i     = $i - 6;
-
-			}
-
-		}
-
-		return $count;
-
-	}
-
 	private static function rec_compare_dates( $args, $event, $events ) {
 
-		// Get the dayname in month of the event.
-		$occurrence_of_event_in_month = TZ_Event::get_occurrence_in_month( strtotime( $args['eventStart'] ) );
+		$eventWeekOfMonth = TZ_Event::week_of_month( strtotime( $args['eventStart'] ) );
 
-		// Loop through the days of the month, adding events if the recurrence settings match the day of the month.
 		for ( $daynumber = 1; $daynumber <= $args['lastDayOfMonth']; $daynumber ++ ) {
 
-			$thisTimeStamp      = strtotime( $args['currentMonth'] . '/' . $daynumber . '/' . $args['currentYear'] );
-			$currentDayName     = date( 'l', $thisTimeStamp );
-			$currentDayPosition = date( 'w', $thisTimeStamp );
-			$thisAdd            = false;
+			$thisTimeStamp  = strtotime( $args['currentMonth'] . '/' . $daynumber . '/' . $args['currentYear'] );
+			$currentDayName = date( 'l', $thisTimeStamp );
+			$thisAdd        = false;
 
 			if ( $thisTimeStamp > strtotime( $args['eventStart'] ) && $thisTimeStamp <= strtotime( $args['recEnd'] ) ) {
 				switch ( $args['recType'] ) {
@@ -828,10 +703,7 @@ final class TZ_Event {
 						}
 						break;
 					case 'm1':
-
-						$occurence_of_date_in_month = TZ_Event::get_occurrence_in_month( $thisTimeStamp );
-
-						if ( $occurrence_of_event_in_month == $occurence_of_date_in_month && $currentDayName == $args['startDayName'] ) {
+						if ( $eventWeekOfMonth == TZ_Event::week_of_month( $thisTimeStamp ) && $currentDayName == $args['startDayName'] ) {
 							$thisAdd = true;
 						}
 						break;
@@ -841,9 +713,7 @@ final class TZ_Event {
 						}
 						break;
 					case 'y':
-						if ( $args['currentMonth'] == date( 'n', strtotime( $args['eventStart'] ) )
-						     && $daynumber == date( 'j', strtotime( $args['eventStart'] ) )
-						) {
+						if ( $args['currentMonth'] == date( 'n', strtotime( $args['eventStart'] ) ) && $daynumber == date( 'j', strtotime( $args['eventStart'] ) ) ) {
 							$thisAdd = true;
 						}
 						break;
@@ -862,7 +732,6 @@ final class TZ_Event {
 	}
 
 	public static function save_post( $post_id, $post ) {
-
 		if ( ! isset( $_POST[ self::$nonce ] ) ) {
 			return $post_id;
 		}
@@ -871,12 +740,11 @@ final class TZ_Event {
 		$no_end_time           = isset( $_POST[ self::$no_end_time_meta ] );
 		$exclude_from_calendar = isset( $_POST[ self::$exclude_from_calendar_meta ] );
 
-		$start = new DateTime( sprintf( '%s %s', $_POST[ self::$start_date ], $_POST[ self::$start_time ] ) );
-		$end   = new DateTime( sprintf( '%s %s', $_POST[ self::$end_date ], $_POST[ self::$end_time ] ) );
+		$start = new DateTime( sprintf( '%s %s', date( 'm/d/Y', strtotime( $_POST[ self::$start_date ] ) ), $_POST[ self::$start_time ] ) );
+		$end   = new DateTime( sprintf( '%s %s', date( 'm/d/Y', strtotime( $_POST[ self::$end_date ] ) ), $_POST[ self::$end_time ] ) );
 
 		$rec_frequency = isset( $_POST[ self::$rec_frequency ] ) ? $_POST[ self::$rec_frequency ] : '';
 		$rec_end       = new DateTime( sprintf( '%s', $_POST[ self::$rec_end_date ] ) );
-		$rec_skip      = isset( $_POST[ self::$rec_frequency ] ) ? $_POST[ self::$rec_skip_meta ] : '';
 
 		$calendar_title = isset( $_POST[ self::$calendar_title_meta ] ) ? $_POST[ self::$calendar_title_meta ] : '';
 		$location       = isset( $_POST[ self::$location_meta ] ) ? $_POST[ self::$location_meta ] : '';
@@ -902,7 +770,6 @@ final class TZ_Event {
 		update_post_meta( $post_id, self::$end_meta, $end->format( self::$mysql_format ) );
 
 		update_post_meta( $post_id, self::$rec_frequency_meta, $rec_frequency );
-		update_post_meta( $post_id, self::$rec_skip_meta, $rec_skip );
 		update_post_meta( $post_id, self::$rec_end_meta, $rec_end->format( self::$mysql_format ) );
 
 		update_post_meta( $post_id, self::$calendar_title_meta, $calendar_title );
@@ -920,16 +787,14 @@ final class TZ_Event {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static function tags() {
-
 		return array(
 			self::$year_tag,
 			self::$month_tag,
-			self::$day_tag,
+			self::$day_tag
 		);
 	}
 
 	public static function add_rewrite_tags() {
-
 		$tags   = self::tags();
 		$tags[] = self::$date_tag;
 		$tags[] = self::$archive_tag;
@@ -940,7 +805,6 @@ final class TZ_Event {
 	}
 
 	public static function add_rewrite_rules() {
-
 		global $wp_rewrite;
 
 		$rules    = array();
@@ -976,7 +840,6 @@ final class TZ_Event {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static function wp_title( $title, $sep, $seplocation ) {
-
 		global $wp_query;
 		if ( ! is_archive() ) {
 			return $title;
@@ -1021,12 +884,11 @@ final class TZ_Event {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static function parse_date( $query ) {
-
 		$default = array(
 			'year'       => 0,
 			'month'      => 0,
 			'day'        => 0,
-			'is_archive' => false,
+			'is_archive' => false
 		);
 
 		$output = $default;
@@ -1085,7 +947,6 @@ final class TZ_Event {
 	}
 
 	public static function pre_get_posts( $query ) {
-
 		if ( ! is_archive() ) {
 			return;
 		}
@@ -1102,14 +963,12 @@ final class TZ_Event {
 			return;
 		}
 
-
 		self::filter_admin( $query );
 		self::order_by_event_date( $query );
 		self::add_date_filter( $query );
 	}
 
 	public static function order_by_event_date( &$query ) {
-
 		if ( isset( $_REQUEST['orderby'] ) ) {
 			return;
 		}
@@ -1119,7 +978,6 @@ final class TZ_Event {
 	}
 
 	public static function add_date_filter( &$query ) {
-
 		$start = null;
 		$end   = null;
 
@@ -1166,7 +1024,7 @@ final class TZ_Event {
 			'key'     => self::$end_meta,
 			'value'   => $start->format( $mysql_format ),
 			'compare' => '>=',
-			'type'    => 'DATETIME',
+			'type'    => 'DATETIME'
 		);
 
 		//end date must be before search start date
@@ -1174,7 +1032,7 @@ final class TZ_Event {
 			'key'     => self::$start_meta,
 			'value'   => $end->format( $mysql_format ),
 			'compare' => '<=',
-			'type'    => 'DATETIME',
+			'type'    => 'DATETIME'
 		);
 
 
@@ -1182,18 +1040,17 @@ final class TZ_Event {
 	}
 
 	public static function exclude_old_events( &$query ) {
-
 		$meta_query = $query->meta_query;
 		if ( ! is_array( $meta_query ) ) {
 			$meta_query = array();
 		}
 
-		$now          = new DateTime( current_time( 'mysql' ) );
+		$now          = new DateTime();
 		$meta_query[] = array(
 			'key'     => self::$end_meta,
 			'value'   => $now->format( 'Y-m-d H:i:s' ),
 			'compare' => '>=',
-			'type'    => 'DATETIME',
+			'type'    => 'DATETIME'
 		);
 
 		$query->set( 'meta_query', $meta_query );
@@ -1208,7 +1065,6 @@ final class TZ_Event {
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static function register() {
-
 		$args                    = self::$register_args;
 		$args['rewrite']['slug'] = self::$slug;
 		$args                    = apply_filters( 'tz_register_args', $args );
@@ -1216,14 +1072,13 @@ final class TZ_Event {
 	}
 
 	public static function initialize() {
-
 		add_action( 'init', array( __CLASS__, 'add_rewrite_tags' ) );
 		add_action( 'delete_option_rewrite_rules', array( __CLASS__, 'add_rewrite_rules' ) );
 		add_action( 'init', array( __CLASS__, 'register' ) );
 		add_action( 'pre_get_posts', array( __CLASS__, 'pre_get_posts' ) );
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_box' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_styles' ) );
+		add_action( 'admin_init', array( __CLASS__, 'enqueue_scripts' ) );
+		add_action( 'admin_init', array( __CLASS__, 'enqueue_styles' ) );
 		add_filter( 'wp_title', array( __CLASS__, 'wp_title' ), 10, 3 );
 		add_filter( 'aioseop_title', array( __CLASS__, 'wp_title' ), 10, 3 );
 		add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 2 );
